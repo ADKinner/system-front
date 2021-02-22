@@ -1,38 +1,86 @@
-.App {
-  text-align: center;
+.main {
+    width: 100%;
+    height: 100%;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.small_panel {
+    padding-top: 200px;
+    margin-left: 47%;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.img {
+    width: 128px;
+    height: 128px;
+    background-image: url("./images/icon_128.png");
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.panel {
+    background: antiquewhite;
+    border-radius: 10px;
+    width: 450px;
+    height: 400px;
+    margin-left: 75vh;
 }
 
-.App-link {
-  color: #61dafb;
+.login {
+    height: 200px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.register {
+    height: 200px;
+}
+
+.begin {
+    text-align: center;
+    font-size: 25px;
+    font-width: 300;
+    padding-top: 10px;
+}
+
+.part {
+    margin-left: 35px;
+    margin-right: 35px;
+    height: 70px;
+    width: 380px;
+}
+
+.description {
+    margin-top: 10px;
+    height: 25px;
+    width: 380px;
+}
+
+.in_data {
+    height: 25px;
+    width: 360px;
+    padding: 10px;
+    font-size: 15px;
+    border-radius: 5px;
+}
+
+.btn {
+    height: 50px;
+    width: 380px;
+    margin-left: 35px;
+    margin-right: 35px;
+    margin-top: 25px;
+    border-radius: 10px;
+    text-align: center;
+    color: antiquewhite;
+    background: saddlebrown;
+    border: 3px solid saddlebrown;
+    font-size: 17px;
+}
+
+.information {
+    padding-top: 30px;
+    padding-left: 35px;
+    padding-right: 35px;
+    text-align: center;
+    font-size: 16px;
+    font-width: 300;
+}
+
+.style {
+    margin-top: 5px;
 }
