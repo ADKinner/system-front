@@ -1,0 +1,100 @@
+.main_r {
+    width: 100%;
+    height: 980px;
+}
+
+.small_panel_r {
+    padding-top: 200px;
+    margin-left: 47%;
+}
+
+.img_r {
+    width: 128px;
+    height: 128px;
+    background-image: url("../images/icon_128.png");
+}
+
+.panel_r {
+    background: antiquewhite;
+    border-radius: 10px;
+    width: 450px;
+    height: 480px;
+    margin-left: 75vh;
+}
+
+.begin_r {
+    text-align: center;
+    font-size: 25px;
+    padding-top: 10px;
+}
+
+.reg_r {
+    height: 200px;
+}
+
+.part_r {
+    margin-left: 35px;
+    margin-right: 35px;
+    height: 75px;
+    width: 380px;
+}
+
+.part_pass_r {
+    margin-left: 35px;
+    margin-right: 35px;
+    height: 130px;
+    width: 380px;
+}
+
+.description_r {
+    margin-top: 10px;
+    height: 25px;
+    width: 380px;
+}
+
+.in_data_r {
+    height: 25px;
+    width: 355px;
+    padding: 10px;
+    font-size: 15px;
+    border-radius: 5px;
+}
+
+.in_data_r:focus {
+    outline-color: saddlebrown;
+}
+
+.btn_r {
+    height: 50px;
+    width: 380px;
+    margin-left: 35px;
+    margin-right: 35px;
+    margin-top: 10px;
+    border-radius: 10px;
+    text-align: center;
+    color: antiquewhite;
+    background: saddlebrown;
+    border: 3px solid saddlebrown;
+    font-size: 17px;
+}
+
+.small_indent {
+    height: 5px;
+}
+
+.indent_r {
+    margin-left: 35px;
+    height: 11px;
+    font-style: italic;
+    color: red;
+    font-size: 15px;
+}
+
+.indent_r_2 {
+    margin-left: 35px;
+    margin-right: 25px;
+    font-style: italic;
+    color: red;
+    font-size: 15px;
+    height: fit-content;
+}

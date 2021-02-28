@@ -1,0 +1,15 @@
+.img_404 {
+    width: 512px;
+    height: 512px;
+    background-image: url("../images/not_found.png");
+}
+
+.panel_404 {
+    padding-top: 250px;
+    margin-left: 37%;
+}
+
+.main_404 {
+    width: 100%;
+    height: 100%;
+}

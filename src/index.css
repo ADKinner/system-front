@@ -4,7 +4,7 @@ body {
     Segoe UI Emoji;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-image: url("./images/boards.jpeg");
+    background-image: url("images/boards.jpeg");
 }
 
 code {

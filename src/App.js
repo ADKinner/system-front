@@ -1,40 +1,27 @@
+import React, {Component} from "react";
 import './App.css';
 
-function App() {
+import {BrowserRouter as Router, Route, Switch, Link, Redirect} from "react-router-dom";
 
-    return (
-        <div className="main">
-            <div className="small_panel">
-                <svg className="img"/>
-            </div>
-            <div className="panel">
-                <div className="begin">
-                    Sign in to System
-                </div>
-                <form className="login">
-                    <div className="part">
-                        <div className="description">
-                            Username
-                        </div>
-                        <input className="in_data"/>
-                    </div>
-                    <div className="part">
-                        <div className="description">
-                            Password
-                        </div>
-                        <input className="in_data"/>
-                    </div>
-                    <button type="submit" className="btn">Login</button>
-                </form>
-                <form className="register">
-                    <div className="information">
-                        New to System? Create an account.
-                    </div>
-                    <button className="btn style">Register</button>
-                </form>
-            </div>
-        </div>
-    );
+import LoginPage from "./pages/login"
+import StudentPage from "./pages/student"
+import RegisterPage from "./pages/register"
+import NotFoundPage from "./pages/404"
+
+class App extends Component {
+
+    render() {
+        return <Router>
+            <Switch>
+                <Route exact path="/login" component={LoginPage}/>
+                <Route exact path="/student" component={StudentPage}/>
+                <Route exact path="/register" component={RegisterPage}/>
+                <Route exact path="/404" component={NotFoundPage}/>
+                <Redirect exact from="/" to="/login"/>
+                <Redirect to="/404"/>
+            </Switch>
+        </Router>
+    }
 }
 
 export default App;
