@@ -15,8 +15,7 @@ export default function validateRegInfo(values) {
     if (!values.password || !values.confirm_password) {
         errors.password = "Password is required"
     } else if (!/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/.test(values.password)) {
-        errors.password = "Password must contain at least one number, one uppercase and lowercase letter " +
-            "and at least 8 or more characters"
+        errors.password = "Incorrect password format."
     } else if (values.password  !== values.confirm_password) {
         errors.password = "Passwords do not match"
     }

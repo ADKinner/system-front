@@ -1,23 +1,40 @@
 import React, {useState} from "react";
+import axios from 'axios';
 import '../styles/register.css'
+import '../styles/modalReg.css'
 
 import useForm from "../hooks/useForm";
 import validate from "../validate/validateRegInfo";
 
 const RegPage = () => {
 
+    const first_part_request = '/data?id=';
+
+    const second_part_request = '&password=';
+
     const [isSubmitted, setIsSubmitted] = useState(false);
 
     const [isCorrect, setIsCorrect] = useState(false);
+
+    const [passwordVisibility, setPasswordVisibility] = useState(false);
 
     const {handleChange, values, handleSubmit, errors} = useForm(submit, validate);
 
     function submit() {
         setIsSubmitted(true);
+        checkData();
     }
 
-    function checkData(values) {
-        return true;
+    function checkData() {
+        const url = first_part_request + values.student_id_number + second_part_request +
+            values.student_id_password;
+        console.log(url)
+        axios.get(url)
+            .then(data => console.log(data))
+            .catch((error) => {
+                console.error("Error - " + error)
+            })
+        setIsCorrect(true);
     }
 
     return (
@@ -51,7 +68,7 @@ const RegPage = () => {
                         <input
                             name="student_id_password"
                             className="in_data_r"
-                            type="password"
+                            type={passwordVisibility ? "text" : "password"}
                             placeholder="Enter your SID confirmation password"
                             value={values.student_id_password}
                             onChange={handleChange}
@@ -65,8 +82,9 @@ const RegPage = () => {
                         <input
                             name="password"
                             className="in_data_r"
-                            type="password"
-                            placeholder="Enter password for your account"
+                            type={passwordVisibility ? "text" : "password"}
+                            placeholder="Enter password"
+                            title="≥ one number, ≥ one lower and uppercase letter and ≥ 8 characters"
                             value={values.password}
                             onChange={handleChange}
                         />
@@ -74,27 +92,78 @@ const RegPage = () => {
                         <input
                             name="confirm_password"
                             className="in_data_r"
-                            type="password"
+                            type={passwordVisibility ? "text" : "password"}
                             placeholder="Reenter password"
                             value={values.confirm_password}
                             onChange={handleChange}
                         />
                     </div>
+                    <input type="checkbox"
+                           id="check_1"
+                           className="check_rm"
+                           onClick={() => setPasswordVisibility(!passwordVisibility)}
+                    />
+                    <label htmlFor="check_1">Show passwords</label>
                     {errors.password && <div className="indent_r_2">{errors.password}</div>}
                     <button type="submit" className="btn_r">Confirm</button>
-                    {/*{*/}
-                    {/*    isSubmitted ? (() => {*/}
-                    {/*            setIsCorrect(checkData())*/}
-                    {/*        })*/}
-                    {/*        : ({})*/}
-                    {/*}*/}
-                    {/*{*/}
-                    {/*    isCorrect ? ({}) : (*/}
-                    {/*        <div>*/}
-                    {/*            Data is incorrect*/}
-                    {/*        </div>*/}
-                    {/*    )*/}
-                    {/*}*/}
+                    {isSubmitted && isCorrect && (
+                        <React.Fragment>
+                            {
+                                <div className="modal_rm">
+                                    <div className="modal_body_rm success">
+                                        <h1>Verification</h1>
+                                        <h3>
+                                            A message with a code has been sent to your phone, enter it to complete
+                                            registration.
+                                        </h3>
+                                        <form>
+                                            <div>
+                                                <input
+                                                    className="input_rm"
+                                                    type="text"
+                                                    min="0"
+                                                    on
+                                                />
+                                                <button
+                                                    className="btn_rm margin_btn_rm"
+                                                    onClick={() => setIsSubmitted(false)}
+                                                >
+                                                    Send
+                                                </button>
+                                            </div>
+                                        </form>
+                                        <div>
+                                            <button
+                                                className="btn_rm btn_rm_success_size"
+                                                onClick={() => setIsSubmitted(false)}
+                                            >
+                                                Close
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </React.Fragment>
+                    )}
+                    {isSubmitted && !isCorrect &&
+                    (
+                        <React.Fragment>
+                            {
+                                <div className="modal_rm">
+                                    <div className="modal_body_rm">
+                                        <h1>Error</h1>
+                                        <h3>Input data is incorrect or such SID has been already registered.</h3>
+                                        <button
+                                            className="btn_rm"
+                                            onClick={() => setIsSubmitted(false)}
+                                        >
+                                            Close
+                                        </button>
+                                    </div>
+                                </div>
+                            }
+                        </React.Fragment>
+                    )}
                 </form>
             </div>
         </div>
