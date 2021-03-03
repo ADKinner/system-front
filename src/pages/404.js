@@ -1,7 +1,7 @@
 import React from "react";
 import '../styles/404.css'
 
-class NotFoundPage extends React.Component {
+class NotFoundErrorPage extends React.Component {
 
     render() {
         return (
@@ -14,4 +14,4 @@ class NotFoundPage extends React.Component {
     }
 }
 
-export default NotFoundPage;
+export default NotFoundErrorPage;

@@ -4,7 +4,8 @@ import LoginPage from "./pages/login";
 import StudentPage from "./pages/student";
 import RegisterPage from "./pages/register";
 import SuccessPage from "./pages/success";
-import NotFoundPage from "./pages/404";
+import NotFoundErrorPage from "./pages/404";
+import ServerErrorPage from "./pages/500";
 import './App.css';
 
 class App extends Component {
@@ -16,7 +17,8 @@ class App extends Component {
                 <Route exact path="/student" component={StudentPage}/>
                 <Route exact path="/register" component={RegisterPage}/>
                 <Route exact path="/success" component={SuccessPage}/>
-                <Route exact path="/404" component={NotFoundPage}/>
+                <Route exact path="/404" component={NotFoundErrorPage}/>
+                <Route exact path="/500" component={ServerErrorPage}/>
                 <Redirect exact from="/" to="/login"/>
                 <Redirect to="/404"/>
             </Switch>
