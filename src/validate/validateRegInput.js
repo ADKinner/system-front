@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function validateRegInfo(values) {
+export default function validateRegInput(values) {
 
     let errors = {}
 
@@ -12,7 +12,10 @@ export default function validateRegInfo(values) {
         errors.student_id_password = "Student ID confirmation password required"
     }
 
-    if (!values.password || !values.confirm_password) {
+    if (!values.password && !values.confirm_password) {
+        errors.password = "Passwords are required"
+    }
+    else if (!values.password || !values.confirm_password) {
         errors.password = "Password is required"
     } else if (!/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/.test(values.password)) {
         errors.password = "Incorrect password format."
