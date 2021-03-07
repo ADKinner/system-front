@@ -1,5 +1,6 @@
 import React from "react";
 import '../styles/login.css';
+import {Link} from "react-router-dom";
 
 class LoginPage extends React.Component {
 
@@ -29,6 +30,9 @@ class LoginPage extends React.Component {
                                 Password
                             </div>
                             <input className="in_data_l"/>
+                        </div>
+                        <div className="repair_panel">
+                            <Link to="/recovery">Forgot password? Restore it.</Link>
                         </div>
                         <button type="submit" className="btn_l" onClick={this.goToStudentPage}>Login</button>
                     </form>

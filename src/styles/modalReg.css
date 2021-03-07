@@ -41,6 +41,22 @@
     border-color: saddlebrown;
 }
 
+.success_rec {
+    width: 250px;
+    height: 200px;
+}
+
+.success_rec h1 {
+    margin-top: 0px;
+    font-family: Consolas, serif;
+    font-style: italic;
+    color: saddlebrown;
+}
+
+.success_rec button {
+    border-color: saddlebrown;
+}
+
 .modal_body_rm h3 {
     font-size: 18px;
     font-family: Consolas, serif;

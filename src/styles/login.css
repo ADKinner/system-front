@@ -1,6 +1,11 @@
 .main_l {
     width: 100%;
     height: 100%;
+    font-family: Consolas, serif;
+}
+
+.main_l button {
+    font-family: Consolas, serif;
 }
 
 .small_panel_l {
@@ -29,7 +34,6 @@
 .begin_l {
     text-align: center;
     font-size: 25px;
-    font-width: 300;
     padding-top: 10px;
 }
 
@@ -59,11 +63,24 @@
     width: 380px;
     margin-left: 35px;
     margin-right: 35px;
-    margin-top: 25px;
     border-radius: 10px;
     text-align: center;
     color: antiquewhite;
     background: saddlebrown;
     border: 3px solid saddlebrown;
     font-size: 17px;
+}
+
+.repair_panel {
+    margin-top: 5px;
+    margin-left: 35px;
+    margin-bottom: 5px;
+}
+
+.repair_panel a {
+    color: blue;
+}
+
+.repair_panel a:hover {
+    color: blue;
 }

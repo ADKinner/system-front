@@ -1,0 +1,123 @@
+.main_rec {
+    width: 100%;
+    height: 100%;
+    font-family: Consolas, serif;
+}
+
+.main_rec button {
+    font-family: Consolas, serif;
+}
+
+.small_panel_rec {
+    padding-top: 200px;
+    margin-left: 47%;
+}
+
+.img_rec {
+    width: 128px;
+    height: 128px;
+    background-image: url("../images/icon_128.png");
+}
+
+.panel_first_rec {
+    background: antiquewhite;
+    border-radius: 10px;
+    width: 450px;
+    height: 210px;
+    margin-left: 75vh;
+}
+
+.panel_second_rec {
+    background: antiquewhite;
+    border-radius: 10px;
+    width: 450px;
+    height: 400px;
+    margin-left: 75vh;
+}
+
+.login_rec {
+    height: 200px;
+}
+
+.begin_rec {
+    text-align: center;
+    font-size: 25px;
+    padding-top: 10px;
+}
+
+.small_indent_rec {
+    height: 5px;
+}
+
+.btn_rec {
+    height: 50px;
+    width: 382px;
+    margin-left: 35px;
+    border-radius: 10px;
+    margin-top: 10px;
+    text-align: center;
+    color: antiquewhite;
+    background: saddlebrown;
+    border: 3px solid saddlebrown;
+    font-size: 17px;
+}
+
+.indent_rec {
+    margin-top: 5px;
+    margin-left: 35px;
+    height: 11px;
+    font-style: italic;
+    color: red;
+    font-size: 15px;
+}
+
+.part_rec {
+    margin-left: 35px;
+    margin-right: 35px;
+    height: 75px;
+    width: 380px;
+}
+
+.part_pass_rec {
+    margin-left: 35px;
+    margin-right: 35px;
+    height: 130px;
+    width: 380px;
+}
+
+.part_rec {
+    margin-left: 35px;
+    margin-right: 35px;
+    height: 75px;
+    width: 380px;
+}
+
+.description_rec {
+    margin-top: 10px;
+    height: 25px;
+    width: 380px;
+}
+
+.in_data_rec {
+    height: 25px;
+    width: 360px;
+    padding: 10px;
+    font-size: 15px;
+    border-radius: 5px;
+}
+
+.check_rm {
+    margin-left: 35px;
+    height: 15px;
+    width: 15px;
+    border-color: saddlebrown;
+}
+
+.indent_rec_2 {
+    margin-left: 35px;
+    margin-right: 25px;
+    font-style: italic;
+    color: red;
+    font-size: 15px;
+    height: 20px;
+}

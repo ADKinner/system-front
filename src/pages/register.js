@@ -10,11 +10,11 @@ class RegisterPage extends React.Component {
         super(props);
         this.state = {
             defaultServerURL: "http://localhost:8080/",
-            dataUrl: {
-                firstPart: "data?id=",
-                secondPart: "&password="
+            urls: {
+                firstRegisterUrl: "data?id=",
+                secondRegisterUrl: "&password=",
+                passwordUrl: "password-confirmation/registration?email=",
             },
-            passwordUrl: "password?email=",
             studentsUrl: "students",
             isSubmitted: false,
             isInputConfirmed: false,
@@ -23,11 +23,11 @@ class RegisterPage extends React.Component {
             isReady: false,
             confirmPassword: '',
             values: {
-                student_id_number: '',
-                student_id_password: '',
+                studentID: '',
+                studentIDPassword: '',
                 password: '',
-                confirm_password: '',
-                email_confirm_password: ''
+                confirmPassword: '',
+                emailConfirmPassword: ''
             },
             student: {
                 id: '',
@@ -36,7 +36,7 @@ class RegisterPage extends React.Component {
                 surname: '',
                 patronymic: '',
                 email: '',
-                phoneNumber: ''
+                groupId: ''
             },
             errors: {}
         };
@@ -45,7 +45,6 @@ class RegisterPage extends React.Component {
     handleSubmitRegInput(event) {
         event.preventDefault();
         const val = this.checkInputErrors();
-        console.log(val);
         this.setState({
             isSubmitted: val
         });
@@ -75,7 +74,7 @@ class RegisterPage extends React.Component {
     handleConfirmPasswordInputChange(event) {
         this.setState({
             values: {
-                email_confirm_password: event.target.value
+                emailConfirmPassword: event.target.value
             }
         });
     }
@@ -88,7 +87,6 @@ class RegisterPage extends React.Component {
 
     checkInputErrors() {
         const errors = validateRegInput(this.state.values);
-        console.log(errors);
         this.setState({
             errors: errors
         });
@@ -96,8 +94,8 @@ class RegisterPage extends React.Component {
     }
 
     checkInputOnServer() {
-        axios.get(this.state.defaultServerURL + this.state.dataUrl.firstPart + this.state.values.student_id_number +
-            this.state.dataUrl.secondPart + this.state.values.student_id_password)
+        axios.get(this.state.defaultServerURL + this.state.urls.firstRegisterUrl + this.state.values.studentID +
+            this.state.urls.secondRegisterUrl + this.state.values.studentIDPassword)
             .then((response) => {
                 this.setState({
                     isInputConfirmed: true,
@@ -126,24 +124,22 @@ class RegisterPage extends React.Component {
     }
 
     checkConfirmPassword() {
-        if (this.state.confirmPassword === this.state.values.email_confirm_password) {
+        if (this.state.confirmPassword === this.state.values.emailConfirmPassword) {
             this.createStudentAccount();
-            this.goToSuccessPage();
         } else {
             this.setState({
                 values: {
-                    email_confirm_password: ''
+                    emailConfirmPassword: ''
                 }
             });
         }
     }
 
     getConfirmPassword(email) {
-        console.log(email);
-        axios.get(this.state.defaultServerURL + this.state.passwordUrl + email)
+        axios.get(this.state.defaultServerURL + this.state.urls.passwordUrl + email)
             .then((response) => {
                 this.setState({
-                    confirmPassword: response.data["password"]
+                    confirmPassword: response.data["emailConfirmPassword"]
                 })
             })
             .catch((error) => {
@@ -154,21 +150,29 @@ class RegisterPage extends React.Component {
     }
 
     createStudentAccount() {
-        // axios.post(this.state.defaultServerURL + this.state.studentsUrl, {
-        //     id: this.state.student.id,
-        //     name: this.state.student.name,
-        //     surname: this.state.student.surname,
-        //     patronymic: this.state.student.patronymic,
-        //     password: this.state.student.password,
-        //     phoneNumber: this.state.student.phoneNumber,
-        //     email: this.state.student.email
-        // })
-        //     .then()
-        //     .catch();
+        axios.post(this.state.defaultServerURL + this.state.studentsUrl, {
+            id: this.state.student.id,
+            name: this.state.student.name,
+            surname: this.state.student.surname,
+            patronymic: this.state.student.patronymic,
+            password: this.state.student.password,
+            email: this.state.student.email,
+            groupId: this.state.student.groupId
+        })
+            .then((response) => {
+                if (this.state.student.id === response.data["id"]) {
+                    this.goToSuccessPage();
+                }
+            })
+            .catch((error) => {
+            if (error.response.status === 500) {
+                this.goToServerErrorPage();
+            }
+        });
     }
 
     goToSuccessPage() {
-        this.props.history.push('/success');
+        this.props.history.push('/register/success');
     }
 
     goToServerErrorPage() {
@@ -191,17 +195,17 @@ class RegisterPage extends React.Component {
                                 Student ID number
                             </div>
                             <input
-                                name="student_id_number"
+                                name="studentID"
                                 className="in_data_r"
                                 type="text"
                                 placeholder="Enter your SID number"
-                                value={this.state.values.student_id_number}
+                                value={this.state.values.studentID}
                                 onChange={(event) => this.handleRegInputChange(event)}
                             />
                         </div>
-                        {!!this.state.errors.student_id_number && (
+                        {this.state.errors.studentID && (
                             <div className="indent_r">
-                                {this.state.errors.student_id_number}
+                                {this.state.errors.studentID}
                             </div>
                         )}
                         <div className="part_r">
@@ -209,17 +213,17 @@ class RegisterPage extends React.Component {
                                 Student ID confirmation password
                             </div>
                             <input
-                                name="student_id_password"
+                                name="studentIDPassword"
                                 className="in_data_r"
                                 type={this.state.isPasswordVisibility ? "text" : "password"}
                                 placeholder="Enter your SID confirmation password"
-                                value={this.state.values.student_id_password}
+                                value={this.state.values.studentIDPassword}
                                 onChange={(event) => this.handleRegInputChange(event)}
                             />
                         </div>
-                        {this.state.errors.student_id_password && (
+                        {this.state.errors.studentIDPassword && (
                             <div className="indent_r">
-                                {this.state.errors.student_id_password}
+                                {this.state.errors.studentIDPassword}
                             </div>
                         )}
                         <div className="part_pass_r">
@@ -237,20 +241,20 @@ class RegisterPage extends React.Component {
                             />
                             <div className="small_indent"/>
                             <input
-                                name="confirm_password"
+                                name="confirmPassword"
                                 className="in_data_r"
                                 type={this.state.isPasswordVisibility ? "text" : "password"}
                                 placeholder="Reenter password"
-                                value={this.state.values.confirm_password}
+                                value={this.state.values.confirmPassword}
                                 onChange={(event) => this.handleRegInputChange(event)}
                             />
                         </div>
                         <input type="checkbox"
-                               id="check_1"
+                               id="check"
                                className="check_rm"
                                onChange={() => this.handleChangePasswordVisibility()}
                         />
-                        <label htmlFor="check_1">Show passwords</label>
+                        <label htmlFor="check">Show passwords</label>
                         {this.state.errors.password && (
                             <div className="indent_r_2">
                                 {this.state.errors.password}
@@ -274,7 +278,7 @@ class RegisterPage extends React.Component {
                                                 name="email_password"
                                                 className="input_rm"
                                                 type="text"
-                                                value={this.state.values.email_confirm_password}
+                                                value={this.state.values.emailConfirmPassword}
                                                 onChange={(event) =>
                                                     this.handleConfirmPasswordInputChange(event)}
                                             />

@@ -2,7 +2,7 @@ import React from "react";
 import {Link} from "react-router-dom";
 import "../styles/success.css";
 
-class SuccessPage extends React.Component {
+class SuccessRegistrationPage extends React.Component {
 
     render() {
         return (
@@ -11,7 +11,7 @@ class SuccessPage extends React.Component {
                     <svg className="img_success"/>
                 </div>
                 <div className="text_success">
-                    <h1>Account successfully created</h1>
+                    <h1>Password successfully change</h1>
                     <Link to="/login">Click to go to login page.</Link>
                 </div>
             </div>
@@ -19,4 +19,4 @@ class SuccessPage extends React.Component {
     }
 }
 
-export default SuccessPage;
+export default SuccessRegistrationPage;
