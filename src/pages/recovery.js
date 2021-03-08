@@ -2,7 +2,7 @@ import React from "react";
 import validateRecIDInput from "../validate/validateRecIDInput";
 import validateRecPasswordsInput from "../validate/validateRecPasswordsInput";
 import '../styles/recovery.css'
-import '../styles/modalReg.css'
+import '../styles/modal.css'
 import axios from "axios";
 
 class RecoveryPasswordPage extends React.Component {
@@ -15,16 +15,14 @@ class RecoveryPasswordPage extends React.Component {
                 passwordUrl: 'password-confirmation/login/repair-password?email=',
                 studentUrl: 'students',
                 teacherUrl: 'teachers',
-                administratorUrl: 'administrators',
                 slash: '/'
             },
             isLoginCorrect: false,
             isModalOpen: false,
             isIDError: false,
             isPasswordVisibility: false,
-            data: {
-                id: ''
-            },
+            id: '',
+            data: {},
             role: -1,
             errors: {}
         }
@@ -32,9 +30,7 @@ class RecoveryPasswordPage extends React.Component {
 
     handleIDInputChange(event) {
         this.setState({
-            data: {
-                id: event.target.value
-            }
+            id: event.target.value
         });
     }
 
@@ -58,30 +54,12 @@ class RecoveryPasswordPage extends React.Component {
         if (Object.keys(this.state.errors).length === 0) {
             this.setState({
                 errors: {}
-            })
+            });
         }
         if (this.checkIDInputError()) {
-            if (this.checkIsStudentIDCorrectOnServer(this.state.data.id)
-                || this.checkIsTeacherIDCorrectOnServer(this.state.data.id)
-                || this.checkIsAdministratorIDCorrectOnServer(this.state.data.id)) {
-                this.setState({
-                    isLoginCorrect: true,
-                    isModalOpen: true,
-                    data: {
-                        confirmPassword: '',
-                        newPassword: '',
-                        repeatPassword: ''
-                    }
-                })
-            } else {
-                this.setState({
-                    data: {
-                        id: ''
-                    },
-                    errors: {
-                        id: 'ID is incorrect'
-                    }
-                })
+            this.checkIsStudentIDCorrectOnServer(this.state.id);
+            if (Object.keys(this.state.errors).length === 0) {
+                this.checkIsTeacherIDCorrectOnServer(this.state.id);
             }
         }
     }
@@ -96,11 +74,10 @@ class RecoveryPasswordPage extends React.Component {
         if (this.checkPasswordsInputError()) {
             if (this.checkConfirmPasswordsIdentity()) {
                 this.changePasswordOnAccount();
-
             } else {
                 this.setState({
                     errors: {
-                        password: 'Confirm passwords not match'
+                        confirmPassword: 'Confirm passwords not match'
                     }
                 })
             }
@@ -114,7 +91,7 @@ class RecoveryPasswordPage extends React.Component {
     }
 
     checkIDInputError() {
-        const errors = validateRecIDInput(this.state.data.id);
+        const errors = validateRecIDInput(this.state.id);
         this.setState({
             errors: errors
         });
@@ -133,16 +110,29 @@ class RecoveryPasswordPage extends React.Component {
         axios.get(this.state.defaultServerURL + this.state.urls.studentUrl + this.state.urls.slash + id)
             .then((response) => {
                 this.setState({
+                    data: {
+                        confirmPassword: '',
+                        newPassword: '',
+                        repeatPassword: ''
+                    },
+                    isLoginCorrect: true,
+                    isModalOpen: true,
                     role: 0
-                })
+                });
                 this.getConfirmPassword(response.data["email"]);
-                return true;
             })
             .catch((error) => {
                 if (error.response.status === 500) {
                     this.goToServerErrorPage();
                 } else {
-                    return false;
+                    this.setState({
+                        data: {
+                            id: ''
+                        },
+                        errors: {
+                            id: 'ID is incorrect'
+                        }
+                    });
                 }
             })
     }
@@ -151,40 +141,35 @@ class RecoveryPasswordPage extends React.Component {
         axios.get(this.state.defaultServerURL + this.state.urls.teacherUrl + this.state.urls.slash + id)
             .then((response) => {
                 this.setState({
+                    data: {
+                        confirmPassword: '',
+                        newPassword: '',
+                        repeatPassword: ''
+                    },
+                    isLoginCorrect: true,
+                    isModalOpen: true,
                     role: 1
-                })
+                });
                 this.getConfirmPassword(response.data["email"]);
-                return true;
             })
             .catch((error) => {
                 if (error.response.status === 500) {
                     this.goToServerErrorPage();
                 } else {
-                    return false;
-                }
-            })
-    }
-
-    checkIsAdministratorIDCorrectOnServer(id) {
-        axios.get(this.state.defaultServerURL + this.state.urls.administratorUrl + this.state.urls.slash + id)
-            .then((response) => {
-                this.setState({
-                    role: 2
-                })
-                this.getConfirmPassword(response.data["email"]);
-                return true;
-            })
-            .catch((error) => {
-                if (error.response.status === 500) {
-                    this.goToServerErrorPage();
-                } else {
-                    return false;
+                    this.setState({
+                        data: {
+                            id: ''
+                        },
+                        errors: {
+                            id: 'ID is incorrect'
+                        }
+                    });
                 }
             })
     }
 
     checkConfirmPasswordsIdentity() {
-        return this.state.data.emailConfirmPassword === this.state.data.confirm_password;
+        return this.state.data.emailConfirmPassword === this.state.data.confirmPassword;
     }
 
     getConfirmPassword(email) {
@@ -194,7 +179,7 @@ class RecoveryPasswordPage extends React.Component {
                     data: {
                         emailConfirmPassword: response.data["emailConfirmPassword"]
                     }
-                })
+                });
             })
             .catch((error) => {
                 if (error.response.status === 500) {
@@ -209,11 +194,9 @@ class RecoveryPasswordPage extends React.Component {
             url += this.state.urls.studentUrl;
         } else if (this.state.role === 1) {
             url += this.state.urls.teacherUrl;
-        } else {
-            url += this.state.urls.administratorUrl;
         }
         axios.put(url, {
-            login: this.state.data.id,
+            id: this.state.id,
             password: this.state.data.newPassword
         })
             .then(() => {
@@ -243,7 +226,7 @@ class RecoveryPasswordPage extends React.Component {
                     </div>
                     <div className="panel_second_rec">
                         <div className="begin_rec">
-                            Recover password in System
+                            Password recovery in System
                         </div>
                         <form className="login_rec" onSubmit={(event) => this.handleSubmitPasswordsInput(event)}>
                             <div className="part_rec">
@@ -251,17 +234,17 @@ class RecoveryPasswordPage extends React.Component {
                                     Confirm password
                                 </div>
                                 <input
-                                    name="confirm_password"
+                                    name="confirmPassword"
                                     className="in_data_rec"
                                     type={this.state.isPasswordVisibility ? "text" : "password"}
                                     placeholder="Enter confirmation password"
-                                    value={this.state.data.confirm_password}
+                                    value={this.state.data.confirmPassword}
                                     onChange={(event) => this.handlePasswordsInputChange(event)}
                                 />
                             </div>
-                            {this.state.errors.confirm_password && (
+                            {this.state.errors.confirmPassword && (
                                 <div className="indent_r">
-                                    {this.state.errors.confirm_password}
+                                    {this.state.errors.confirmPassword}
                                 </div>
                             )}
                             <div className="part_pass_rec">
@@ -269,20 +252,20 @@ class RecoveryPasswordPage extends React.Component {
                                     New password
                                 </div>
                                 <input
-                                    name="new_password"
+                                    name="newPassword"
                                     className="in_data_rec"
                                     type={this.state.isPasswordVisibility ? "text" : "password"}
                                     placeholder="Enter new password"
-                                    value={this.state.data.new_password}
+                                    value={this.state.data.newPassword}
                                     onChange={(event) => this.handlePasswordsInputChange(event)}
                                 />
                                 <div className="small_indent_rec"/>
                                 <input
-                                    name="repeat_password"
+                                    name="repeatPassword"
                                     className="in_data_rec"
                                     type={this.state.isPasswordVisibility ? "text" : "password"}
                                     placeholder="Enter new password"
-                                    value={this.state.data.repeat_password}
+                                    value={this.state.data.repeatPassword}
                                     onChange={(event) => this.handlePasswordsInputChange(event)}
                                 />
                             </div>
@@ -292,12 +275,12 @@ class RecoveryPasswordPage extends React.Component {
                                    onChange={() => this.handleChangePasswordVisibility()}
                             />
                             <label htmlFor="check">Show passwords</label>
-                            {this.state.errors.new_password && (
+                            {this.state.errors.newPassword && (
                                 <div className="indent_rec_2">
-                                    {this.state.errors.new_password}
+                                    {this.state.errors.newPassword}
                                 </div>
                             )}
-                            <button type="submit" className="btn_l">Finish recovery</button>
+                            <button type="submit" className="btn_rec">Finish recovery</button>
                         </form>
                     </div>
                     {this.state.isModalOpen && (
@@ -308,6 +291,8 @@ class RecoveryPasswordPage extends React.Component {
                                         <h1>Information</h1>
                                         <h3>
                                             Confirmation passwords was sent to your account mail.
+                                        </h3>
+                                        <h3>
                                             Check it.
                                         </h3>
                                         <button
@@ -331,7 +316,7 @@ class RecoveryPasswordPage extends React.Component {
                     </div>
                     <div className="panel_first_rec">
                         <div className="begin_rec">
-                            Recover password in System
+                            Password recovery in System
                         </div>
                         <form className="login_rec" onSubmit={(event) => this.handleSubmitIDInput(event)}>
                             <div className="part_rec">
@@ -343,7 +328,7 @@ class RecoveryPasswordPage extends React.Component {
                                     className="in_data_rec"
                                     type="text"
                                     placeholder="Enter your ID number"
-                                    value={this.state.data.id}
+                                    value={this.state.id}
                                     onChange={(event) => this.handleIDInputChange(event)}
                                 />
                             </div>
@@ -352,7 +337,7 @@ class RecoveryPasswordPage extends React.Component {
                                     {this.state.errors.id}
                                 </div>
                             )}
-                            <button type="submit" className="btn_rec">Start recovery</button>
+                            <button type="submit" className="btn_rec first_indent">Start recovery</button>
                         </form>
                     </div>
                 </div>

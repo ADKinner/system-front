@@ -31,7 +31,7 @@
     background: antiquewhite;
     border-radius: 10px;
     width: 450px;
-    height: 400px;
+    height: 380px;
     margin-left: 75vh;
 }
 
@@ -54,12 +54,16 @@
     width: 382px;
     margin-left: 35px;
     border-radius: 10px;
-    margin-top: 10px;
+    margin-top: 5px;
     text-align: center;
     color: antiquewhite;
     background: saddlebrown;
     border: 3px solid saddlebrown;
     font-size: 17px;
+}
+
+.first_indent {
+    margin-top: 10px;
 }
 
 .indent_rec {

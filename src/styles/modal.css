@@ -42,8 +42,8 @@
 }
 
 .success_rec {
-    width: 250px;
-    height: 200px;
+    width: 300px;
+    height: 180px;
 }
 
 .success_rec h1 {
@@ -58,7 +58,7 @@
 }
 
 .modal_body_rm h3 {
-    font-size: 18px;
+    font-size: 19px;
     font-family: Consolas, serif;
     font-style: italic;
 }

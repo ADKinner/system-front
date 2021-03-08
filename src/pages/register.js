@@ -2,7 +2,7 @@ import React from "react";
 import axios from 'axios';
 import validateRegInput from "../validate/validateRegInput";
 import '../styles/register.css';
-import '../styles/modalReg.css';
+import '../styles/modal.css';
 
 class RegisterPage extends React.Component {
 
@@ -14,8 +14,8 @@ class RegisterPage extends React.Component {
                 firstRegisterUrl: "data?id=",
                 secondRegisterUrl: "&password=",
                 passwordUrl: "password-confirmation/registration?email=",
+                studentsUrl: "students",
             },
-            studentsUrl: "students",
             isSubmitted: false,
             isInputConfirmed: false,
             isPasswordConfirmed: false,
@@ -150,7 +150,7 @@ class RegisterPage extends React.Component {
     }
 
     createStudentAccount() {
-        axios.post(this.state.defaultServerURL + this.state.studentsUrl, {
+        axios.post(this.state.defaultServerURL + this.state.urls.studentsUrl, {
             id: this.state.student.id,
             name: this.state.student.name,
             surname: this.state.student.surname,
