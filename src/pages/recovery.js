@@ -1,16 +1,16 @@
 import React from "react";
+import axios from "axios";
 import validateRecIDInput from "../validate/validateRecIDInput";
 import validateRecPasswordsInput from "../validate/validateRecPasswordsInput";
-import '../styles/recovery.css'
-import '../styles/modal.css'
-import axios from "axios";
+import * as constants from '../constants';
+import '../styles/recovery.css';
+import '../styles/modal.css';
 
 class RecoveryPasswordPage extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            defaultServerURL: "http://localhost:8080/",
             urls: {
                 passwordUrl: 'password-confirmation/login/repair-password?email=',
                 studentUrl: 'students',
@@ -107,7 +107,7 @@ class RecoveryPasswordPage extends React.Component {
     }
 
     checkIsStudentIDCorrectOnServer(id) {
-        axios.get(this.state.defaultServerURL + this.state.urls.studentUrl + this.state.urls.slash + id)
+        axios.get(constants.DEFAULT_URL + constants.STUDENTS_URL + constants.SLASH + id)
             .then((response) => {
                 this.setState({
                     data: {
@@ -138,7 +138,7 @@ class RecoveryPasswordPage extends React.Component {
     }
 
     checkIsTeacherIDCorrectOnServer(id) {
-        axios.get(this.state.defaultServerURL + this.state.urls.teacherUrl + this.state.urls.slash + id)
+        axios.get(constants.DEFAULT_URL + constants.TEACHERS_URL + constants.SLASH + id)
             .then((response) => {
                 this.setState({
                     data: {
@@ -173,7 +173,7 @@ class RecoveryPasswordPage extends React.Component {
     }
 
     getConfirmPassword(email) {
-        axios.get(this.state.defaultServerURL + this.state.urls.passwordUrl + email)
+        axios.get(constants.DEFAULT_URL + this.state.urls.passwordUrl + email)
             .then((response) => {
                 this.setState({
                     data: {
@@ -189,7 +189,7 @@ class RecoveryPasswordPage extends React.Component {
     }
 
     changePasswordOnAccount() {
-        let url = this.state.defaultServerURL;
+        let url = constants.DEFAULT_URL;
         if (this.state.role === 0) {
             url += this.state.urls.studentUrl;
         } else if (this.state.role === 1) {

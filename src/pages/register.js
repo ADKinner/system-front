@@ -1,6 +1,7 @@
 import React from "react";
 import axios from 'axios';
 import validateRegInput from "../validate/validateRegInput";
+import * as constants from '../constants';
 import '../styles/register.css';
 import '../styles/modal.css';
 
@@ -9,13 +10,6 @@ class RegisterPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            defaultServerURL: "http://localhost:8080/",
-            urls: {
-                firstRegisterUrl: "data?id=",
-                secondRegisterUrl: "&password=",
-                passwordUrl: "password-confirmation/registration?email=",
-                studentsUrl: "students",
-            },
             isSubmitted: false,
             isInputConfirmed: false,
             isPasswordConfirmed: false,
@@ -94,8 +88,8 @@ class RegisterPage extends React.Component {
     }
 
     checkInputOnServer() {
-        axios.get(this.state.defaultServerURL + this.state.urls.firstRegisterUrl + this.state.values.studentID +
-            this.state.urls.secondRegisterUrl + this.state.values.studentIDPassword)
+        axios.get(constants.DEFAULT_URL + constants.REGISTRATION_DATA_URL + constants.SLASH + this.state.values.studentID +
+            constants.PASSWORD_URL_PARAM + this.state.values.studentIDPassword)
             .then((response) => {
                 this.setState({
                     isInputConfirmed: true,
@@ -136,10 +130,10 @@ class RegisterPage extends React.Component {
     }
 
     getConfirmPassword(email) {
-        axios.get(this.state.defaultServerURL + this.state.urls.passwordUrl + email)
+        axios.get(constants.DEFAULT_URL + constants.CONFIRMATION_URL + constants.REGISTRATION_URL + constants.EMAIL_URL_PARAM + email)
             .then((response) => {
                 this.setState({
-                    confirmPassword: response.data["emailConfirmPassword"]
+                    confirmPassword: response.data["password"]
                 })
             })
             .catch((error) => {
@@ -150,7 +144,7 @@ class RegisterPage extends React.Component {
     }
 
     createStudentAccount() {
-        axios.post(this.state.defaultServerURL + this.state.urls.studentsUrl, {
+        axios.post(constants.DEFAULT_URL + constants.STUDENTS_URL, {
             id: this.state.student.id,
             name: this.state.student.name,
             surname: this.state.student.surname,
@@ -165,10 +159,10 @@ class RegisterPage extends React.Component {
                 }
             })
             .catch((error) => {
-            if (error.response.status === 500) {
-                this.goToServerErrorPage();
-            }
-        });
+                if (error.response.status === 500) {
+                    this.goToServerErrorPage();
+                }
+            });
     }
 
     goToSuccessPage() {

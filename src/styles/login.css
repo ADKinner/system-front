@@ -23,7 +23,7 @@
     background: antiquewhite;
     border-radius: 10px;
     width: 450px;
-    height: 300px;
+    height: 350px;
     margin-left: 75vh;
 }
 
@@ -42,6 +42,10 @@
     margin-right: 35px;
     height: 70px;
     width: 380px;
+}
+
+.part_password_l {
+    height: 80px;
 }
 
 .description_l {
@@ -83,4 +87,21 @@
 
 .repair_panel a:hover {
     color: blue;
+}
+
+.check_l {
+    margin-left: 35px;
+    height: 15px;
+    width: 15px;
+    border-color: saddlebrown;
+}
+
+.indent_l {
+    margin-top: 5px;
+    margin-left: 35px;
+    margin-right: 25px;
+    font-style: italic;
+    color: red;
+    font-size: 15px;
+    height: fit-content;
 }

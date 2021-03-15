@@ -1,8 +1,70 @@
 import React from "react";
-import '../styles/login.css';
 import {Link} from "react-router-dom";
+import axios from "axios";
+import * as constants from '../constants';
+import '../styles/login.css';
 
 class LoginPage extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            urls: {
+                firstLoginUrl: "students?id=",
+                secondLoginUrl: "&password=",
+            },
+            isError: false,
+            isPasswordVisibility: false,
+            values: {
+                id: '',
+                password: ''
+            }
+        }
+    }
+
+    handleSubmitLoginInput(event) {
+        event.preventDefault();
+        this.checkInputOnServer();
+        this.setState({
+            isReady: true
+        });
+    }
+
+    handleLoginInputChange(event) {
+        this.setState({
+            values: {
+                ...this.state.values,
+                [event.target.name]: event.target.value
+            }
+        });
+    }
+
+    handleChangePasswordVisibility() {
+        this.setState((state) => ({
+            isPasswordVisibility: !state.isPasswordVisibility
+        }));
+    }
+
+    checkInputOnServer() {
+        // axios.get(constants.DEFAULT_URL + constants.STUDENTS_URL + this.state.values.id +
+        //     this.state.urls.secondLoginUrl + this.state.values.password)
+        //     .then((response) => {
+        //
+        //     })
+        //     .catch((error) => {
+        //         if (error.response.status === 500) {
+        //             this.goToServerErrorPage();
+        //         } else {
+        //             this.setState({
+        //                 isError: true
+        //             });
+        //         }
+        //     })
+        // this.setState({
+        //     isError: true
+        // })
+        // console.log(this.state);
+    }
 
     goToStudentPage() {
         this.props.history.push('/student');
@@ -18,23 +80,48 @@ class LoginPage extends React.Component {
                     <div className="begin_l">
                         Sign in to System
                     </div>
-                    <form className="login_l">
+                    <form className="login_l" onSubmit={(event) => this.handleSubmitLoginInput(event)}>
                         <div className="part_l">
                             <div className="description_l">
-                                Username
+                                ID
                             </div>
-                            <input className="in_data_l"/>
+                            <input
+                                name="id"
+                                type="text"
+                                placeholder="Enter your ID number"
+                                className="in_data_l"
+                                value={this.state.values.id}
+                                onChange={(event) => this.handleLoginInputChange(event)}
+                            />
                         </div>
-                        <div className="part_l">
+                        <div className="part_l part_password_l">
                             <div className="description_l">
                                 Password
                             </div>
-                            <input className="in_data_l"/>
+                            <input
+                                name="password"
+                                className="in_data_l"
+                                type={this.state.isPasswordVisibility ? "text" : "password"}
+                                placeholder="Enter your password"
+                                value={this.state.values.password}
+                                onChange={(event) => this.handleLoginInputChange(event)}
+                            />
                         </div>
+                        <input type="checkbox"
+                               id="check"
+                               className="check_l"
+                               onChange={() => this.handleChangePasswordVisibility()}
+                        />
+                        <label htmlFor="check">Show password</label>
+                        {this.state.isError && (
+                            <div className="indent_l">
+                                ID or password are incorrect
+                            </div>
+                        )}
                         <div className="repair_panel">
                             <Link to="/recovery">Forgot password? Restore it.</Link>
                         </div>
-                        <button type="submit" className="btn_l" onClick={this.goToStudentPage}>Login</button>
+                        <button type="submit" className="btn_l">Login</button>
                     </form>
                 </div>
             </div>
