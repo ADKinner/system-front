@@ -125,3 +125,12 @@
     font-size: 15px;
     height: 20px;
 }
+
+.btn_ch {
+    background: darkred;
+    border-color: darkred;
+}
+
+.panel_ch {
+    height: 440px;
+}

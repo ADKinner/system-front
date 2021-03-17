@@ -11,20 +11,15 @@ class RecoveryPasswordPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            urls: {
-                passwordUrl: 'password-confirmation/login/repair-password?email=',
-                studentUrl: 'students',
-                teacherUrl: 'teachers',
-                slash: '/'
-            },
             isLoginCorrect: false,
             isModalOpen: false,
-            isIDError: false,
+            isSuccess: false,
             isPasswordVisibility: false,
             id: '',
             data: {},
             role: -1,
-            errors: {}
+            errors: {},
+            emailError: 0
         }
     }
 
@@ -58,8 +53,11 @@ class RecoveryPasswordPage extends React.Component {
         }
         if (this.checkIDInputError()) {
             this.checkIsStudentIDCorrectOnServer(this.state.id);
-            if (Object.keys(this.state.errors).length === 0) {
+            if (this.state.emailError === 1) {
                 this.checkIsTeacherIDCorrectOnServer(this.state.id);
+            }
+            if (this.state.emailError === 2) {
+                this.state.checkIsAdminIDCorrectOnServer(this.state.id);
             }
         }
     }
@@ -107,7 +105,7 @@ class RecoveryPasswordPage extends React.Component {
     }
 
     checkIsStudentIDCorrectOnServer(id) {
-        axios.get(constants.DEFAULT_URL + constants.STUDENTS_URL + constants.SLASH + id)
+        axios.get(constants.DEFAULT_URL + constants.STUDENTS_URL + constants.SLASH + id + constants.EMAIL_URL)
             .then((response) => {
                 this.setState({
                     data: {
@@ -129,16 +127,14 @@ class RecoveryPasswordPage extends React.Component {
                         data: {
                             id: ''
                         },
-                        errors: {
-                            id: 'ID is incorrect'
-                        }
+                        emailError: 1
                     });
                 }
             })
     }
 
     checkIsTeacherIDCorrectOnServer(id) {
-        axios.get(constants.DEFAULT_URL + constants.TEACHERS_URL + constants.SLASH + id)
+        axios.get(constants.DEFAULT_URL + constants.TEACHERS_URL + constants.SLASH + id + constants.EMAIL_URL)
             .then((response) => {
                 this.setState({
                     data: {
@@ -149,6 +145,35 @@ class RecoveryPasswordPage extends React.Component {
                     isLoginCorrect: true,
                     isModalOpen: true,
                     role: 1
+                });
+                this.getConfirmPassword(response.data["email"]);
+            })
+            .catch((error) => {
+                if (error.response.status === 500) {
+                    this.goToServerErrorPage();
+                } else {
+                    this.setState({
+                        data: {
+                            id: ''
+                        },
+                        emailError: 2
+                    });
+                }
+            })
+    }
+
+    checkIsAdminIDCorrectOnServer(id) {
+        axios.get(constants.DEFAULT_URL + constants.ADMINS_URL + constants.SLASH + id + constants.EMAIL_URL)
+            .then((response) => {
+                this.setState({
+                    data: {
+                        confirmPassword: '',
+                        newPassword: '',
+                        repeatPassword: ''
+                    },
+                    isLoginCorrect: true,
+                    isModalOpen: true,
+                    role: 2
                 });
                 this.getConfirmPassword(response.data["email"]);
             })
@@ -173,11 +198,12 @@ class RecoveryPasswordPage extends React.Component {
     }
 
     getConfirmPassword(email) {
-        axios.get(constants.DEFAULT_URL + this.state.urls.passwordUrl + email)
+        axios.get(constants.DEFAULT_URL + constants.CONFIRMATION_URL + constants.PASSWORD_REPAIR_URL
+            + constants.EMAIL_URL_PARAM + email)
             .then((response) => {
                 this.setState({
                     data: {
-                        emailConfirmPassword: response.data["emailConfirmPassword"]
+                        emailConfirmPassword: response.data["password"]
                     }
                 });
             })
@@ -191,9 +217,11 @@ class RecoveryPasswordPage extends React.Component {
     changePasswordOnAccount() {
         let url = constants.DEFAULT_URL;
         if (this.state.role === 0) {
-            url += this.state.urls.studentUrl;
+            url += constants.STUDENTS_URL;
         } else if (this.state.role === 1) {
-            url += this.state.urls.teacherUrl;
+            url += constants.TEACHERS_URL;
+        } else if (this.state.role === 2) {
+            url += constants.ADMINS_URL;
         }
         axios.put(url, {
             id: this.state.id,
@@ -290,7 +318,7 @@ class RecoveryPasswordPage extends React.Component {
                                     <div className="modal_body_rm success_rec">
                                         <h1>Information</h1>
                                         <h3>
-                                            Confirmation passwords was sent to your account mail.
+                                            Confirmation password was sent to your account mail.
                                         </h3>
                                         <h3>
                                             Check it.
