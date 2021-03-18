@@ -1,8 +1,7 @@
 import React from "react";
 import axios from "axios";
 import * as constants from "../constants";
-import {goLoginPage, goProfilePage, goMainPage, goStudentGrades, goChangePasswordPage, goServerErrorPage} from "../redirect";
-import '../styles/recovery.css';
+import {goLoginPage, goProfilePage, goMainPage, goStudentGroup, goChangePasswordPage, goServerErrorPage} from "../redirect";
 import '../styles/modal.css';
 import '../styles/profile.css'
 
@@ -175,7 +174,7 @@ class ProfilePage extends React.Component {
                         <div className="sys_name">SYSTEM</div>
                         <a className="logout" onClick={() => goLoginPage(this.props)}>Logout</a>
                         <a className="active" onClick={() => goProfilePage(this.props, '/student')}>Profile</a>
-                        <a onClick={() => goStudentGrades(this.props)}>Grades</a>
+                        <a onClick={() => goStudentGroup(this.props)}>Student</a>
                         <a onClick={() => this.handleMainClick(localStorage.getItem("role"))}>Main</a>
                     </div>
                 )}

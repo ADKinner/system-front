@@ -11,8 +11,8 @@ export function goMainPage(props, url) {
     props.history.push(url);
 }
 
-export function goStudentGrades(props) {
-    props.history.push("student/grades");
+export function goStudentGroup(props) {
+    props.history.push("student/group");
 }
 
 export function goChangePasswordPage(props, email) {

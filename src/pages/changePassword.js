@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import {goLoginPage, goMainPage, goProfilePage, goStudentGrades, goServerErrorPage} from "../redirect";
+import {goLoginPage, goMainPage, goProfilePage, goStudentGroup, goServerErrorPage} from "../redirect";
 import validateRecPasswordsInput from "../validate/validateRecPasswordsInput";
 import * as constants from '../constants';
 import '../styles/recovery.css';
@@ -178,7 +178,7 @@ class ChangePasswordPage extends React.Component {
                         <div className="sys_name">SYSTEM</div>
                         <a className="logout" onClick={() => goLoginPage(this.props)}>Logout</a>
                         <a onClick={() => this.goToProfilePage()}>Profile</a>
-                        <a onClick={() => goStudentGrades(this.props)}>Grades</a>
+                        <a onClick={() => goStudentGroup(this.props)}>Group</a>
                         <a onClick={() => this.handleMainClick(localStorage.getItem("role"))}>Main</a>
                     </div>
                 )}
