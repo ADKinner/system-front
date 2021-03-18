@@ -1,13 +1,11 @@
 import React, {Component} from "react";
 import {BrowserRouter as Router, Route, Switch, Redirect} from "react-router-dom";
 import LoginPage from "./pages/login";
-import StudentPage from "./pages/student";
-import TeacherPage from "./pages/teacher";
-import AdminPage from "./pages/admin";
+import StudentPage from "./pages/student/student";
+import TeacherPage from "./pages/teacher/teacher";
+import AdminPage from "./pages/admin/admin";
 import ProfilePage from "./pages/profile";
 import RegisterPage from "./pages/register";
-import SuccessRegistrationPage from "./pages/successRegistration";
-import SuccessPasswordRepairPage from "./pages/successPasswordRepair";
 import RecoveryPasswordPage from "./pages/recovery";
 import ChangePasswordPage from "./pages/changePassword";
 import NotFoundErrorPage from "./pages/404";
@@ -27,10 +25,8 @@ class App extends Component {
                 <Route exact path="/teacher/profile" component={ProfilePage}/>
                 <Route exact path="/admin/profile" component={ProfilePage}/>
                 <Route exact path="/register" component={RegisterPage}/>
-                <Route exact path="/register/success" component={SuccessRegistrationPage}/>
-                <Route exact path="/recovery/success" component={SuccessPasswordRepairPage}/>
                 <Route exact path="/recovery" component={RecoveryPasswordPage}/>
-                <Route exact path="/change/password" component={ChangePasswordPage}/>
+                <Route exact path="/change-password" component={ChangePasswordPage}/>
                 <Route exact path="/404" component={NotFoundErrorPage}/>
                 <Route exact path="/500" component={ServerErrorPage}/>
                 <Redirect exact from="/" to="/login"/>

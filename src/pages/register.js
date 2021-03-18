@@ -1,9 +1,12 @@
 import React from "react";
 import axios from 'axios';
 import validateRegInput from "../validate/validateRegInput";
+import {goServerErrorPage} from "../redirect";
+import {Link} from "react-router-dom";
 import * as constants from '../constants';
 import '../styles/register.css';
 import '../styles/modal.css';
+import '../styles/success.css';
 
 class RegisterPage extends React.Component {
 
@@ -15,6 +18,7 @@ class RegisterPage extends React.Component {
             isPasswordConfirmed: false,
             isPasswordVisibility: false,
             isReady: false,
+            isSuccess: false,
             confirmPassword: '',
             values: {
                 studentID: '',
@@ -108,7 +112,7 @@ class RegisterPage extends React.Component {
             })
             .catch((error) => {
                 if (error.response.status === 500) {
-                    this.goToServerErrorPage();
+                    goServerErrorPage(this.props);
                 } else {
                     this.setState({
                         isInputConfirmed: false
@@ -138,7 +142,7 @@ class RegisterPage extends React.Component {
             })
             .catch((error) => {
                 if (error.response.status === 500) {
-                    this.goToServerErrorPage();
+                    goServerErrorPage(this.props);
                 }
             });
     }
@@ -155,169 +159,177 @@ class RegisterPage extends React.Component {
         })
             .then((response) => {
                 if (this.state.student.id === response.data["id"]) {
-                    this.goToSuccessPage();
+                    this.setState({
+                        isSuccess: true
+                    })
                 }
             })
             .catch((error) => {
                 if (error.response.status === 500) {
-                    this.goToServerErrorPage();
+                    goServerErrorPage(this.props);
                 }
             });
     }
 
-    goToSuccessPage() {
-        this.props.history.push('/register/success');
-    }
-
-    goToServerErrorPage() {
-        this.props.history.push('/500');
-    }
-
     render() {
-        return (
-            <div className="main_r">
-                <div className="small_panel_r">
-                    <svg className="img_r"/>
-                </div>
-                <div className="panel_r">
-                    <div className="begin_r">
-                        Registration in System
+        if (this.state.isSuccess) {
+            return (
+                <div className="main_success">
+                    <div className="panel_success">
+                        <svg className="img_success"/>
                     </div>
-                    <form className="reg_r" onSubmit={(event) => this.handleSubmitRegInput(event)}>
-                        <div className="part_r">
-                            <div className="description_r">
-                                Student ID number
-                            </div>
-                            <input
-                                name="studentID"
-                                className="in_data_r"
-                                type="text"
-                                placeholder="Enter your SID number"
-                                value={this.state.values.studentID}
-                                onChange={(event) => this.handleRegInputChange(event)}
-                            />
+                    <div className="text_success">
+                        <h1>Account successfully created</h1>
+                        <Link to="/login">Click to go to login page.</Link>
+                    </div>
+                </div>
+            )
+        } else {
+            return (
+                <div className="main_r">
+                    <div className="small_panel_r">
+                        <svg className="img_r"/>
+                    </div>
+                    <div className="panel_r">
+                        <div className="begin_r">
+                            Registration in System
                         </div>
-                        {this.state.errors.studentID && (
-                            <div className="indent_r">
-                                {this.state.errors.studentID}
+                        <form className="reg_r" onSubmit={(event) => this.handleSubmitRegInput(event)}>
+                            <div className="part_r">
+                                <div className="description_r">
+                                    Student ID number
+                                </div>
+                                <input
+                                    name="studentID"
+                                    className="in_data_r"
+                                    type="text"
+                                    placeholder="Enter your SID number"
+                                    value={this.state.values.studentID}
+                                    onChange={(event) => this.handleRegInputChange(event)}
+                                />
                             </div>
-                        )}
-                        <div className="part_r">
-                            <div className="description_r">
-                                Student ID confirmation password
+                            {this.state.errors.studentID && (
+                                <div className="indent_r">
+                                    {this.state.errors.studentID}
+                                </div>
+                            )}
+                            <div className="part_r">
+                                <div className="description_r">
+                                    Student ID confirmation password
+                                </div>
+                                <input
+                                    name="studentIDPassword"
+                                    className="in_data_r"
+                                    type={this.state.isPasswordVisibility ? "text" : "password"}
+                                    placeholder="Enter your SID confirmation password"
+                                    value={this.state.values.studentIDPassword}
+                                    onChange={(event) => this.handleRegInputChange(event)}
+                                />
                             </div>
-                            <input
-                                name="studentIDPassword"
-                                className="in_data_r"
-                                type={this.state.isPasswordVisibility ? "text" : "password"}
-                                placeholder="Enter your SID confirmation password"
-                                value={this.state.values.studentIDPassword}
-                                onChange={(event) => this.handleRegInputChange(event)}
+                            {this.state.errors.studentIDPassword && (
+                                <div className="indent_r">
+                                    {this.state.errors.studentIDPassword}
+                                </div>
+                            )}
+                            <div className="part_pass_r">
+                                <div className="description_r">
+                                    Password
+                                </div>
+                                <input
+                                    name="password"
+                                    className="in_data_r"
+                                    type={this.state.isPasswordVisibility ? "text" : "password"}
+                                    placeholder="Enter password"
+                                    title="≥ one number, ≥ one lower and uppercase letter and ≥ 8 characters"
+                                    value={this.state.values.password}
+                                    onChange={(event) => this.handleRegInputChange(event)}
+                                />
+                                <div className="small_indent"/>
+                                <input
+                                    name="confirmPassword"
+                                    className="in_data_r"
+                                    type={this.state.isPasswordVisibility ? "text" : "password"}
+                                    placeholder="Reenter password"
+                                    value={this.state.values.confirmPassword}
+                                    onChange={(event) => this.handleRegInputChange(event)}
+                                />
+                            </div>
+                            <input type="checkbox"
+                                   id="check"
+                                   className="check_rm"
+                                   onChange={() => this.handleChangePasswordVisibility()}
                             />
-                        </div>
-                        {this.state.errors.studentIDPassword && (
-                            <div className="indent_r">
-                                {this.state.errors.studentIDPassword}
-                            </div>
-                        )}
-                        <div className="part_pass_r">
-                            <div className="description_r">
-                                Password
-                            </div>
-                            <input
-                                name="password"
-                                className="in_data_r"
-                                type={this.state.isPasswordVisibility ? "text" : "password"}
-                                placeholder="Enter password"
-                                title="≥ one number, ≥ one lower and uppercase letter and ≥ 8 characters"
-                                value={this.state.values.password}
-                                onChange={(event) => this.handleRegInputChange(event)}
-                            />
-                            <div className="small_indent"/>
-                            <input
-                                name="confirmPassword"
-                                className="in_data_r"
-                                type={this.state.isPasswordVisibility ? "text" : "password"}
-                                placeholder="Reenter password"
-                                value={this.state.values.confirmPassword}
-                                onChange={(event) => this.handleRegInputChange(event)}
-                            />
-                        </div>
-                        <input type="checkbox"
-                               id="check"
-                               className="check_rm"
-                               onChange={() => this.handleChangePasswordVisibility()}
-                        />
-                        <label htmlFor="check">Show passwords</label>
-                        {this.state.errors.password && (
-                            <div className="indent_r_2">
-                                {this.state.errors.password}
-                            </div>
-                        )}
-                        <button type="submit" className="btn_r">Confirm</button>
-                    </form>
-                    {this.state.isSubmitted && this.state.isInputConfirmed && this.state.isReady &&
-                    (
-                        <React.Fragment>
-                            {
-                                <div className="modal_rm">
-                                    <div className="modal_body_rm success">
-                                        <h1>Verification</h1>
-                                        <h3>
-                                            A message with a code has been sent to your email, enter it to complete
-                                            registration.
-                                        </h3>
-                                        <div>
-                                            <input
-                                                name="email_password"
-                                                className="input_rm"
-                                                type="text"
-                                                value={this.state.values.emailConfirmPassword}
-                                                onChange={(event) =>
-                                                    this.handleConfirmPasswordInputChange(event)}
-                                            />
-                                            <button
-                                                className="btn_rm margin_btn_rm"
-                                                onClick={() => this.checkConfirmPassword()}
-                                            >
-                                                Send
-                                            </button>
+                            <label htmlFor="check">Show passwords</label>
+                            {this.state.errors.password && (
+                                <div className="indent_r_2">
+                                    {this.state.errors.password}
+                                </div>
+                            )}
+                            <button type="submit" className="btn_r">Confirm</button>
+                        </form>
+                        {this.state.isSubmitted && this.state.isInputConfirmed && this.state.isReady &&
+                        (
+                            <React.Fragment>
+                                {
+                                    <div className="modal_rm">
+                                        <div className="modal_body_rm success">
+                                            <h1>Verification</h1>
+                                            <h3>
+                                                A message with a code has been sent to your email, enter it to complete
+                                                registration.
+                                            </h3>
+                                            <div>
+                                                <input
+                                                    name="email_password"
+                                                    className="input_rm"
+                                                    type="text"
+                                                    value={this.state.values.emailConfirmPassword}
+                                                    onChange={(event) =>
+                                                        this.handleConfirmPasswordInputChange(event)}
+                                                />
+                                                <button
+                                                    className="btn_rm margin_btn_rm"
+                                                    onClick={() => this.checkConfirmPassword()}
+                                                >
+                                                    Send
+                                                </button>
+                                            </div>
+                                            <div>
+                                                <button
+                                                    className="btn_rm btn_rm_success_size"
+                                                    onClick={() => this.handleCloseButtonClick()}
+                                                >
+                                                    Close
+                                                </button>
+                                            </div>
                                         </div>
-                                        <div>
+                                    </div>
+                                }
+                            </React.Fragment>
+                        )}
+                        {this.state.isSubmitted && !this.state.isInputConfirmed && this.state.isReady &&
+                        (
+                            <React.Fragment>
+                                {
+                                    <div className="modal_rm">
+                                        <div className="modal_body_rm">
+                                            <h1>Error</h1>
+                                            <h3>Input data is incorrect or such SID has been already registered.</h3>
                                             <button
-                                                className="btn_rm btn_rm_success_size"
+                                                className="btn_rm"
                                                 onClick={() => this.handleCloseButtonClick()}
                                             >
                                                 Close
                                             </button>
                                         </div>
                                     </div>
-                                </div>
-                            }
-                        </React.Fragment>
-                    )}
-                    {this.state.isSubmitted && !this.state.isInputConfirmed && this.state.isReady &&
-                    (
-                        <React.Fragment>
-                            {
-                                <div className="modal_rm">
-                                    <div className="modal_body_rm">
-                                        <h1>Error</h1>
-                                        <h3>Input data is incorrect or such SID has been already registered.</h3>
-                                        <button
-                                            className="btn_rm"
-                                            onClick={() => this.handleCloseButtonClick()}
-                                        >
-                                            Close
-                                        </button>
-                                    </div>
-                                </div>
-                            }
-                        </React.Fragment>
-                    )}
+                                }
+                            </React.Fragment>
+                        )}
+                    </div>
                 </div>
-            </div>
-        )
+            )
+        }
     }
 }
 

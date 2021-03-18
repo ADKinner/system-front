@@ -1,10 +1,12 @@
 import React from "react";
 import axios from "axios";
+import {Link} from "react-router-dom";
 import validateRecIDInput from "../validate/validateRecIDInput";
 import validateRecPasswordsInput from "../validate/validateRecPasswordsInput";
 import * as constants from '../constants';
 import '../styles/recovery.css';
 import '../styles/modal.css';
+import '../styles/success.css';
 
 class RecoveryPasswordPage extends React.Component {
 
@@ -228,7 +230,9 @@ class RecoveryPasswordPage extends React.Component {
             password: this.state.data.newPassword
         })
             .then(() => {
-                this.goToSuccessPage();
+                this.setState({
+                    isSuccess: true
+                })
             })
             .catch((error) => {
                 if (error.response.status === 500) {
@@ -237,139 +241,149 @@ class RecoveryPasswordPage extends React.Component {
             })
     }
 
-    goToSuccessPage() {
-        this.props.history.push('/recovery/success');
-    }
-
     goToServerErrorPage() {
         this.props.history.push('/500');
     }
 
     render() {
-        if (this.state.isLoginCorrect) {
+        if (this.state.isSuccess) {
             return (
-                <div className="main_rec">
-                    <div className="small_panel_rec">
-                        <svg className="img_rec"/>
+                <div className="main_success">
+                    <div className="panel_success">
+                        <svg className="img_success"/>
                     </div>
-                    <div className="panel_second_rec">
-                        <div className="begin_rec">
-                            Password recovery in System
-                        </div>
-                        <form className="login_rec" onSubmit={(event) => this.handleSubmitPasswordsInput(event)}>
-                            <div className="part_rec">
-                                <div className="description_rec">
-                                    Confirm password
-                                </div>
-                                <input
-                                    name="confirmPassword"
-                                    className="in_data_rec"
-                                    type={this.state.isPasswordVisibility ? "text" : "password"}
-                                    placeholder="Enter confirmation password"
-                                    value={this.state.data.confirmPassword}
-                                    onChange={(event) => this.handlePasswordsInputChange(event)}
-                                />
-                            </div>
-                            {this.state.errors.confirmPassword && (
-                                <div className="indent_r">
-                                    {this.state.errors.confirmPassword}
-                                </div>
-                            )}
-                            <div className="part_pass_rec">
-                                <div className="description_rec">
-                                    New password
-                                </div>
-                                <input
-                                    name="newPassword"
-                                    className="in_data_rec"
-                                    type={this.state.isPasswordVisibility ? "text" : "password"}
-                                    placeholder="Enter new password"
-                                    value={this.state.data.newPassword}
-                                    onChange={(event) => this.handlePasswordsInputChange(event)}
-                                />
-                                <div className="small_indent_rec"/>
-                                <input
-                                    name="repeatPassword"
-                                    className="in_data_rec"
-                                    type={this.state.isPasswordVisibility ? "text" : "password"}
-                                    placeholder="Enter new password"
-                                    value={this.state.data.repeatPassword}
-                                    onChange={(event) => this.handlePasswordsInputChange(event)}
-                                />
-                            </div>
-                            <input type="checkbox"
-                                   id="check"
-                                   className="check_rm"
-                                   onChange={() => this.handleChangePasswordVisibility()}
-                            />
-                            <label htmlFor="check">Show passwords</label>
-                            {this.state.errors.newPassword && (
-                                <div className="indent_rec_2">
-                                    {this.state.errors.newPassword}
-                                </div>
-                            )}
-                            <button type="submit" className="btn_rec">Finish recovery</button>
-                        </form>
+                    <div className="text_success">
+                        <h1>Password successfully change</h1>
+                        <Link to="/login">Click to go to login page.</Link>
                     </div>
-                    {this.state.isModalOpen && (
-                        <React.Fragment>
-                            {
-                                <div className="modal_rm">
-                                    <div className="modal_body_rm success_rec">
-                                        <h1>Information</h1>
-                                        <h3>
-                                            Confirmation password was sent to your account mail.
-                                        </h3>
-                                        <h3>
-                                            Check it.
-                                        </h3>
-                                        <button
-                                            className="btn_rm"
-                                            onClick={() => this.handleCloseButtonClick()}
-                                        >
-                                            OK
-                                        </button>
-                                    </div>
-                                </div>
-                            }
-                        </React.Fragment>
-                    )}
                 </div>
             )
         } else {
-            return (
-                <div className="main_rec">
-                    <div className="small_panel_rec">
-                        <svg className="img_rec"/>
-                    </div>
-                    <div className="panel_first_rec">
-                        <div className="begin_rec">
-                            Password recovery in System
+            if (this.state.isLoginCorrect) {
+                return (
+                    <div className="main_rec">
+                        <div className="small_panel_rec">
+                            <svg className="img_rec"/>
                         </div>
-                        <form className="login_rec" onSubmit={(event) => this.handleSubmitIDInput(event)}>
-                            <div className="part_rec">
-                                <div className="description_rec">
-                                    User ID
-                                </div>
-                                <input
-                                    name="id"
-                                    className="in_data_rec"
-                                    type="text"
-                                    placeholder="Enter your ID number"
-                                    value={this.state.id}
-                                    onChange={(event) => this.handleIDInputChange(event)}
-                                />
+                        <div className="panel_second_rec">
+                            <div className="begin_rec">
+                                Password recovery in System
                             </div>
-                            {this.state.errors.id && (
-                                <div className="indent_rec">
-                                    {this.state.errors.id}
+                            <form className="login_rec" onSubmit={(event) => this.handleSubmitPasswordsInput(event)}>
+                                <div className="part_rec">
+                                    <div className="description_rec">
+                                        Confirm password
+                                    </div>
+                                    <input
+                                        name="confirmPassword"
+                                        className="in_data_rec"
+                                        type={this.state.isPasswordVisibility ? "text" : "password"}
+                                        placeholder="Enter confirmation password"
+                                        value={this.state.data.confirmPassword}
+                                        onChange={(event) => this.handlePasswordsInputChange(event)}
+                                    />
                                 </div>
-                            )}
-                            <button type="submit" className="btn_rec first_indent">Start recovery</button>
-                        </form>
+                                {this.state.errors.confirmPassword && (
+                                    <div className="indent_r">
+                                        {this.state.errors.confirmPassword}
+                                    </div>
+                                )}
+                                <div className="part_pass_rec">
+                                    <div className="description_rec">
+                                        New password
+                                    </div>
+                                    <input
+                                        name="newPassword"
+                                        className="in_data_rec"
+                                        type={this.state.isPasswordVisibility ? "text" : "password"}
+                                        placeholder="Enter new password"
+                                        value={this.state.data.newPassword}
+                                        onChange={(event) => this.handlePasswordsInputChange(event)}
+                                    />
+                                    <div className="small_indent_rec"/>
+                                    <input
+                                        name="repeatPassword"
+                                        className="in_data_rec"
+                                        type={this.state.isPasswordVisibility ? "text" : "password"}
+                                        placeholder="Enter new password"
+                                        value={this.state.data.repeatPassword}
+                                        onChange={(event) => this.handlePasswordsInputChange(event)}
+                                    />
+                                </div>
+                                <input type="checkbox"
+                                       id="check"
+                                       className="check_rm"
+                                       onChange={() => this.handleChangePasswordVisibility()}
+                                />
+                                <label htmlFor="check">Show passwords</label>
+                                {this.state.errors.newPassword && (
+                                    <div className="indent_rec_2">
+                                        {this.state.errors.newPassword}
+                                    </div>
+                                )}
+                                <button type="submit" className="btn_rec">Finish recovery</button>
+                            </form>
+                        </div>
+                        {this.state.isModalOpen && (
+                            <React.Fragment>
+                                {
+                                    <div className="modal_rm">
+                                        <div className="modal_body_rm success_rec">
+                                            <h1>Information</h1>
+                                            <h3>
+                                                Confirmation password was sent to your account mail.
+                                            </h3>
+                                            <h3>
+                                                Check it.
+                                            </h3>
+                                            <button
+                                                className="btn_rm"
+                                                onClick={() => this.handleCloseButtonClick()}
+                                            >
+                                                OK
+                                            </button>
+                                        </div>
+                                    </div>
+                                }
+                            </React.Fragment>
+                        )}
                     </div>
-                </div>
-            )
+                )
+            } else {
+                return (
+                    <div className="main_rec">
+                        <div className="small_panel_rec">
+                            <svg className="img_rec"/>
+                        </div>
+                        <div className="panel_first_rec">
+                            <div className="begin_rec">
+                                Password recovery in System
+                            </div>
+                            <form className="login_rec" onSubmit={(event) => this.handleSubmitIDInput(event)}>
+                                <div className="part_rec">
+                                    <div className="description_rec">
+                                        User ID
+                                    </div>
+                                    <input
+                                        name="id"
+                                        className="in_data_rec"
+                                        type="text"
+                                        placeholder="Enter your ID number"
+                                        value={this.state.id}
+                                        onChange={(event) => this.handleIDInputChange(event)}
+                                    />
+                                </div>
+                                {this.state.errors.id && (
+                                    <div className="indent_rec">
+                                        {this.state.errors.id}
+                                    </div>
+                                )}
+                                <button type="submit" className="btn_rec first_indent">Start recovery</button>
+                            </form>
+                        </div>
+                    </div>
+                )
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import axios from "axios";
+import {goMainPage, goServerErrorPage} from "../redirect";
 import * as constants from '../constants';
 import '../styles/login.css';
 
@@ -54,7 +55,7 @@ class LoginPage extends React.Component {
             })
             .catch((error) => {
                 if (error.response.status === 500) {
-                    this.goToServerErrorPage();
+                    goServerErrorPage(this.props);
                 } else if (error.response.status === 400) {
                     this.setState({
                         isError: true
@@ -65,11 +66,11 @@ class LoginPage extends React.Component {
 
     goToUserPageByRole(role) {
         if (role.localeCompare(constants.STUDENT_ROLE)) {
-            this.props.history.push('/student');
+            goMainPage(this.props, '/student');
         } else if (role.localeCompare(constants.TEACHER_ROLE)) {
-            this.props.history.push('/teacher');
+            goMainPage(this.props, '/teacher');
         } else if (role.localeCompare(constants.ADMIN_ROLE)) {
-            this.props.history.push('/admin');
+            goMainPage(this.props, '/admin');
         }
     }
 

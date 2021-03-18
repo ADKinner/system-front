@@ -67,7 +67,7 @@
     margin-top: 100px;
     margin-left: 200px;
     width: 1500px;
-    height: 700px;
+    height: 680px;
 }
 
 .user_panel {
@@ -82,10 +82,9 @@
 }
 
 .user_details_panel {
-    padding-top: -100px !important;
     display: inline-block;
     margin-left: 200px;
-    height: 380px;
+    height: 300px;
     width: 400px;
     border-radius: 20px;
     background-color: sandybrown;
@@ -140,14 +139,19 @@
 
 .btn_pr {
     margin-top: 10px;
-    height: 50px;
+    height: 30px;
     width: 350px;
     margin-left: 25px;
     margin-right: 35px;
-    border-radius: 10px;
+    border-radius: 7px;
     text-align: center;
     color: antiquewhite;
-    background: saddlebrown;
-    border: 3px solid saddlebrown;
-    font-size: 17px;
+    background: #38629C;
+    border: 3px solid #38629C;
+    font-size: 15px;
+}
+
+.btn_pr:hover {
+    background-color: #4E3524;
+    border-color: #4E3524;
 }

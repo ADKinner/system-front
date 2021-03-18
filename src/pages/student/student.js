@@ -1,5 +1,5 @@
 import React from "react";
-import '../styles/student.css'
+import '../../styles/student.css'
 
 class StudentPage extends React.Component {
 

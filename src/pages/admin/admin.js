@@ -1,5 +1,5 @@
 import React from "react";
-import '../styles/admin.css'
+import '../../styles/admin.css'
 
 class AdminPage extends React.Component {
 

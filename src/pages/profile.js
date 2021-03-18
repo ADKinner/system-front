@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import * as constants from "../constants";
+import {goLoginPage, goProfilePage, goMainPage, goStudentGrades, goChangePasswordPage, goServerErrorPage} from "../redirect";
 import '../styles/recovery.css';
 import '../styles/modal.css';
 import '../styles/profile.css'
@@ -36,8 +37,8 @@ class ProfilePage extends React.Component {
 
     componentDidMount() {
         const role = localStorage.getItem("role");
-        if (role === null) {
-            this.goToLoginPage();
+        if (localStorage.length === 0 || role === null) {
+            goLoginPage(this.props);
         } else {
             switch (role) {
                 case "ROLE_STUDENT":
@@ -53,7 +54,7 @@ class ProfilePage extends React.Component {
                     this.getAdminData();
                     break;
                 default:
-                    this.goToLoginPage();
+                    goLoginPage(this.props);
                     break;
             }
         }
@@ -84,9 +85,9 @@ class ProfilePage extends React.Component {
             .catch((error) => {
                 console.log(error);
                 if (error.response.status === 500) {
-                    this.goToServerErrorPage();
+                    goServerErrorPage(this.props);
                 } else if (error.response.status === 401) {
-                    this.goToLoginPage();
+                    goLoginPage(this.props);
                 }
             });
     }
@@ -116,9 +117,9 @@ class ProfilePage extends React.Component {
             .catch((error) => {
                 console.log(error);
                 if (error.response.status === 500) {
-                    this.goToServerErrorPage();
+                    goServerErrorPage(this.props);
                 } else if (error.response.status === 401) {
-                    this.goToLoginPage();
+                    goLoginPage(this.props);
                 }
             });
     }
@@ -148,51 +149,21 @@ class ProfilePage extends React.Component {
             .catch((error) => {
                 console.log(error);
                 if (error.response.status === 500) {
-                    this.goToServerErrorPage();
+                    goServerErrorPage(this.props);
                 } else if (error.response.status === 401) {
-                    this.goToLoginPage();
+                    goLoginPage(this.props);
                 }
             });
     }
 
-    handleLogoutClick() {
-        this.goToLoginPage()
-    }
-
-    handleProfileClick() {
-        this.props.history.push('/student/profile');
-    }
-
-    handleGradesClick() {
-        this.props.history.push('/student/grades');
-    }
-
-    handleGroupClick() {
-        this.props.history.push('/student/group');
-    }
-
     handleMainClick(role) {
         if (role.localeCompare(constants.STUDENT_ROLE)) {
-            this.props.history.push('/student');
+            goMainPage(this.props, '/student');
         } else if (role.localeCompare(constants.TEACHER_ROLE)) {
-            this.props.history.push('/teacher');
+            goMainPage(this.props, '/teacher');
         } else if (role.localeCompare(constants.ADMIN_ROLE)) {
-            this.props.history.push('/admin');
+            goMainPage(this.props, '/admin');
         }
-    }
-
-    goToLoginPage() {
-        //localStorage.clear();
-        this.props.history.push('/login');
-    }
-
-    goToChangePasswordPage() {
-        localStorage.setItem("email", this.state.user.email);
-        this.props.history.push('/change/password');
-    }
-
-    goToChangeEmailPage() {
-        this.props.history.push('/change/email');
     }
 
     render() {
@@ -202,10 +173,9 @@ class ProfilePage extends React.Component {
                     <div className="bar_p">
                         <div className="sys_image"/>
                         <div className="sys_name">SYSTEM</div>
-                        <a className="logout" onClick={() => this.handleLogoutClick()}>Logout</a>
-                        <a className="active" onClick={() => this.handleProfileClick()}>Profile</a>
-                        <a onClick={() => this.handleGradesClick()}>Grades</a>
-                        <a onClick={() => this.handleGroupClick()}>Group</a>
+                        <a className="logout" onClick={() => goLoginPage(this.props)}>Logout</a>
+                        <a className="active" onClick={() => goProfilePage(this.props, '/student')}>Profile</a>
+                        <a onClick={() => goStudentGrades(this.props)}>Grades</a>
                         <a onClick={() => this.handleMainClick(localStorage.getItem("role"))}>Main</a>
                     </div>
                 )}
@@ -213,8 +183,8 @@ class ProfilePage extends React.Component {
                     <div className="bar_p">
                         <div className="sys_image"/>
                         <div className="sys_name">SYSTEM</div>
-                        <a className="logout" onClick={() => this.handleLogoutClick()}>Logout</a>
-                        <a className="active" onClick={() => this.handleProfileClick()}>Profile</a>
+                        <a className="logout" onClick={() => goLoginPage(this.props)}>Logout</a>
+                        <a className="active" onClick={() => goProfilePage(this.props, '/teacher')}>Profile</a>
                         <a onClick={() => this.handleMainClick(localStorage.getItem("role"))}>Main</a>
                     </div>
                 )}
@@ -222,8 +192,8 @@ class ProfilePage extends React.Component {
                     <div className="bar_p">
                         <div className="sys_image"/>
                         <div className="sys_name">SYSTEM</div>
-                        <a className="logout" onClick={() => this.handleLogoutClick()}>Logout</a>
-                        <a className="active" onClick={() => this.handleProfileClick()}>Profile</a>
+                        <a className="logout" onClick={() => goLoginPage(this.props)}>Logout</a>
+                        <a className="active" onClick={() => goProfilePage(this.props, '/admin')}>Profile</a>
                         <a onClick={() => this.handleMainClick(localStorage.getItem("role"))}>Main</a>
                     </div>
                 )}
@@ -274,15 +244,9 @@ class ProfilePage extends React.Component {
                         )}
                         <button
                             className="btn_pr"
-                            onClick={() => this.goToChangePasswordPage()}
+                            onClick={() => goChangePasswordPage(this.props, this.state.user.email)}
                         >
                             Change password
-                        </button>
-                        <button
-                            className="btn_pr"
-                            onClick={() => this.goToChangeEmailPage()}
-                        >
-                            Change email
                         </button>
                     </div>
                 </div>

@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import {goLoginPage, goMainPage, goProfilePage, goStudentGrades, goServerErrorPage} from "../redirect";
 import validateRecPasswordsInput from "../validate/validateRecPasswordsInput";
 import * as constants from '../constants';
 import '../styles/recovery.css';
@@ -11,20 +12,34 @@ class ChangePasswordPage extends React.Component {
         super(props);
         this.state = {
             isModalOpen: true,
-            isIDError: false,
             isPasswordVisibility: false,
-            id: '',
             data: {},
-            errors: {}
+            errors: {},
+            isStudent: false,
+            isTeacher: false,
+            isAdmin: false
         }
     }
 
     componentDidMount() {
         const role = localStorage.getItem("role");
-        if (role === null) {
-            this.goToLoginPage();
+        if (localStorage.length === 0 || role === null) {
+            goLoginPage(this.props);
         } else {
-            console.log(localStorage.getItem("email"));
+            switch (role) {
+                case "ROLE_STUDENT":
+                    this.setState({isStudent: true});
+                    break;
+                case "ROLE_TEACHER":
+                    this.setState({isTeacher: true});
+                    break;
+                case "ROLE_ADMIN":
+                    this.setState({isAdmin: true});
+                    break;
+                default:
+                    goLoginPage(this.props);
+                    break;
+            }
             this.getConfirmPassword(localStorage.getItem("email"));
         }
     }
@@ -99,9 +114,9 @@ class ChangePasswordPage extends React.Component {
             })
             .catch((error) => {
                 if (error.response.status === 500) {
-                    this.goToServerErrorPage();
+                    goServerErrorPage(this.props);
                 } else if (error.response.status === 401) {
-                    this.goToLoginPage();
+                    goLoginPage(this.props);
                 }
             });
     }
@@ -127,7 +142,7 @@ class ChangePasswordPage extends React.Component {
             })
             .catch((error) => {
                 if (error.response.status === 500) {
-                    this.goToServerErrorPage();
+                    goServerErrorPage(this.props);
                 }
             })
     }
@@ -136,26 +151,55 @@ class ChangePasswordPage extends React.Component {
         localStorage.removeItem("email");
         const role = localStorage.getItem("role");
         if (role.localeCompare(constants.STUDENT_ROLE)) {
-            this.props.history.push('/student/profile');
+            goProfilePage(this.props, '/student');
         } else if (role.localeCompare(constants.TEACHER_ROLE)) {
-            this.props.history.push('/teacher/profile');
+            goProfilePage(this.props, '/student');
         } else if (role.localeCompare(constants.ADMIN_ROLE)) {
-            this.props.history.push('/admin/profile');
+            goProfilePage(this.props, '/student');
         }
     }
 
-    goToServerErrorPage() {
-        this.props.history.push('/500');
-    }
-
-    goToLoginPage() {
-        localStorage.clear();
-        this.props.history.push('/login');
+    handleMainClick(role) {
+        if (role.localeCompare(constants.STUDENT_ROLE)) {
+            goMainPage(this.props, '/student');
+        } else if (role.localeCompare(constants.TEACHER_ROLE)) {
+            goMainPage(this.props, '/teacher');
+        } else if (role.localeCompare(constants.ADMIN_ROLE)) {
+            goMainPage(this.props, '/admin');
+        }
     }
 
     render() {
         return (
             <div className="main_rec">
+                {this.state.isStudent && (
+                    <div className="bar_p">
+                        <div className="sys_image"/>
+                        <div className="sys_name">SYSTEM</div>
+                        <a className="logout" onClick={() => goLoginPage(this.props)}>Logout</a>
+                        <a onClick={() => this.goToProfilePage()}>Profile</a>
+                        <a onClick={() => goStudentGrades(this.props)}>Grades</a>
+                        <a onClick={() => this.handleMainClick(localStorage.getItem("role"))}>Main</a>
+                    </div>
+                )}
+                {this.state.isTeacher && (
+                    <div className="bar_p">
+                        <div className="sys_image"/>
+                        <div className="sys_name">SYSTEM</div>
+                        <a className="logout" onClick={() => goLoginPage(this.props)}>Logout</a>
+                        <a onClick={() => this.goToProfilePage()}>Profile</a>
+                        <a onClick={() => this.handleMainClick(localStorage.getItem("role"))}>Main</a>
+                    </div>
+                )}
+                {this.state.isAdmin && (
+                    <div className="bar_p">
+                        <div className="sys_image"/>
+                        <div className="sys_name">SYSTEM</div>
+                        <a className="logout" onClick={() => goLoginPage(this.props)}>Logout</a>
+                        <a onClick={() => this.goToProfilePage()}>Profile</a>
+                        <a onClick={() => this.handleMainClick(localStorage.getItem("role"))}>Main</a>
+                    </div>
+                )}
                 <div className="small_panel_rec">
                     <svg className="img_rec"/>
                 </div>
@@ -216,7 +260,6 @@ class ChangePasswordPage extends React.Component {
                             </div>
                         )}
                         <button type="submit" className="btn_rec">Change password</button>
-                        <button onClick={()=>this.goToProfilePage()} className="btn_rec btn_ch">Return</button>
                     </form>
                 </div>
                 {this.state.isModalOpen && (
@@ -256,7 +299,7 @@ class ChangePasswordPage extends React.Component {
                                         className="btn_rm"
                                         onClick={() => this.goToProfilePage()}
                                     >
-                                        Back
+                                        Return
                                     </button>
                                 </div>
                             </div>
