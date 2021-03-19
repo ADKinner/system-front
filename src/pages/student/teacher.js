@@ -9,14 +9,14 @@ import {
     goStudentTeacherPage
 } from "../../redirect";
 import * as constants from "../../constants";
-import '../../styles/student/group.css';
+import '../../styles/student/teacher.css';
 
-class StudentGroupPage extends React.Component {
+class StudentTeacherPage extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            students: [],
+            teachers: [],
             isEmpty: true
         }
     }
@@ -39,7 +39,7 @@ class StudentGroupPage extends React.Component {
 
     getStudentData() {
         axios.get(constants.DEFAULT_URL + constants.STUDENTS_URL + constants.SLASH + localStorage.getItem("id")
-            + constants.GROUP_URL, {
+            + constants.TEACHERS_URL, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -47,7 +47,7 @@ class StudentGroupPage extends React.Component {
             .then((response) => {
                 this.setState({
                     isEmpty: false,
-                    students: response.data
+                    teachers: response.data
                 });
                 console.log(this.state);
             })
@@ -64,8 +64,8 @@ class StudentGroupPage extends React.Component {
     }
 
     renderTableData() {
-        return this.state.students.map((student, index) => {
-            const {id, surname, name, patronymic, email} = student
+        return this.state.teachers.map((teacher, index) => {
+            const {id, surname, name, patronymic, email, subjectName} = teacher
             return (
                 <tr key={id}>
                     <td>{index + 1}</td>
@@ -73,13 +73,14 @@ class StudentGroupPage extends React.Component {
                     <td>{name}</td>
                     <td>{patronymic}</td>
                     <td>{email}</td>
+                    <td>{subjectName}</td>
                 </tr>
             )
         })
     }
 
     renderTableHeader() {
-        let header = Object.keys(this.state.students[0])
+        let header = Object.keys(this.state.teachers[0])
         return header.map((key, index) => {
             return <th key={index}>{key.toUpperCase()}</th>
         })
@@ -87,21 +88,21 @@ class StudentGroupPage extends React.Component {
 
     render() {
         return (
-            <div className="main_group_st">
+            <div className="main_teacher_st">
                 <div className="bar_p">
                     <div className="sys_image"/>
                     <div className="sys_name">SYSTEM</div>
                     <a className="logout" onClick={() => goLoginPage(this.props)}>Logout</a>
                     <a onClick={() => goProfilePage(this.props, '/student')}>Profile</a>
                     <a onClick={() => goStudentTeacherPage(this.props)}>Teachers</a>
-                    <a className="active" onClick={() => goStudentGroupPage(this.props)}>Group</a>
+                    <a onClick={() => goStudentGroupPage(this.props)}>Group</a>
                     <a onClick={() => goStudentMainPage(this.props)}>Main</a>
                 </div>
                 <div className="st_group_table_panel">
                     {!this.state.isEmpty && (
                         <div>
                             <h1 id='title'>Group</h1>
-                            <table id='students'>
+                            <table id='teachers'>
                                 <tbody>
                                 <tr>{this.renderTableHeader()}</tr>
                                 {this.renderTableData()}
@@ -115,4 +116,4 @@ class StudentGroupPage extends React.Component {
     }
 }
 
-export default StudentGroupPage;
+export default StudentTeacherPage;
