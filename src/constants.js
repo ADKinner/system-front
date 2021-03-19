@@ -7,6 +7,7 @@ export const STUDENTS_URL = "/students";
 export const TEACHERS_URL = "/teachers";
 export const ADMINS_URL = "/admins";
 export const GROUPS_URL = "/groups";
+export const GROUP_URL = "/group";
 export const EMAIL_URL = "/email";
 export const PASSWORD_CHANGE_URL = "/password-change";
 export const PASSWORD_REPAIR_URL = "/password-repair";

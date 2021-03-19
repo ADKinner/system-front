@@ -70,8 +70,8 @@ class ProfilePage extends React.Component {
                 this.setState({
                     user: {
                         id: response.data["id"],
-                        name: response.data["firstName"],
-                        surname: response.data["lastName"],
+                        name: response.data["name"],
+                        surname: response.data["surname"],
                         patronymic: response.data["patronymic"],
                         password: response.data["password"],
                         email: response.data["email"],
@@ -174,7 +174,7 @@ class ProfilePage extends React.Component {
                         <div className="sys_name">SYSTEM</div>
                         <a className="logout" onClick={() => goLoginPage(this.props)}>Logout</a>
                         <a className="active" onClick={() => goProfilePage(this.props, '/student')}>Profile</a>
-                        <a onClick={() => goStudentGroup(this.props)}>Student</a>
+                        <a onClick={() => goStudentGroup(this.props)}>Group</a>
                         <a onClick={() => this.handleMainClick(localStorage.getItem("role"))}>Main</a>
                     </div>
                 )}
