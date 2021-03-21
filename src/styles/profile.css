@@ -84,7 +84,7 @@
 .user_details_panel {
     display: inline-block;
     margin-left: 200px;
-    height: 300px;
+    height: 360px;
     width: 400px;
     border-radius: 20px;
     background-color: sandybrown;
@@ -107,8 +107,10 @@
 }
 
 .main_text {
-    margin-top: 30px;
-    font-size: 25px;
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    color: #f2f2f2;
+    margin-top: 20px;
+    font-size: 30px;
     height: 40px;
     vertical-align: middle;
     text-align: center;

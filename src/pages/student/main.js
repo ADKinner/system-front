@@ -4,7 +4,6 @@ import {
     goLoginPage,
     goProfilePage,
     goStudentGroupPage,
-    goMainPage,
     goServerErrorPage,
     goStudentTeacherPage
 } from "../../redirect";
@@ -18,7 +17,6 @@ class StudentMainPage extends React.Component {
         this.state = {
             isStart: true,
             subjects: [],
-            subjectID: 0,
             subject: {
                 name: '',
                 planClasses: 0,
@@ -64,29 +62,26 @@ class StudentMainPage extends React.Component {
                     goServerErrorPage(this.props);
                 } else if (error.response.status === 401) {
                     goLoginPage(this.props);
-                } else if (error.response.status === 404) {
-                    this.setState({isEmpty: true});
                 }
             });
     }
 
-    getSubjectData(subjectID) {
+    getSubjectData(subjectId) {
         axios.get(constants.DEFAULT_URL + constants.STUDENTS_URL + constants.SLASH + localStorage.getItem("id")
-            + constants.SUBJECTS_URL + constants.SLASH + subjectID, {
+            + constants.SUBJECTS_URL + constants.SLASH + subjectId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
         })
             .then((response) => {
-                console.log(response.data)
                 this.setState({
                     subject: {
                         name: response.data["subjectName"],
-                        planClasses: response.data["planClasses"],
-                        conductClasses: response.data["conductClasses"],
-                        skips: response.data["skips"],
+                        planLessonsCount: response.data["planLessonsCount"],
+                        pastLessonsCount: response.data["pastLessonsCount"],
+                        skipsCount: response.data["skipsCount"],
                         grades: response.data["grades"].join(', '),
-                        average: this.average(response.data["grades"])
+                        averageGrade: response.data["averageGrade"].toFixed(1)
                     }
                 });
             })
@@ -100,14 +95,6 @@ class StudentMainPage extends React.Component {
             });
     }
 
-    average(input) {
-        this.output = 0;
-        for (this.i = 0; this.i < input.length; this.i++) {
-            this.output += Number(input[this.i]);
-        }
-        return this.output / input.length;
-    }
-
     handleSubjectButtonClick(event) {
         this.setState({
             isStart: false,
@@ -118,8 +105,7 @@ class StudentMainPage extends React.Component {
 
     handleMainClick() {
         this.setState({
-            isStart: true,
-            subjectID: 0
+            isStart: true
         })
     }
 
@@ -164,19 +150,19 @@ class StudentMainPage extends React.Component {
                                 </div>
                                 <div className="subject_detail">
                                     <div className="subject_detail_name">Average mark:</div>
-                                    <div className="subject_detail_value">{this.state.subject.average}</div>
+                                    <div className="subject_detail_value">{this.state.subject.averageGrade}</div>
                                 </div>
                                 <div className="subject_detail">
                                     <div className="subject_detail_name">Skips count:</div>
-                                    <div className="subject_detail_value">{this.state.subject.skips}</div>
+                                    <div className="subject_detail_value">{this.state.subject.skipsCount}</div>
                                 </div>
                                 <div className="subject_detail">
-                                    <div className="subject_detail_name">Сonducted classes:</div>
-                                    <div className="subject_detail_value">{this.state.subject.conductClasses}</div>
+                                    <div className="subject_detail_name">Past classes:</div>
+                                    <div className="subject_detail_value">{this.state.subject.pastLessonsCount}</div>
                                 </div>
                                 <div className="subject_detail">
                                     <div className="subject_detail_name">Planned classes:</div>
-                                    <div className="subject_detail_value">{this.state.subject.planClasses}</div>
+                                    <div className="subject_detail_value">{this.state.subject.planLessonsCount}</div>
                                 </div>
                             </div>
                         </div>

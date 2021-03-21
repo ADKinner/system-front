@@ -49,7 +49,6 @@ class StudentTeacherPage extends React.Component {
                     isEmpty: false,
                     teachers: response.data
                 });
-                console.log(this.state);
             })
             .catch((error) => {
                 console.log(error);
@@ -101,7 +100,7 @@ class StudentTeacherPage extends React.Component {
                 <div className="st_group_table_panel">
                     {!this.state.isEmpty && (
                         <div>
-                            <h1 id='title'>Group</h1>
+                            <h1 id='title'>Teachers</h1>
                             <table id='teachers'>
                                 <tbody>
                                 <tr>{this.renderTableHeader()}</tr>

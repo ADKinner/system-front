@@ -49,16 +49,12 @@ class StudentGroupPage extends React.Component {
                     isEmpty: false,
                     students: response.data
                 });
-                console.log(this.state);
             })
             .catch((error) => {
-                console.log(error);
                 if (error.response.status === 500) {
                     goServerErrorPage(this.props);
                 } else if (error.response.status === 401) {
                     goLoginPage(this.props);
-                } else if (error.response.status === 404) {
-                    this.setState({isEmpty: true});
                 }
             });
     }

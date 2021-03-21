@@ -85,7 +85,9 @@ class ProfilePage extends React.Component {
                         email: response.data["email"],
                     },
                     student: {
-                        group: response.data["group"]["number"]
+                        group: response.data["group"]["id"],
+                        speciality: response.data["group"]["term"]["speciality"]["name"],
+                        faculty: response.data["group"]["term"]["speciality"]["cathedra"]["faculty"]["name"]
                     }
                 })
             })
@@ -233,9 +235,19 @@ class ProfilePage extends React.Component {
                         </div>
                         <div className="indent"/>
                         {this.state.isStudent && (
-                            <div className="user_detail">
-                                <div className="user_detail_name">Group:</div>
-                                <div className="user_detail_value">{this.state.student.group}</div>
+                            <div>
+                                <div className="user_detail">
+                                    <div className="user_detail_name">Group:</div>
+                                    <div className="user_detail_value">{this.state.student.group}</div>
+                                </div>
+                                <div className="user_detail">
+                                    <div className="user_detail_name">Speciality:</div>
+                                    <div className="user_detail_value">{this.state.student.speciality}</div>
+                                </div>
+                                <div className="user_detail">
+                                    <div className="user_detail_name">Faculty:</div>
+                                    <div className="user_detail_value">{this.state.student.faculty}</div>
+                                </div>
                             </div>
                         )}
                         {this.state.isTeacher && (
