@@ -14,7 +14,7 @@ import {
     goTeacherMainPage
 } from "../redirect";
 import '../styles/modal.css';
-import '../styles/profile.css'
+import '../styles/profile.css';
 
 class ProfilePage extends React.Component {
 
@@ -241,9 +241,9 @@ class ProfilePage extends React.Component {
 
     render() {
         return (
-            <div className="main_p_s">
+            <div className="main">
                 {this.state.isStudent && (
-                    <div className="bar_p">
+                    <div className="bar">
                         <div className="sys_image"/>
                         <div className="sys_name">SYSTEM</div>
                         <a className="logout" onClick={() => goLoginPage(this.props)}>Logout</a>
@@ -254,7 +254,7 @@ class ProfilePage extends React.Component {
                     </div>
                 )}
                 {this.state.isTeacher && (
-                    <div className="bar_p">
+                    <div className="bar">
                         <div className="sys_image"/>
                         <div className="sys_name">SYSTEM</div>
                         <a className="logout" onClick={() => goLoginPage(this.props)}>Logout</a>
@@ -265,7 +265,7 @@ class ProfilePage extends React.Component {
                     </div>
                 )}
                 {this.state.isAdmin && (
-                    <div className="bar_p">
+                    <div className="bar">
                         <div className="sys_image"/>
                         <div className="sys_name">SYSTEM</div>
                         <a className="logout" onClick={() => goLoginPage(this.props)}>Logout</a>
