@@ -1,6 +1,6 @@
 import React from "react";
 import '../../styles/teacher/main.css';
-import {goLoginPage, goProfilePage, goServerErrorPage, goTeacherLessonsPage} from "../../redirect";
+import {goLoginPage, goProfilePage, goServerErrorPage, goTeacherInfoPage, goTeacherLessonPage} from "../../redirect";
 import axios from "axios";
 import * as constants from "../../constants";
 
@@ -277,7 +277,8 @@ class MainTeacherPage extends React.Component {
                     <div className="sys_name">SYSTEM</div>
                     <a className="logout" onClick={() => goLoginPage(this.props)}>Logout</a>
                     <a onClick={() => goProfilePage(this.props, '/teacher')}>Profile</a>
-                    <a onClick={() => goTeacherLessonsPage(this.props)}>Lessons</a>
+                    <a onClick={() => goTeacherInfoPage(this.props)}>Info</a>
+                    <a onClick={() => goTeacherLessonPage(this.props)}>Lessons</a>
                     <a onClick={() => this.handleMainClick()} className="active">Main</a>
                 </div>
                 {this.state.isFindGroup && (
@@ -304,7 +305,7 @@ class MainTeacherPage extends React.Component {
                                     {this.state.errorMessage}
                                 </div>
                             )}
-                            <button onClick={() => this.handleSearchGroupButtonClick()} className="btn_l">Search
+                            <button onClick={() => this.handleSearchGroupButtonClick()} className="btn">Search
                             </button>
                         </div>
                     </div>

@@ -6,6 +6,7 @@ import StudentGroupPage from "./pages/student/group";
 import StudentTeacherPage from "./pages/student/teacher";
 import TeacherMainPage from "./pages/teacher/main";
 import TeacherLessonPage from "./pages/teacher/lesson";
+import TeacherInfoPage from "./pages/teacher/info";
 import AdminPage from "./pages/admin/admin";
 import ProfilePage from "./pages/profile";
 import RegisterPage from "./pages/register";
@@ -24,6 +25,7 @@ class App extends Component {
                 <Route exact path="/student" component={StudentMainPage}/>
                 <Route exact path="/teacher" component={TeacherMainPage}/>
                 <Route exact path="/teacher/lessons" component={TeacherLessonPage}/>
+                <Route exact path="/teacher/info" component={TeacherInfoPage}/>
                 <Route exact path="/admin" component={AdminPage}/>
                 <Route exact path="/student/profile" component={ProfilePage}/>
                 <Route exact path="/student/group" component={StudentGroupPage}/>

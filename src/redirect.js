@@ -27,8 +27,12 @@ export function goTeacherMainPage(props) {
     props.history.push("/teacher");
 }
 
-export function goTeacherLessonsPage(props) {
+export function goTeacherLessonPage(props) {
     props.history.push("/teacher/lessons");
+}
+
+export function goTeacherInfoPage(props) {
+    props.history.push("/teacher/info")
 }
 
 export function goChangePasswordPage(props, email) {
