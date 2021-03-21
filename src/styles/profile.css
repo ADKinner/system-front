@@ -127,6 +127,10 @@
     width: 350px;
 }
 
+.add_data {
+    height: 100px;
+}
+
 .user_detail_name {
     text-align: left;
     width: 175px;

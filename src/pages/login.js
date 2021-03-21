@@ -65,11 +65,11 @@ class LoginPage extends React.Component {
     }
 
     goToUserPageByRole(role) {
-        if (role.localeCompare(constants.STUDENT_ROLE)) {
+        if (role === constants.STUDENT_ROLE) {
             goMainPage(this.props, '/student');
-        } else if (role.localeCompare(constants.TEACHER_ROLE)) {
+        } else if (role === constants.TEACHER_ROLE) {
             goMainPage(this.props, '/teacher');
-        } else if (role.localeCompare(constants.ADMIN_ROLE)) {
+        } else if (role === constants.ADMIN_ROLE) {
             goMainPage(this.props, '/admin');
         }
     }

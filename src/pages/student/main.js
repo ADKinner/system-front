@@ -1,5 +1,5 @@
 import React from "react";
-import '../../styles/student/main.css'
+import '../../styles/student/main.css';
 import {
     goLoginPage,
     goProfilePage,
@@ -106,7 +106,7 @@ class StudentMainPage extends React.Component {
     handleMainClick() {
         this.setState({
             isStart: true
-        })
+        });
     }
 
     renderSubjectButtons() {

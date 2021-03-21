@@ -131,16 +131,22 @@ class ChangePasswordPage extends React.Component {
     changePasswordOnAccount() {
         const role = localStorage.getItem("role");
         let url = constants.DEFAULT_URL;
-        if (role.localeCompare(constants.STUDENT_ROLE)) {
+        if (role === constants.STUDENT_ROLE) {
             url += constants.STUDENTS_URL;
-        } else if (role.localeCompare(constants.TEACHER_ROLE)) {
+        } else if (role === constants.TEACHER_ROLE) {
             url += constants.TEACHERS_URL;
-        } else if (role.localeCompare(constants.ADMIN_ROLE)) {
+        } else if (role === constants.ADMIN_ROLE) {
             url += constants.ADMINS_URL;
         }
+        console.log(this.state.data.newPassword);
+        console.log(url);
         axios.put(url, {
             id: localStorage.getItem("id"),
             password: this.state.data.newPassword
+        }, {
+            headers: {
+                Authorization: localStorage.getItem("token")
+            }
         })
             .then(() => {
                 this.setState({
@@ -157,21 +163,21 @@ class ChangePasswordPage extends React.Component {
     goToProfilePage() {
         localStorage.removeItem("email");
         const role = localStorage.getItem("role");
-        if (role.localeCompare(constants.STUDENT_ROLE)) {
+        if (role === constants.STUDENT_ROLE) {
             goProfilePage(this.props, '/student');
-        } else if (role.localeCompare(constants.TEACHER_ROLE)) {
-            goProfilePage(this.props, '/student');
-        } else if (role.localeCompare(constants.ADMIN_ROLE)) {
-            goProfilePage(this.props, '/student');
+        } else if (role === constants.TEACHER_ROLE) {
+            goProfilePage(this.props, '/teacher');
+        } else if (role === constants.ADMIN_ROLE) {
+            goProfilePage(this.props, '/admin');
         }
     }
 
     handleMainClick(role) {
-        if (role.localeCompare(constants.STUDENT_ROLE)) {
+        if (role === constants.STUDENT_ROLE) {
             goMainPage(this.props, '/student');
-        } else if (role.localeCompare(constants.TEACHER_ROLE)) {
+        } else if (role === constants.TEACHER_ROLE) {
             goMainPage(this.props, '/teacher');
-        } else if (role.localeCompare(constants.ADMIN_ROLE)) {
+        } else if (role === constants.ADMIN_ROLE) {
             goMainPage(this.props, '/admin');
         }
     }

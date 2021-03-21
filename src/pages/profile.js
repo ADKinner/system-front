@@ -81,7 +81,6 @@ class ProfilePage extends React.Component {
                         name: response.data["name"],
                         surname: response.data["surname"],
                         patronymic: response.data["patronymic"],
-                        password: response.data["password"],
                         email: response.data["email"],
                     },
                     student: {
@@ -112,14 +111,14 @@ class ProfilePage extends React.Component {
                 this.setState({
                     user: {
                         id: response.data["id"],
-                        name: response.data["firstName"],
-                        surname: response.data["lastName"],
+                        name: response.data["name"],
+                        surname: response.data["surname"],
                         patronymic: response.data["patronymic"],
-                        password: response.data["password"],
                         email: response.data["email"],
                     },
                     teacher: {
-                        cathedra: response.data["cathedra"]["abbreviation"]
+                        cathedra: response.data["cathedra"]["name"],
+                        post: response.data["post"]["name"]
                     }
                 })
             })
@@ -144,14 +143,13 @@ class ProfilePage extends React.Component {
                 this.setState({
                     user: {
                         id: response.data["id"],
-                        name: response.data["firstName"],
-                        surname: response.data["lastName"],
+                        name: response.data["name"],
+                        surname: response.data["surname"],
                         patronymic: response.data["patronymic"],
-                        password: response.data["password"],
                         email: response.data["email"],
                     },
                     admin: {
-                        post: response.data["adminPost"]["name"]
+                        post: response.data["post"]["name"]
                     }
                 })
             })
@@ -166,12 +164,85 @@ class ProfilePage extends React.Component {
     }
 
     handleMainClick(role) {
-        if (role.localeCompare(constants.STUDENT_ROLE)) {
+        if (role === constants.STUDENT_ROLE) {
             goMainPage(this.props, '/student');
-        } else if (role.localeCompare(constants.TEACHER_ROLE)) {
+        } else if (role === constants.TEACHER_ROLE) {
             goMainPage(this.props, '/teacher');
-        } else if (role.localeCompare(constants.ADMIN_ROLE)) {
+        } else if (role === constants.ADMIN_ROLE) {
             goMainPage(this.props, '/admin');
+        }
+    }
+
+    renderTitle() {
+        const role = localStorage.getItem("role");
+        if (role === constants.STUDENT_ROLE) {
+            return(
+                <div>
+                    <div className="main_text">
+                        Student Profile
+                    </div>
+                </div>
+            );
+        } else if (role === constants.TEACHER_ROLE) {
+            return(
+                <div>
+                    <div className="main_text">
+                        Teacher Profile
+                    </div>
+                </div>
+            );
+        } else if (role === constants.ADMIN_ROLE) {
+            return(
+                <div>
+                    <div className="main_text">
+                        Admin Profile
+                    </div>
+                </div>
+            );
+        }
+    }
+
+    renderAdditionalData() {
+        const role = localStorage.getItem("role");
+        if (role === constants.STUDENT_ROLE) {
+            return(
+                <div>
+                    <div className="user_detail">
+                        <div className="user_detail_name">Group:</div>
+                        <div className="user_detail_value">{this.state.student.group}</div>
+                    </div>
+                    <div className="user_detail">
+                        <div className="user_detail_name">Speciality:</div>
+                        <div className="user_detail_value">{this.state.student.speciality}</div>
+                    </div>
+                    <div className="user_detail">
+                        <div className="user_detail_name">Faculty:</div>
+                        <div className="user_detail_value">{this.state.student.faculty}</div>
+                    </div>
+                </div>
+            );
+        } else if (role === constants.TEACHER_ROLE) {
+            return(
+                <div className="add_data">
+                    <div className="user_detail">
+                        <div className="user_detail_name">Cathedra:</div>
+                        <div className="user_detail_value">{this.state.teacher.cathedra}</div>
+                    </div>
+                    <div className="user_detail">
+                        <div className="user_detail_name">Post:</div>
+                        <div className="user_detail_value">{this.state.teacher.post}</div>
+                    </div>
+                </div>
+            );
+        } else if (role === constants.ADMIN_ROLE) {
+            return(
+                <div>
+                    <div className="user_detail">
+                        <div className="user_detail_name">Post:</div>
+                        <div className="user_detail_value">{this.state.admin.post}</div>
+                    </div>
+                </div>
+            );
         }
     }
 
@@ -213,7 +284,7 @@ class ProfilePage extends React.Component {
                         <div className="user_id">ID: {this.state.user.id}</div>
                     </div>
                     <div className="user_details_panel">
-                        <div className="main_text">Student Profile</div>
+                        {this.renderTitle()}
                         <div className="user_detail">
                             <div className="user_detail_name">Name:</div>
                             <div className="user_detail_value">{this.state.user.name}</div>
@@ -234,34 +305,7 @@ class ProfilePage extends React.Component {
                             <div className="user_detail_value">{this.state.user.email}</div>
                         </div>
                         <div className="indent"/>
-                        {this.state.isStudent && (
-                            <div>
-                                <div className="user_detail">
-                                    <div className="user_detail_name">Group:</div>
-                                    <div className="user_detail_value">{this.state.student.group}</div>
-                                </div>
-                                <div className="user_detail">
-                                    <div className="user_detail_name">Speciality:</div>
-                                    <div className="user_detail_value">{this.state.student.speciality}</div>
-                                </div>
-                                <div className="user_detail">
-                                    <div className="user_detail_name">Faculty:</div>
-                                    <div className="user_detail_value">{this.state.student.faculty}</div>
-                                </div>
-                            </div>
-                        )}
-                        {this.state.isTeacher && (
-                            <div className="user_detail">
-                                <div className="user_detail_name">Cathedra:</div>
-                                <div className="user_detail_value">{this.state.teacher.cathedra}</div>
-                            </div>
-                        )}
-                        {this.state.isAdmin && (
-                            <div className="user_detail">
-                                <div className="user_detail_name">Post:</div>
-                                <div className="user_detail_value">{this.state.admin.post}</div>
-                            </div>
-                        )}
+                        {this.renderAdditionalData()}
                         <button
                             className="btn_pr"
                             onClick={() => goChangePasswordPage(this.props, this.state.user.email)}

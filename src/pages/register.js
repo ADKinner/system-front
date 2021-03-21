@@ -138,7 +138,6 @@ class RegisterPage extends React.Component {
                 this.setState({
                     confirmPassword: response.data["password"]
                 });
-                console.log(response.data["password"]);
             })
             .catch((error) => {
                 if (error.response.status === 500) {
@@ -173,11 +172,10 @@ class RegisterPage extends React.Component {
     }
 
     deleteStudentData() {
-        axios.delete(constants.DEFAULT_URL + constants.STUDENTS_URL + constants.SLASH + this.state.student.id)
-            .then((response) => {
-            });
+        axios.delete(constants.DEFAULT_URL + constants.REGISTRATION_DATA_URL + constants.SLASH
+            + this.state.student.id)
+            .then((response) => {});
     }
-
 
     render() {
         if (this.state.isSuccess) {

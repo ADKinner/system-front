@@ -16,6 +16,6 @@ export const PASSWORD_URL_PARAM = "?password=";
 export const EMAIL_URL_PARAM = "?email=";
 export const SLASH = "/";
 
-export const STUDENT_ROLE = "STUDENT_ROLE";
-export const TEACHER_ROLE = "TEACHER_ROLE";
-export const ADMIN_ROLE = "ADMIN_ROLE";
+export const STUDENT_ROLE = "ROLE_STUDENT";
+export const TEACHER_ROLE = "ROLE_TEACHER";
+export const ADMIN_ROLE = "ROLE_ADMIN";

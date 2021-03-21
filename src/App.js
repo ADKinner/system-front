@@ -4,7 +4,7 @@ import LoginPage from "./pages/login";
 import StudentMainPage from "./pages/student/main";
 import StudentGroupPage from "./pages/student/group";
 import StudentTeacherPage from "./pages/student/teacher";
-import TeacherPage from "./pages/teacher/teacher";
+import TeacherPage from "./pages/teacher/main";
 import AdminPage from "./pages/admin/admin";
 import ProfilePage from "./pages/profile";
 import RegisterPage from "./pages/register";
