@@ -76,35 +76,35 @@ class LoginPage extends React.Component {
 
     render() {
         return (
-            <div className="main_l">
-                <div className="small_panel_l">
-                    <svg className="img_l"/>
+            <div className="main">
+                <div className="image">
+                    <svg className="img"/>
                 </div>
-                <div className="panel_l">
-                    <div className="begin_l">
+                <div className="big_panel">
+                    <div className="title">
                         Sign in to System
                     </div>
-                    <form className="login_l" onSubmit={(event) => this.handleSubmitLoginInput(event)}>
-                        <div className="part_l">
-                            <div className="description_l">
+                    <form className="login_form" onSubmit={(event) => this.handleSubmitLoginInput(event)}>
+                        <div className="form_part">
+                            <div className="description">
                                 ID
                             </div>
                             <input
                                 name="id"
                                 type="text"
                                 placeholder="Enter your ID number"
-                                className="in_data_l"
+                                className="input"
                                 value={this.state.values.id}
                                 onChange={(event) => this.handleLoginInputChange(event)}
                             />
                         </div>
-                        <div className="part_l part_password_l">
-                            <div className="description_l">
+                        <div className="form_part form_part_password">
+                            <div className="description">
                                 Password
                             </div>
                             <input
                                 name="password"
-                                className="in_data_l"
+                                className="input"
                                 type={this.state.isPasswordVisibility ? "text" : "password"}
                                 placeholder="Enter your password"
                                 value={this.state.values.password}
@@ -113,19 +113,19 @@ class LoginPage extends React.Component {
                         </div>
                         <input type="checkbox"
                                id="check"
-                               className="check_l"
+                               className="check_box"
                                onChange={() => this.handleChangePasswordVisibility()}
                         />
                         <label htmlFor="check">Show password</label>
                         {this.state.isError && (
-                            <div className="indent_l">
+                            <div className="error_panel">
                                 ID or password are incorrect
                             </div>
                         )}
                         <div className="repair_panel">
                             <Link to="/recovery">Forgot password? Restore it.</Link>
                         </div>
-                        <button type="submit" className="btn_l">Login</button>
+                        <button type="submit" className="btn">Login</button>
                     </form>
                 </div>
             </div>
