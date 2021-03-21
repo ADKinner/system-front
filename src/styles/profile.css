@@ -90,12 +90,23 @@
     background-color: sandybrown;
 }
 
-.user_image_st {
+.user_image {
     margin-top: 25px;
     margin-left: 50px;
     width: 400px;
     height: 400px;
+}
+
+.user_image_st {
     background-image: url("../images/student.png");
+}
+
+.user_image_t {
+    background-image: url("../images/teacher.png");
+}
+
+.user_image_a {
+    background-image: url("../images/admin.png");
 }
 
 .user_id {

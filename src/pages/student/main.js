@@ -2,9 +2,9 @@ import React from "react";
 import '../../styles/student/main.css';
 import {
     goLoginPage,
-    goProfilePage,
-    goStudentGroupPage,
     goServerErrorPage,
+    goStudentGroupPage,
+    goStudentProfilePage,
     goStudentTeacherPage
 } from "../../redirect";
 import axios from "axios";
@@ -129,7 +129,7 @@ class StudentMainPage extends React.Component {
                     <div className="sys_image"/>
                     <div className="sys_name">SYSTEM</div>
                     <a className="logout" onClick={() => goLoginPage(this.props)}>Logout</a>
-                    <a onClick={() => goProfilePage(this.props, '/student')}>Profile</a>
+                    <a onClick={() => goStudentProfilePage(this.props)}>Profile</a>
                     <a onClick={() => goStudentTeacherPage(this.props)}>Teachers</a>
                     <a onClick={() => goStudentGroupPage(this.props)}>Group</a>
                     <a className="active" onClick={() => this.handleMainClick()}>Main</a>

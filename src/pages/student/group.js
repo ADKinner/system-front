@@ -2,10 +2,10 @@ import React from "react";
 import axios from "axios";
 import {
     goLoginPage,
-    goProfilePage,
     goServerErrorPage,
     goStudentGroupPage,
     goStudentMainPage,
+    goStudentProfilePage,
     goStudentTeacherPage
 } from "../../redirect";
 import * as constants from "../../constants";
@@ -88,7 +88,7 @@ class StudentGroupPage extends React.Component {
                     <div className="sys_image"/>
                     <div className="sys_name">SYSTEM</div>
                     <a className="logout" onClick={() => goLoginPage(this.props)}>Logout</a>
-                    <a onClick={() => goProfilePage(this.props, '/student')}>Profile</a>
+                    <a onClick={() => goStudentProfilePage(this.props)}>Profile</a>
                     <a onClick={() => goStudentTeacherPage(this.props)}>Teachers</a>
                     <a className="active" onClick={() => goStudentGroupPage(this.props)}>Group</a>
                     <a onClick={() => goStudentMainPage(this.props)}>Main</a>

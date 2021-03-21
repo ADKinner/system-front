@@ -2,16 +2,18 @@ import React from "react";
 import axios from "axios";
 import * as constants from "../constants";
 import {
+    goAdminProfilePage,
     goChangePasswordPage,
     goLoginPage,
-    goProfilePage,
     goServerErrorPage,
     goStudentGroupPage,
     goStudentMainPage,
+    goStudentProfilePage,
     goStudentTeacherPage,
     goTeacherInfoPage,
     goTeacherLessonPage,
-    goTeacherMainPage
+    goTeacherMainPage,
+    goTeacherProfilePage
 } from "../redirect";
 import '../styles/modal.css';
 import '../styles/profile.css';
@@ -239,43 +241,68 @@ class ProfilePage extends React.Component {
         }
     }
 
+    renderProfileImage() {
+        const role = localStorage.getItem("role");
+        if (role === constants.STUDENT_ROLE) {
+            return (
+                <div className="user_image user_image_st"/>
+            );
+        } else if (role === constants.TEACHER_ROLE) {
+            return (
+                <div className="user_image user_image_t"/>
+            );
+        } else if (role === constants.ADMIN_ROLE) {
+            return (
+                <div className="user_image user_image_a"/>
+            );
+        }
+    }
+
+    renderBarButtons() {
+        const role = localStorage.getItem("role");
+        if (role === constants.STUDENT_ROLE) {
+            return (
+                <div className="bar">
+                    <div className="sys_image"/>
+                    <div className="sys_name">SYSTEM</div>
+                    <a className="logout" onClick={() => goLoginPage(this.props)}>Logout</a>
+                    <a className="active" onClick={() => goStudentProfilePage(this.props)}>Profile</a>
+                    <a onClick={() => goStudentTeacherPage(this.props)}>Teachers</a>
+                    <a onClick={() => goStudentGroupPage(this.props)}>Group</a>
+                    <a onClick={() => goStudentMainPage(this.props)}>Main</a>
+                </div>
+            );
+        } else if (role === constants.TEACHER_ROLE) {
+            return (
+                <div className="bar">
+                    <div className="sys_image"/>
+                    <div className="sys_name">SYSTEM</div>
+                    <a className="logout" onClick={() => goLoginPage(this.props)}>Logout</a>
+                    <a className="active" onClick={() => goTeacherProfilePage(this.props)}>Profile</a>
+                    <a onClick={() => goTeacherInfoPage(this.props)}>Info</a>
+                    <a onClick={() => goTeacherLessonPage(this.props)}>Lesson</a>
+                    <a onClick={() => goTeacherMainPage(this.props)}>Main</a>
+                </div>
+            );
+        } else if (role === constants.ADMIN_ROLE) {
+            return (
+                <div className="bar">
+                    <div className="sys_image"/>
+                    <div className="sys_name">SYSTEM</div>
+                    <a className="logout" onClick={() => goLoginPage(this.props)}>Logout</a>
+                    <a className="active" onClick={() => goAdminProfilePage(this.props)}>Profile</a>
+                </div>
+            );
+        }
+    }
+
     render() {
         return (
             <div className="main">
-                {this.state.isStudent && (
-                    <div className="bar">
-                        <div className="sys_image"/>
-                        <div className="sys_name">SYSTEM</div>
-                        <a className="logout" onClick={() => goLoginPage(this.props)}>Logout</a>
-                        <a className="active" onClick={() => goProfilePage(this.props, '/student')}>Profile</a>
-                        <a onClick={() => goStudentTeacherPage(this.props)}>Teachers</a>
-                        <a onClick={() => goStudentGroupPage(this.props)}>Group</a>
-                        <a onClick={() => goStudentMainPage(this.props)}>Main</a>
-                    </div>
-                )}
-                {this.state.isTeacher && (
-                    <div className="bar">
-                        <div className="sys_image"/>
-                        <div className="sys_name">SYSTEM</div>
-                        <a className="logout" onClick={() => goLoginPage(this.props)}>Logout</a>
-                        <a className="active" onClick={() => goProfilePage(this.props, '/teacher')}>Profile</a>
-                        <a onClick={() => goTeacherInfoPage(this.props)}>Info</a>
-                        <a onClick={() => goTeacherLessonPage(this.props)}>Lessons</a>
-                        <a onClick={() => goTeacherMainPage(this.props)}>Main</a>
-                    </div>
-                )}
-                {this.state.isAdmin && (
-                    <div className="bar">
-                        <div className="sys_image"/>
-                        <div className="sys_name">SYSTEM</div>
-                        <a className="logout" onClick={() => goLoginPage(this.props)}>Logout</a>
-                        <a className="active" onClick={() => goProfilePage(this.props, '/admin')}>Profile</a>
-                        <a>Main</a>
-                    </div>
-                )}
+                {this.renderBarButtons()}
                 <div className="panel">
                     <div className="user_panel">
-                        <div className="user_image_st"/>
+                        {this.renderProfileImage()}
                         <div className="user_id">ID: {this.state.user.id}</div>
                     </div>
                     <div className="user_details_panel">

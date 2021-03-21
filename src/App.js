@@ -27,11 +27,11 @@ class App extends Component {
                 <Route exact path="/teacher/lessons" component={TeacherLessonPage}/>
                 <Route exact path="/teacher/info" component={TeacherInfoPage}/>
                 <Route exact path="/admin" component={AdminPage}/>
+                <Route exact path="/admin/profile" component={ProfilePage}/>
                 <Route exact path="/student/profile" component={ProfilePage}/>
                 <Route exact path="/student/group" component={StudentGroupPage}/>
                 <Route exact path="/student/teachers" component={StudentTeacherPage}/>
                 <Route exact path="/teacher/profile" component={ProfilePage}/>
-                <Route exact path="/admin/profile" component={ProfilePage}/>
                 <Route exact path="/register" component={RegisterPage}/>
                 <Route exact path="/recovery" component={RecoveryPasswordPage}/>
                 <Route exact path="/change-password" component={ChangePasswordPage}/>

@@ -1,8 +1,6 @@
 import React from "react";
 import '../../styles/teacher/main.css';
-import {goLoginPage, goProfilePage, goServerErrorPage, goTeacherLessonPage, goTeacherMainPage} from "../../redirect";
-import axios from "axios";
-import * as constants from "../../constants";
+import {goLoginPage, goTeacherLessonPage, goTeacherMainPage, goTeacherProfilePage} from "../../redirect";
 
 class TeacherInfoPage extends React.Component {
 
@@ -46,9 +44,9 @@ class TeacherInfoPage extends React.Component {
                     <div className="sys_image"/>
                     <div className="sys_name">SYSTEM</div>
                     <a className="logout" onClick={() => goLoginPage(this.props)}>Logout</a>
-                    <a onClick={() => goProfilePage(this.props, '/teacher')}>Profile</a>
+                    <a onClick={() => goTeacherProfilePage(this.props)}>Profile</a>
                     <a className="active">Info</a>
-                    <a onClick={() => goTeacherLessonPage(this.props)}>Lessons</a>
+                    <a onClick={() => goTeacherLessonPage(this.props)}>Lesson</a>
                     <a onClick={() => goTeacherMainPage(this.props)}>Main</a>
                 </div>
             </div>

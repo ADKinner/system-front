@@ -7,6 +7,18 @@ export function goProfilePage(props, url) {
     props.history.push(url + '/profile');
 }
 
+export function goStudentProfilePage(props) {
+    props.history.push('/student/profile');
+}
+
+export function goTeacherProfilePage(props) {
+    props.history.push('/teacher/profile');
+}
+
+export function goAdminProfilePage(props) {
+    props.history.push('/admin/profile');
+}
+
 export function goMainPage(props, url) {
     props.history.push(url);
 }
