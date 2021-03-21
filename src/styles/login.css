@@ -75,6 +75,11 @@
     font-size: 17px;
 }
 
+.btn_l:hover {
+    background: #38629C;
+    border: 3px solid #38629C;
+}
+
 .repair_panel {
     margin-top: 5px;
     margin-left: 35px;

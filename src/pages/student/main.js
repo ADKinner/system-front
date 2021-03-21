@@ -19,11 +19,11 @@ class StudentMainPage extends React.Component {
             subjects: [],
             subject: {
                 name: '',
-                planClasses: 0,
-                conductClasses: 0,
-                skips: 0,
+                planLessonsCount: 0,
+                pastLessonsCount: 0,
+                skipsCount: 0,
                 grades: '',
-                average: 0.0
+                averageGrade: 0.0
             }
         }
     }
@@ -66,7 +66,7 @@ class StudentMainPage extends React.Component {
             });
     }
 
-    getSubjectData(subjectId) {
+    getStudentInfo(subjectId) {
         axios.get(constants.DEFAULT_URL + constants.STUDENTS_URL + constants.SLASH + localStorage.getItem("id")
             + constants.SUBJECTS_URL + constants.SLASH + subjectId, {
             headers: {
@@ -100,7 +100,7 @@ class StudentMainPage extends React.Component {
             isStart: false,
             subjectID: event.target.value
         });
-        this.getSubjectData(event.target.value);
+        this.getStudentInfo(event.target.value);
     }
 
     handleMainClick() {

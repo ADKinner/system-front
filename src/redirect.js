@@ -23,6 +23,14 @@ export function goStudentTeacherPage(props) {
     props.history.push("/student/teachers");
 }
 
+export function goTeacherMainPage(props) {
+    props.history.push("/teacher");
+}
+
+export function goTeacherLessonsPage(props) {
+    props.history.push("/teacher/lessons");
+}
+
 export function goChangePasswordPage(props, email) {
     localStorage.setItem("email", email);
     props.history.push("/change-password")

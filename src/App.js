@@ -4,7 +4,7 @@ import LoginPage from "./pages/login";
 import StudentMainPage from "./pages/student/main";
 import StudentGroupPage from "./pages/student/group";
 import StudentTeacherPage from "./pages/student/teacher";
-import TeacherPage from "./pages/teacher/main";
+import MainTeacherPage from "./pages/teacher/main";
 import AdminPage from "./pages/admin/admin";
 import ProfilePage from "./pages/profile";
 import RegisterPage from "./pages/register";
@@ -21,7 +21,7 @@ class App extends Component {
             <Switch>
                 <Route exact path="/login" component={LoginPage}/>
                 <Route exact path="/student" component={StudentMainPage}/>
-                <Route exact path="/teacher" component={TeacherPage}/>
+                <Route exact path="/teacher" component={MainTeacherPage}/>
                 <Route exact path="/admin" component={AdminPage}/>
                 <Route exact path="/student/profile" component={ProfilePage}/>
                 <Route exact path="/student/group" component={StudentGroupPage}/>
