@@ -65,8 +65,8 @@ class StudentGroupPage extends React.Component {
             return (
                 <tr key={id}>
                     <td>{index + 1}</td>
-                    <td>{surname}</td>
                     <td>{name}</td>
+                    <td>{surname}</td>
                     <td>{patronymic}</td>
                     <td>{email}</td>
                 </tr>

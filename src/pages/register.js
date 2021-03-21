@@ -21,7 +21,7 @@ class RegisterPage extends React.Component {
             isSuccess: false,
             confirmPassword: '',
             values: {
-                studentID: '',
+                id: '',
                 studentIDPassword: '',
                 password: '',
                 confirmPassword: '',
@@ -29,7 +29,6 @@ class RegisterPage extends React.Component {
             },
             student: {
                 id: '',
-                password: '',
                 name: '',
                 surname: '',
                 patronymic: '',
@@ -99,16 +98,16 @@ class RegisterPage extends React.Component {
                     isInputConfirmed: true,
                     isReady: true,
                     student: {
-                        id: response.data["studentId"],
-                        password: response.data["studentIdPassword"],
-                        name: response.data["studentName"],
-                        surname: response.data["studentSurname"],
-                        patronymic: response.data["studentPatronymic"],
-                        email: response.data["studentEmail"],
-                        phoneNumber: response.data["studentPhoneNumber"]
+                        id: response.data["id"],
+                        name: response.data["name"],
+                        surname: response.data["surname"],
+                        password: this.state.values.password,
+                        patronymic: response.data["patronymic"],
+                        email: response.data["email"],
+                        groupId: response.data["groupId"]
                     }
                 });
-                this.getConfirmPassword(response.data["studentEmail"]);
+                this.getConfirmPassword(response.data["email"]);
             })
             .catch((error) => {
                 if (error.response.status === 500) {
@@ -138,7 +137,8 @@ class RegisterPage extends React.Component {
             .then((response) => {
                 this.setState({
                     confirmPassword: response.data["password"]
-                })
+                });
+                console.log(response.data["password"]);
             })
             .catch((error) => {
                 if (error.response.status === 500) {
@@ -159,9 +159,10 @@ class RegisterPage extends React.Component {
         })
             .then((response) => {
                 if (this.state.student.id === response.data["id"]) {
+                    this.deleteStudentData();
                     this.setState({
                         isSuccess: true
-                    })
+                    });
                 }
             })
             .catch((error) => {
@@ -170,6 +171,13 @@ class RegisterPage extends React.Component {
                 }
             });
     }
+
+    deleteStudentData() {
+        axios.delete(constants.DEFAULT_URL + constants.STUDENTS_URL + constants.SLASH + this.state.student.id)
+            .then((response) => {
+            });
+    }
+
 
     render() {
         if (this.state.isSuccess) {
