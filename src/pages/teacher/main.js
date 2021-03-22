@@ -26,21 +26,8 @@ class MainTeacherPage extends React.Component {
             subjectId: '',
             subjects: [],
             students: [],
-            groupInfo: {
-                subjectName: '',
-                planLessonsCount: 0,
-                pastLessonsCount: 0,
-                averageSkipsCount: 0.0,
-                averageGrade: 0.0
-            },
-            studentInfo: {
-                cred: '',
-                planLessonsCount: 0,
-                pastLessonsCount: 0,
-                skipsCount: 0,
-                grades: '',
-                averageGrade: 0.0
-            }
+            groupInfo: {},
+            studentInfo: {}
         }
     }
 
@@ -104,13 +91,7 @@ class MainTeacherPage extends React.Component {
         })
             .then((response) => {
                 this.setState({
-                    groupInfo: {
-                        name: response.data["subjectName"],
-                        planLessonsCount: response.data["planLessonsCount"],
-                        pastLessonsCount: response.data["pastLessonsCount"],
-                        averageSkipsCount: response.data["averageSkipsCount"].toFixed(1),
-                        averageGrade: response.data["averageGrade"].toFixed(1)
-                    },
+                    groupInfo: response.data,
                     isGroupInfo: true,
                     isSubjects: false,
                 });
@@ -157,20 +138,12 @@ class MainTeacherPage extends React.Component {
         })
             .then((response) => {
                 this.setState({
-                    studentInfo: {
-                        cred: response.data["cred"],
-                        planLessonsCount: response.data["planLessonsCount"],
-                        pastLessonsCount: response.data["pastLessonsCount"],
-                        skipsCount: response.data["skipsCount"],
-                        grades: response.data["grades"].join(', '),
-                        averageGrade: response.data["averageGrade"].toFixed(1)
-                    },
+                    studentInfo: response.data,
                     isStudentInfo: true,
                     isGroupStudents: false,
                 });
             })
             .catch((error) => {
-                console.log(error);
                 if (error.response.status === 500) {
                     goServerErrorPage(this.props);
                 } else if (error.response.status === 401) {
@@ -325,14 +298,18 @@ class MainTeacherPage extends React.Component {
                     <div className="subject_data_panel_t">
                         <div className="subject_data_st">
                             <h1>Group: {this.state.groupId}</h1>
-                            <h2>Subject: {this.state.groupInfo.name}</h2>
+                            <h2>Subject: {this.state.groupInfo.subjectName}</h2>
                             <div className="subject_detail">
                                 <div className="subject_detail_name">Average mark:</div>
-                                <div className="subject_detail_value">{this.state.groupInfo.averageGrade}</div>
+                                <div className="subject_detail_value">
+                                    {this.state.groupInfo.averageGrade.toFixed(1)}
+                                </div>
                             </div>
                             <div className="subject_detail">
                                 <div className="subject_detail_name">Average skips count:</div>
-                                <div className="subject_detail_value">{this.state.groupInfo.averageSkipsCount}</div>
+                                <div className="subject_detail_value">
+                                    {this.state.groupInfo.averageSkipsCount.toFixed(1)}
+                                </div>
                             </div>
                             <div className="subject_detail">
                                 <div className="subject_detail_name">Past classes:</div>
@@ -366,14 +343,16 @@ class MainTeacherPage extends React.Component {
                     <div className="subject_data_panel_t">
                         <div className="subject_data_st">
                             <h1>Student: {this.state.studentInfo.cred}</h1>
-                            <h2>Subject: {this.state.groupInfo.name}</h2>
+                            <h2>Subject: {this.state.groupInfo.subjectName}</h2>
                             <div className="subject_detail">
                                 <div className="subject_detail_name">Grades:</div>
-                                <div className="subject_detail_value">{this.state.studentInfo.grades}</div>
+                                <div className="subject_detail_value">{this.state.studentInfo.grades.join(', ')}</div>
                             </div>
                             <div className="subject_detail">
                                 <div className="subject_detail_name">Average mark:</div>
-                                <div className="subject_detail_value">{this.state.studentInfo.averageGrade}</div>
+                                <div className="subject_detail_value">
+                                    {this.state.studentInfo.averageGrade.toFixed(1)}
+                                </div>
                             </div>
                             <div className="subject_detail">
                                 <div className="subject_detail_name">Skips count:</div>

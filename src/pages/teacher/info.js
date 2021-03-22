@@ -169,15 +169,21 @@ class TeacherInfoPage extends React.Component {
                             </div>
                             <div className="subject_detail">
                                 <div className="subject_detail_name">Average grades mark:</div>
-                                <div className="subject_detail_value">{this.state.subject.averageGrade}</div>
+                                <div className="subject_detail_value">
+                                    {this.state.subject.averageGrade.toFixed(1)}
+                                </div>
                             </div>
                             <div className="subject_detail">
                                 <div className="subject_detail_name">Average skips count:</div>
-                                <div className="subject_detail_value">{this.state.subject.averageSkips}</div>
+                                <div className="subject_detail_value">
+                                    {this.state.subject.averageSkips.toFixed(1)}
+                                </div>
                             </div>
                             <div className="subject_detail">
                                 <div className="subject_detail_name">Average past lessons:</div>
-                                <div className="subject_detail_value">{this.state.subject.averagePastLessonsCount}</div>
+                                <div className="subject_detail_value">
+                                    {this.state.subject.averagePastLessonsCount.toFixed(1)}
+                                </div>
                             </div>
                             <div className="subject_detail">
                                 <div className="subject_detail_name">Plan lessons count:</div>
