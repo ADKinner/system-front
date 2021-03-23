@@ -47,6 +47,22 @@ export function goTeacherInfoPage(props) {
     props.history.push("/teacher/info")
 }
 
+export function goAdminStudentsPage(props) {
+    props.history.push('/admin/students');
+}
+
+export function goAdminSubjectsPage(props) {
+    props.history.push('/admin/subjects');
+}
+
+export function goAdminTeachersPage(props) {
+    props.history.push('/admin/teachers');
+}
+
+export function goAdminGroupsPage(props) {
+    props.history.push('/admin/groups');
+}
+
 export function goChangePasswordPage(props, email) {
     localStorage.setItem("email", email);
     props.history.push("/change-password")

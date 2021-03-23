@@ -7,7 +7,10 @@ import StudentTeacherPage from "./pages/student/teacher";
 import TeacherMainPage from "./pages/teacher/main";
 import TeacherLessonPage from "./pages/teacher/lesson";
 import TeacherInfoPage from "./pages/teacher/info";
-import AdminPage from "./pages/admin/admin";
+import AdminStudentsPage from "./pages/admin/students";
+import AdminSubjectsPage from "./pages/admin/subjects";
+import AdminGroupsPage from "./pages/admin/groups";
+import AdminTeachersPage from "./pages/admin/teachers";
 import ProfilePage from "./pages/profile";
 import RegisterPage from "./pages/register";
 import RecoveryPasswordPage from "./pages/recovery";
@@ -26,7 +29,10 @@ class App extends Component {
                 <Route exact path="/teacher" component={TeacherMainPage}/>
                 <Route exact path="/teacher/lessons" component={TeacherLessonPage}/>
                 <Route exact path="/teacher/info" component={TeacherInfoPage}/>
-                <Route exact path="/admin" component={AdminPage}/>
+                <Route exact path="/admin/students" component={AdminStudentsPage}/>
+                <Route exact path="/admin/teachers" component={AdminTeachersPage}/>
+                <Route exact path="/admin/groups" component={AdminGroupsPage}/>
+                <Route exact path="/admin/subjects" component={AdminSubjectsPage}/>
                 <Route exact path="/admin/profile" component={ProfilePage}/>
                 <Route exact path="/student/profile" component={ProfilePage}/>
                 <Route exact path="/student/group" component={StudentGroupPage}/>

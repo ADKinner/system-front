@@ -2,7 +2,8 @@ import React from "react";
 import axios from "axios";
 import * as constants from "../constants";
 import {
-    goAdminProfilePage,
+    goAdminGroupsPage,
+    goAdminProfilePage, goAdminStudentsPage, goAdminSubjectsPage, goAdminTeachersPage,
     goChangePasswordPage,
     goLoginPage,
     goServerErrorPage,
@@ -271,6 +272,10 @@ class ProfilePage extends React.Component {
                     <div className="sys_name">SYSTEM</div>
                     <a className="logout" onClick={() => goLoginPage(this.props)}>Выйти</a>
                     <a className="active" onClick={() => goAdminProfilePage(this.props)}>Профиль</a>
+                    <a onClick={() => goAdminTeachersPage(this.props)}>Учителя</a>
+                    <a onClick={() => goAdminGroupsPage(this.props)}>Группы</a>
+                    <a onClick={() => goAdminStudentsPage(this.props)}>Студенты</a>
+                    <a onClick={() => goAdminSubjectsPage(this.props)}>Предметы</a>
                 </div>
             );
         }
