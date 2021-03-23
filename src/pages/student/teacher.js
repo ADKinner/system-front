@@ -37,12 +37,12 @@ class StudentTeacherPage extends React.Component {
     }
 
     getStudentData() {
-        axios.get(constants.DEFAULT_URL + constants.STUDENTS_URL + constants.SLASH + localStorage.getItem("id")
-            + constants.TEACHERS_URL, {
-            headers: {
-                Authorization: localStorage.getItem("token")
-            }
-        })
+        axios.get(constants.DEFAULT_URL + constants.TEACHERS_URL + constants.STUDENTS_URL + constants.SLASH
+            + localStorage.getItem("id"), {
+                headers: {
+                    Authorization: localStorage.getItem("token")
+                }
+            })
             .then(response => {
                 this.setState({
                     isEmpty: false,

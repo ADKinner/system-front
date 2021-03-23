@@ -28,7 +28,7 @@ class StudentMainPage extends React.Component {
         } else {
             switch (role) {
                 case "ROLE_STUDENT":
-                    this.getStudentSubjects();
+                    this.getSubjects();
                     break;
                 default:
                     goLoginPage(this.props);
@@ -37,9 +37,9 @@ class StudentMainPage extends React.Component {
         }
     }
 
-    getStudentSubjects() {
-        axios.get(constants.DEFAULT_URL + constants.STUDENTS_URL + constants.SLASH + localStorage.getItem("id")
-            + constants.SUBJECTS_URL, {
+    getSubjects() {
+        axios.get(constants.DEFAULT_URL + constants.SUBJECTS_URL + constants.STUDENTS_URL + constants.SLASH
+            + localStorage.getItem("id"), {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -60,8 +60,8 @@ class StudentMainPage extends React.Component {
     }
 
     getStudentInfo(subjectId) {
-        axios.get(constants.DEFAULT_URL + constants.STUDENTS_URL + constants.SLASH + localStorage.getItem("id")
-            + constants.SUBJECTS_URL + constants.SLASH + subjectId, {
+        axios.get(constants.DEFAULT_URL + constants.SUBJECTS_URL + constants.SLASH + subjectId
+            + constants.STUDENTS_URL + constants.SLASH + localStorage.getItem("id"), {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -69,7 +69,7 @@ class StudentMainPage extends React.Component {
             .then(response => {
                 this.setState({
                     subject: {
-                        name: response.data["subjectName"],
+                        name: response.data["subjectName"] + " - " + response.data["subjectForm"],
                         planLessonsCount: response.data["planLessonsCount"],
                         pastLessonsCount: response.data["pastLessonsCount"],
                         skipsCount: response.data["skipsCount"],

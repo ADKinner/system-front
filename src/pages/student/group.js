@@ -37,8 +37,8 @@ class StudentGroupPage extends React.Component {
     }
 
     getStudentData() {
-        axios.get(constants.DEFAULT_URL + constants.STUDENTS_URL + constants.SLASH + localStorage.getItem("id")
-            + constants.GROUP_URL, {
+        axios.get(constants.DEFAULT_URL + constants.GROUPS_URL + constants.STUDENTS_URL + constants.SLASH
+            + localStorage.getItem("id"), {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
