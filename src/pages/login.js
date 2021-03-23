@@ -44,7 +44,7 @@ class LoginPage extends React.Component {
             id: this.state.values.id,
             password: this.state.values.password
         })
-            .then((response) => {
+            .then(response => {
                 localStorage.clear();
                 const role = response.data["role"];
                 const token = response.data["jwtToken"];
@@ -82,9 +82,9 @@ class LoginPage extends React.Component {
                 </div>
                 <div className="big_panel">
                     <div className="title">
-                        Sign in to System
+                        Вход в систему
                     </div>
-                    <form className="login_form" onSubmit={(event) => this.handleSubmitLoginInput(event)}>
+                    <form className="login_form" onSubmit={event => this.handleSubmitLoginInput(event)}>
                         <div className="form_part">
                             <div className="description">
                                 ID
@@ -92,23 +92,23 @@ class LoginPage extends React.Component {
                             <input
                                 name="id"
                                 type="text"
-                                placeholder="Enter your ID number"
+                                placeholder="Введите ваш ID"
                                 className="input"
                                 value={this.state.values.id}
-                                onChange={(event) => this.handleLoginInputChange(event)}
+                                onChange={event => this.handleLoginInputChange(event)}
                             />
                         </div>
                         <div className="form_part form_part_password">
                             <div className="description">
-                                Password
+                                Пароль
                             </div>
                             <input
                                 name="password"
                                 className="input"
                                 type={this.state.isPasswordVisibility ? "text" : "password"}
-                                placeholder="Enter your password"
+                                placeholder="Введите ваш пароль"
                                 value={this.state.values.password}
-                                onChange={(event) => this.handleLoginInputChange(event)}
+                                onChange={event => this.handleLoginInputChange(event)}
                             />
                         </div>
                         <input type="checkbox"
@@ -116,16 +116,16 @@ class LoginPage extends React.Component {
                                className="check_box"
                                onChange={() => this.handleChangePasswordVisibility()}
                         />
-                        <label htmlFor="check">Show password</label>
+                        <label htmlFor="check">Посмотреть пароль</label>
                         {this.state.isError && (
                             <div className="error_panel">
-                                ID or password are incorrect
+                                ID или пароль не верны
                             </div>
                         )}
                         <div className="repair_panel">
-                            <Link to="/recovery">Forgot password? Restore it.</Link>
+                            <Link to="/recovery">Забыли пароль? Восстановите его.</Link>
                         </div>
-                        <button type="submit" className="btn">Login</button>
+                        <button type="submit" className="btn">Войти</button>
                     </form>
                 </div>
             </div>

@@ -8,7 +8,6 @@ export const TEACHERS_URL = "/teachers";
 export const LESSON_ULR = "/lesson";
 export const ADMINS_URL = "/admins";
 export const GROUPS_URL = "/groups";
-export const GROUP_URL = "/group";
 export const SUBJECTS_URL = "/subjects";
 export const EMAIL_URL = "/email";
 export const PASSWORD_CHANGE_URL = "/password-change";
