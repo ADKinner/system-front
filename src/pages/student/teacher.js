@@ -9,15 +9,14 @@ import {
     goStudentTeacherPage
 } from "../../redirect";
 import * as constants from "../../constants";
-import '../../styles/student/teacher.css';
+import '../../styles/student.css';
 
 class StudentTeacherPage extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            teachers: [],
-            isEmpty: true
+            teachers: []
         }
     }
 
@@ -62,53 +61,47 @@ class StudentTeacherPage extends React.Component {
             });
     }
 
-    renderTableData() {
-        return this.state.teachers.map((teacher, index) => {
-            const {id, surname, name, patronymic, email, subjectName} = teacher
-            return (
-                <tr key={id}>
-                    <td>{index + 1}</td>
-                    <td>{surname}</td>
-                    <td>{name}</td>
-                    <td>{patronymic}</td>
-                    <td>{email}</td>
-                    <td>{subjectName}</td>
-                </tr>
-            )
-        })
-    }
-
-    renderTableHeader() {
-        let header = Object.keys(this.state.teachers[0])
-        return header.map((key, index) => {
-            return <th key={index}>{key.toUpperCase()}</th>
-        })
-    }
-
     render() {
         return (
-            <div className="main_teacher_st">
+            <div className="main">
                 <div className="bar">
                     <div className="sys_image"/>
                     <div className="sys_name">SYSTEM</div>
-                    <a className="logout" onClick={() => goLoginPage(this.props)}>Logout</a>
-                    <a onClick={() => goStudentProfilePage(this.props)}>Profile</a>
-                    <a onClick={() => goStudentTeacherPage(this.props)}>Teachers</a>
-                    <a onClick={() => goStudentGroupPage(this.props)}>Group</a>
-                    <a onClick={() => goStudentMainPage(this.props)}>Main</a>
+                    <a className="logout" onClick={() => goLoginPage(this.props)}>Выйти</a>
+                    <a onClick={() => goStudentProfilePage(this.props)}>Профиль</a>
+                    <a onClick={() => goStudentTeacherPage(this.props)}>Учителя</a>
+                    <a onClick={() => goStudentGroupPage(this.props)}>Группа</a>
+                    <a onClick={() => goStudentMainPage(this.props)}>Главная</a>
                 </div>
-                <div className="st_group_table_panel">
-                    {!this.state.isEmpty && (
-                        <div>
-                            <h1 id='title'>Teachers</h1>
-                            <table id='teachers'>
-                                <tbody>
-                                <tr>{this.renderTableHeader()}</tr>
-                                {this.renderTableData()}
-                                </tbody>
-                            </table>
-                        </div>
-                    )}
+                <div className="table_panel">
+                    <div>
+                        <h1 id='title'>Учителя</h1>
+                        <table id='data'>
+                            <tbody>
+                            <tr>
+                                <th>ID</th>
+                                <th>Фамилия</th>
+                                <th>Имя</th>
+                                <th>Отчество</th>
+                                <th>Email</th>
+                                <th>Предмет</th>
+                            </tr>
+                            {this.state.teachers.map((teacher, index) => {
+                                const {id, surname, name, patronymic, email, subjectName} = teacher
+                                return (
+                                    <tr key={id}>
+                                        <td>{index + 1}</td>
+                                        <td>{surname}</td>
+                                        <td>{name}</td>
+                                        <td>{patronymic}</td>
+                                        <td>{email}</td>
+                                        <td>{subjectName}</td>
+                                    </tr>
+                                )
+                            })}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         )

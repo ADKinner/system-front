@@ -149,7 +149,7 @@ class TeacherInfoPage extends React.Component {
                     </div>
                 )}
                 {this.state.isSubjectInfo && (
-                    <div className="data_panel">
+                    <div className="data_panel_teacher">
                         <h1>Subject: {this.state.subject.name + ' - ' + this.state.subject.form}</h1>
                         <div className="detail">
                             <div className="detail_name">Семестр:</div>

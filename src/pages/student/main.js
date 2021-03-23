@@ -1,5 +1,5 @@
 import React from "react";
-import '../../styles/student/main.css';
+import '../../styles/student.css';
 import {
     goLoginPage,
     goServerErrorPage,
@@ -17,14 +17,7 @@ class StudentMainPage extends React.Component {
         this.state = {
             isStart: true,
             subjects: [],
-            subject: {
-                name: '',
-                planLessonsCount: 0,
-                pastLessonsCount: 0,
-                skipsCount: 0,
-                grades: '',
-                averageGrade: 0.0
-            }
+            subject: {}
         }
     }
 
@@ -109,61 +102,59 @@ class StudentMainPage extends React.Component {
         });
     }
 
-    renderSubjectButtons() {
-        return this.state.subjects.map((subject, index) => {
-            const {id, name, form} = subject
-            return (
-                <div>
-                    <button className="btn_st" value={id} onClick={(e) => this.handleSubjectButtonClick(e)}>
-                        {name + ' - ' + form}
-                    </button>
-                </div>
-            )
-        })
-    }
-
     render() {
         return (
-            <div className="main_st">
+            <div className="main">
                 <div className="bar">
                     <div className="sys_image"/>
                     <div className="sys_name">SYSTEM</div>
-                    <a className="logout" onClick={() => goLoginPage(this.props)}>Logout</a>
-                    <a onClick={() => goStudentProfilePage(this.props)}>Profile</a>
-                    <a onClick={() => goStudentTeacherPage(this.props)}>Teachers</a>
-                    <a onClick={() => goStudentGroupPage(this.props)}>Group</a>
-                    <a className="active" onClick={() => this.handleMainClick()}>Main</a>
+                    <a className="logout" onClick={() => goLoginPage(this.props)}>Выйти</a>
+                    <a onClick={() => goStudentProfilePage(this.props)}>Профиль</a>
+                    <a onClick={() => goStudentTeacherPage(this.props)}>Учителя</a>
+                    <a onClick={() => goStudentGroupPage(this.props)}>Группа</a>
+                    <a className="active" onClick={() => this.handleMainClick()}>Главная</a>
                 </div>
-                <div className="main_data_st">
+                <div className="main_data">
                     {this.state.isStart && (
-                        <div className="subject_panel_st">
-                            {this.renderSubjectButtons()}
+                        <div className="subject_panel">
+                            {this.state.subjects.map((subject, index) => {
+                                const {id, name, form} = subject
+                                return (
+                                    <div>
+                                        <button
+                                            className="btn_subject"
+                                            value={id}
+                                            onClick={event => this.handleSubjectButtonClick(event)}
+                                        >
+                                            {name + ' - ' + form}
+                                        </button>
+                                    </div>
+                                )
+                            })}
                         </div>
                     )}
                     {!this.state.isStart && (
-                        <div className="subject_data_panel_st">
-                            <div className="subject_data_st">
-                                <h1>Subject: {this.state.subject.name}</h1>
-                                <div className="subject_detail">
-                                    <div className="subject_detail_name">Grades:</div>
-                                    <div className="subject_detail_value">{this.state.subject.grades}</div>
-                                </div>
-                                <div className="subject_detail">
-                                    <div className="subject_detail_name">Average mark:</div>
-                                    <div className="subject_detail_value">{this.state.subject.averageGrade}</div>
-                                </div>
-                                <div className="subject_detail">
-                                    <div className="subject_detail_name">Skips count:</div>
-                                    <div className="subject_detail_value">{this.state.subject.skipsCount}</div>
-                                </div>
-                                <div className="subject_detail">
-                                    <div className="subject_detail_name">Past classes:</div>
-                                    <div className="subject_detail_value">{this.state.subject.pastLessonsCount}</div>
-                                </div>
-                                <div className="subject_detail">
-                                    <div className="subject_detail_name">Planned classes:</div>
-                                    <div className="subject_detail_value">{this.state.subject.planLessonsCount}</div>
-                                </div>
+                        <div className="data_panel_student">
+                            <h1>Предмет: {this.state.subject.name}</h1>
+                            <div className="subject_detail">
+                                <div className="subject_detail_name">Оценки:</div>
+                                <div className="subject_detail_value">{this.state.subject.grades}</div>
+                            </div>
+                            <div className="subject_detail">
+                                <div className="subject_detail_name">Средний балл:</div>
+                                <div className="subject_detail_value">{this.state.subject.averageGrade}</div>
+                            </div>
+                            <div className="subject_detail">
+                                <div className="subject_detail_name">Количество пропусков:</div>
+                                <div className="subject_detail_value">{this.state.subject.skipsCount}</div>
+                            </div>
+                            <div className="subject_detail">
+                                <div className="subject_detail_name">Прошло занятий:</div>
+                                <div className="subject_detail_value">{this.state.subject.pastLessonsCount}</div>
+                            </div>
+                            <div className="subject_detail">
+                                <div className="subject_detail_name">Всего занятий:</div>
+                                <div className="subject_detail_value">{this.state.subject.planLessonsCount}</div>
                             </div>
                         </div>
                     )}

@@ -269,7 +269,7 @@ class MainTeacherPage extends React.Component {
                     </div>
                 )}
                 {this.state.isGroupInfo && (
-                    <div className="data_panel">
+                    <div className="data_panel_teacher">
                         <h1>Учебная группа: {this.state.groupId}</h1>
                         <h2>Предмет: {this.state.groupInfo.subjectName}</h2>
                         <div className="detail">
@@ -335,7 +335,7 @@ class MainTeacherPage extends React.Component {
                     </div>
                 )}
                 {this.state.isStudentInfo && (
-                    <div className="data_panel">
+                    <div className="data_panel_teacher">
                         <h1>
                             Student: {this.getStudentFullName()}
                         </h1>
