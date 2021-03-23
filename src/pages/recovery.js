@@ -280,7 +280,7 @@ class RecoveryPasswordPage extends React.Component {
                                     />
                                 </div>
                                 {this.state.errors.confirmPassword && (
-                                    <div className="indent_r">
+                                    <div className="error_panel_register">
                                         {this.state.errors.confirmPassword}
                                     </div>
                                 )}
