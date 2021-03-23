@@ -1,5 +1,5 @@
 import React from "react";
-import '../../styles/teacher/main.css';
+import '../../styles/teacher.css';
 import {
     goLoginPage,
     goServerErrorPage,
@@ -48,11 +48,11 @@ class TeacherLessonPage extends React.Component {
                 Authorization: localStorage.getItem("token")
             }
         })
-            .then((response) => {
+            .then(response => {
                 if (response.data.length == 0) {
                     this.setState({
                         isError: true,
-                        errorMessage: 'You not work with this group'
+                        errorMessage: 'Эта группа не доступна'
                     });
                 } else {
                     this.setState({
@@ -71,7 +71,7 @@ class TeacherLessonPage extends React.Component {
                 } else if (error.response.status === 404 || error.response.status === 400) {
                     this.setState({
                         isError: true,
-                        errorMessage: 'Group ID is incorrect'
+                        errorMessage: 'ID учебной группы не верен'
                     });
                 }
             });
@@ -84,13 +84,13 @@ class TeacherLessonPage extends React.Component {
                 Authorization: localStorage.getItem("token")
             }
         })
-            .then((response) => {
+            .then(response => {
                 if (response.data.length == 0) {
                     this.setState({
                         isSubjects: false,
                         isFindGroup: true,
                         isError: true,
-                        errorMessage: 'Group is empty'
+                        errorMessage: 'Группа пуста'
                     });
                 } else {
                     this.setState({
@@ -206,49 +206,50 @@ class TeacherLessonPage extends React.Component {
                 <div className="bar">
                     <div className="sys_image"/>
                     <div className="sys_name">SYSTEM</div>
-                    <a className="logout" onClick={() => goLoginPage(this.props)}>Logout</a>
-                    <a onClick={() => goTeacherProfilePage(this.props)}>Profile</a>
-                    <a onClick={() => goTeacherInfoPage(this.props)}>Info</a>
-                    <a onClick={() => this.handleLessonButtonClick()} className="active">Lesson</a>
-                    <a onClick={() => goTeacherMainPage(this.props)}>Main</a>
+                    <a className="logout" onClick={() => goLoginPage(this.props)}>Выйти</a>
+                    <a onClick={() => goTeacherProfilePage(this.props)}>Профиль</a>
+                    <a onClick={() => goTeacherInfoPage(this.props)}>Информация</a>
+                    <a onClick={() => this.handleLessonButtonClick()} className="active">Занятие</a>
+                    <a onClick={() => goTeacherMainPage(this.props)}>Главная</a>
                 </div>
                 {this.state.isFindGroup && (
                     <div className="find_group_panel">
                         <div className="head">
-                            Find group
+                            Поиск группы
                         </div>
                         <div className="find_panel">
                             <div className="panel_part">
                                 <div className="input_description">
-                                    Group ID
+                                    ID учебной группы
                                 </div>
                                 <input
                                     name="groupId"
                                     type="text"
-                                    placeholder="Enter group ID"
+                                    placeholder="Введите ID учебной группы"
                                     className="input_group"
                                     value={this.state.groupId}
-                                    onChange={(event) => this.handleGroupInputChange(event)}
+                                    onChange={event => this.handleGroupInputChange(event)}
                                 />
                             </div>
                             {this.state.isError && (
-                                <div className="indent_t">
+                                <div className="error_panel_part">
                                     {this.state.errorMessage}
                                 </div>
                             )}
-                            <button onClick={() => this.handleSearchGroupButtonClick()} className="btn">Search
+                            <button onClick={() => this.handleSearchGroupButtonClick()} className="btn">
+                                Поиск
                             </button>
                         </div>
                     </div>
                 )}
                 {this.state.isSubjects && (
-                    <div className="subjects_panel_t">
+                    <div className="subjects_button_panel">
                         {this.state.subjects.map((subject) => {
                             const {id, name, form} = subject
                             return (
                                 <div>
                                     <button
-                                        className="btn_s_t"
+                                        className="btn_subject"
                                         value={id}
                                         onClick={event => this.handleSubjectButtonClick(event)}
                                     >

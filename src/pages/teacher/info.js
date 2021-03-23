@@ -1,5 +1,5 @@
 import React from "react";
-import '../../styles/teacher/main.css';
+import '../../styles/teacher.css';
 import {
     goLoginPage,
     goServerErrorPage,
@@ -38,14 +38,14 @@ class TeacherInfoPage extends React.Component {
         }
     }
 
-    getSubjectsInfo() { // /teachers/id/groups/subjects
+    getSubjectsInfo() {
         axios.get(constants.DEFAULT_URL + constants.SUBJECTS_URL + constants.TEACHERS_URL + constants.SLASH +
             localStorage.getItem("id"), {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
         })
-            .then((response) => {
+            .then(response => {
                 this.setState({
                     subjects: response.data,
                     isSubjectsInfo: true
@@ -67,7 +67,7 @@ class TeacherInfoPage extends React.Component {
                 Authorization: localStorage.getItem("token")
             }
         })
-            .then((response) => {
+            .then(response => {
                 this.setState({
                     subject: response.data,
                     isSubjectsInfo: false,
@@ -92,39 +92,8 @@ class TeacherInfoPage extends React.Component {
         }
     }
 
-    handleViewSubjectInfoButtonClick(e) {
-        this.getSubjectInfo(e.target.value);
-    }
-
-    renderTableData() {
-        return this.state.subjects.map((student, index) => {
-            const {id, subject, form, term, speciality, groups} = student
-            return (
-                <tr key={id}>
-                    <td>{index + 1}</td>
-                    <td>{subject}</td>
-                    <td>{form}</td>
-                    <td>{term}</td>
-                    <td>{speciality}</td>
-                    <td>{groups.join(', ')}</td>
-                    <td>
-                        <button
-                            className="btn_view"
-                            value={id}
-                            onClick={(e) => this.handleViewSubjectInfoButtonClick(e)}
-                        >View
-                        </button>
-                    </td>
-                </tr>
-            )
-        })
-    }
-
-    renderTableHeader() {
-        let header = Object.keys(this.state.subjects[0]);
-        return header.map((key, index) => {
-            return <th key={index}>{key.toUpperCase()}</th>
-        })
+    handleViewSubjectInfoButtonClick(event) {
+        this.getSubjectInfo(event.target.value);
     }
 
     render() {
@@ -133,60 +102,84 @@ class TeacherInfoPage extends React.Component {
                 <div className="bar">
                     <div className="sys_image"/>
                     <div className="sys_name">SYSTEM</div>
-                    <a className="logout" onClick={() => goLoginPage(this.props)}>Logout</a>
-                    <a onClick={() => goTeacherProfilePage(this.props)}>Profile</a>
-                    <a className="active" onClick={() => this.handleInfoClick()}>Info</a>
-                    <a onClick={() => goTeacherLessonPage(this.props)}>Lesson</a>
-                    <a onClick={() => goTeacherMainPage(this.props)}>Main</a>
+                    <a className="logout" onClick={() => goLoginPage(this.props)}>Выйти</a>
+                    <a onClick={() => goTeacherProfilePage(this.props)}>Профиль</a>
+                    <a className="active" onClick={() => this.handleInfoClick()}>Информация</a>
+                    <a onClick={() => goTeacherLessonPage(this.props)}>Занятие</a>
+                    <a onClick={() => goTeacherMainPage(this.props)}>Главная</a>
                 </div>
                 {this.state.isSubjectsInfo && (
                     <div className="table_panel">
-                        <h1 id='title'>Subjects</h1>
+                        <h1 id='title'>Предметы</h1>
                         <table id='students'>
                             <tbody>
                             <tr>
-                                {this.renderTableHeader()}
+                                <th>ID</th>
+                                <th>Предмет</th>
+                                <th>Тип</th>
+                                <th>Семестр</th>
+                                <th>Специальность</th>
+                                <th>Группы</th>
                                 <th/>
                             </tr>
-                            {this.renderTableData()}
+                            {this.state.subjects.map((student, index) => {
+                                const {id, subject, form, term, speciality, groups} = student
+                                return (
+                                    <tr key={id}>
+                                        <td>{index + 1}</td>
+                                        <td>{subject}</td>
+                                        <td>{form}</td>
+                                        <td>{term}</td>
+                                        <td>{speciality}</td>
+                                        <td>{groups.join(', ')}</td>
+                                        <td>
+                                            <button
+                                                className="btn_view"
+                                                value={id}
+                                                onClick={event => this.handleViewSubjectInfoButtonClick(event)}
+                                            >
+                                                Посмотреть
+                                            </button>
+                                        </td>
+                                    </tr>
+                                )
+                            })}
                             </tbody>
                         </table>
                     </div>
                 )}
                 {this.state.isSubjectInfo && (
-                    <div className="subject_data_panel_t">
-                        <div className="subject_data_st">
-                            <h1>Subject: {this.state.subject.name + ' - ' + this.state.subject.form}</h1>
-                            <div className="subject_detail">
-                                <div className="subject_detail_name">Term:</div>
-                                <div className="subject_detail_value">{this.state.subject.term}</div>
+                    <div className="data_panel">
+                        <h1>Subject: {this.state.subject.name + ' - ' + this.state.subject.form}</h1>
+                        <div className="detail">
+                            <div className="detail_name">Семестр:</div>
+                            <div className="detail_value">{this.state.subject.term}</div>
+                        </div>
+                        <div className="detail">
+                            <div className="detail_name">Специальность:</div>
+                            <div className="detail_value">{this.state.subject.speciality}</div>
+                        </div>
+                        <div className="detail">
+                            <div className="detail_name">Средний балл:</div>
+                            <div className="detail_value">
+                                {this.state.subject.averageGrade.toFixed(1)}
                             </div>
-                            <div className="subject_detail">
-                                <div className="subject_detail_name">Speciality:</div>
-                                <div className="subject_detail_value">{this.state.subject.speciality}</div>
+                        </div>
+                        <div className="detail">
+                            <div className="detail_name">Среднее количество пропусков:</div>
+                            <div className="detail_value">
+                                {this.state.subject.averageSkips.toFixed(1)}
                             </div>
-                            <div className="subject_detail">
-                                <div className="subject_detail_name">Average grades mark:</div>
-                                <div className="subject_detail_value">
-                                    {this.state.subject.averageGrade.toFixed(1)}
-                                </div>
+                        </div>
+                        <div className="detail">
+                            <div className="detail_name">Среднее количество проведённых занятий:</div>
+                            <div className="detail_value">
+                                {this.state.subject.averagePastLessonsCount.toFixed(1)}
                             </div>
-                            <div className="subject_detail">
-                                <div className="subject_detail_name">Average skips count:</div>
-                                <div className="subject_detail_value">
-                                    {this.state.subject.averageSkips.toFixed(1)}
-                                </div>
-                            </div>
-                            <div className="subject_detail">
-                                <div className="subject_detail_name">Average past lessons:</div>
-                                <div className="subject_detail_value">
-                                    {this.state.subject.averagePastLessonsCount.toFixed(1)}
-                                </div>
-                            </div>
-                            <div className="subject_detail">
-                                <div className="subject_detail_name">Plan lessons count:</div>
-                                <div className="subject_detail_value">{this.state.subject.planLessonsCount}</div>
-                            </div>
+                        </div>
+                        <div className="detail">
+                            <div className="detail_name">Всего занятий:</div>
+                            <div className="detail_value">{this.state.subject.planLessonsCount}</div>
                         </div>
                     </div>
                 )}

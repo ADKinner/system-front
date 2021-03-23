@@ -74,7 +74,7 @@
     margin-top: 100px;
     margin-left: 100px;
     height: 500px;
-    width: 500px;
+    width: 520px;
     border-radius: 20px;
     border-color: #38629C;
     background-color: #38629C;
@@ -154,7 +154,7 @@
     display: inline-block;
 }
 
-.btn_pr {
+.btn_change_password {
     margin-top: 10px;
     height: 30px;
     width: 350px;
@@ -168,7 +168,7 @@
     font-size: 15px;
 }
 
-.btn_pr:hover {
+.btn_change_password:hover {
     background-color: #4E3524;
     border-color: #4E3524;
 }

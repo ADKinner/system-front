@@ -67,7 +67,7 @@
     width: 380px;
 }
 
-.indent_t {
+.error_panel_part {
     margin-top: 5px;
     margin-left: 35px;
     margin-right: 25px;
@@ -96,7 +96,7 @@
     border: 3px solid #38629C;
 }
 
-.btn_s_t {
+.btn_subject {
     margin-left: 100px;
     margin-top: 20px;
     width: 250px;
@@ -107,11 +107,11 @@
     border-color: #4CAF50;
 }
 
-.btn_s_t:hover {
+.btn_subject:hover {
     background-color: #4CAF50;
 }
 
-.subjects_panel_t {
+.subjects_button_panel {
     padding-top: 250px;
     padding-left: 700px;
 }
@@ -139,12 +139,12 @@
     color: #4CAF50;
 }
 
-.subject_data_panel_t {
+.data_panel {
     padding-top: 25px;
     margin-top: 200px;
     margin-left: 600px;
     width: 800px;
-    height: 470px;
+    height: 480px;
     background-color: saddlebrown;
 }
 

@@ -44,7 +44,7 @@ class StudentTeacherPage extends React.Component {
                 Authorization: localStorage.getItem("token")
             }
         })
-            .then((response) => {
+            .then(response => {
                 this.setState({
                     isEmpty: false,
                     teachers: response.data

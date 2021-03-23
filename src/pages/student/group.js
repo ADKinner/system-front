@@ -44,7 +44,7 @@ class StudentGroupPage extends React.Component {
                 Authorization: localStorage.getItem("token")
             }
         })
-            .then((response) => {
+            .then(response => {
                 this.setState({
                     isEmpty: false,
                     students: response.data

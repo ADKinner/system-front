@@ -1,5 +1,5 @@
 import React from "react";
-import '../../styles/teacher/main.css';
+import '../../styles/teacher.css';
 import {
     goLoginPage,
     goServerErrorPage,
@@ -53,7 +53,7 @@ class MainTeacherPage extends React.Component {
                 Authorization: localStorage.getItem("token")
             }
         })
-            .then((response) => {
+            .then(response => {
                 if (response.data.length === 0) {
                     this.setState({
                         isError: true,
@@ -114,7 +114,7 @@ class MainTeacherPage extends React.Component {
                 Authorization: localStorage.getItem("token")
             }
         })
-            .then((response) => {
+            .then(response => {
                 this.setState({
                     students: response.data,
                     isGroupInfo: false,
@@ -137,7 +137,7 @@ class MainTeacherPage extends React.Component {
                 Authorization: localStorage.getItem("token")
             }
         })
-            .then((response) => {
+            .then(response => {
                 this.setState({
                     studentInfo: response.data,
                     studentId: studentId,
@@ -203,6 +203,11 @@ class MainTeacherPage extends React.Component {
         this.getStudentInfo(event.target.value);
     }
 
+    getStudentFullName() {
+        const student = this.state.students.find(st => st.id == this.state.studentId);
+        return student.surname + " " + student.name + " " + student.patronymic;
+    }
+
     render() {
         return (
             <div className="main">
@@ -235,23 +240,24 @@ class MainTeacherPage extends React.Component {
                                 />
                             </div>
                             {this.state.isError && (
-                                <div className="indent_t">
+                                <div className="error_panel_part">
                                     {this.state.errorMessage}
                                 </div>
                             )}
-                            <button onClick={() => this.handleSearchGroupButtonClick()} className="btn">Search
+                            <button onClick={() => this.handleSearchGroupButtonClick()} className="btn">
+                                Поиск
                             </button>
                         </div>
                     </div>
                 )}
                 {this.state.isSubjects && (
-                    <div className="subjects_panel_t">
+                    <div className="subjects_button_panel">
                         {this.state.subjects.map(subject => {
                             const {id, name, form} = subject
                             return (
                                 <div>
                                     <button
-                                        className="btn_s_t"
+                                        className="btn_subject"
                                         value={id}
                                         onClick={event => this.handleSubjectButtonClick(event)}
                                     >
@@ -263,7 +269,7 @@ class MainTeacherPage extends React.Component {
                     </div>
                 )}
                 {this.state.isGroupInfo && (
-                    <div className="subject_data_panel_t">
+                    <div className="data_panel">
                         <h1>Учебная группа: {this.state.groupId}</h1>
                         <h2>Предмет: {this.state.groupInfo.subjectName}</h2>
                         <div className="detail">
@@ -329,10 +335,10 @@ class MainTeacherPage extends React.Component {
                     </div>
                 )}
                 {this.state.isStudentInfo && (
-                    <div className="subject_data_panel_t">
-                        {/*<h1>Student: {this.state.students.forEach((st) => {*/}
-                        {/*    st.id == this.state.studentId ? */}
-                        {/*})}</h1>*/}
+                    <div className="data_panel">
+                        <h1>
+                            Student: {this.getStudentFullName()}
+                        </h1>
                         <h2>Предмет: {this.state.groupInfo.subjectName}</h2>
                         <div className="detail">
                             <div className="detail_name">Оценки:</div>
