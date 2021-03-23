@@ -3,10 +3,6 @@ export function goLoginPage(props) {
     props.history.push("/login");
 }
 
-export function goProfilePage(props, url) {
-    props.history.push(url + '/profile');
-}
-
 export function goStudentProfilePage(props) {
     props.history.push('/student/profile');
 }

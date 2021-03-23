@@ -1,12 +1,21 @@
 import React from "react";
 import axios from "axios";
 import {
+    goAdminGroupsPage,
+    goAdminProfilePage,
+    goAdminStudentsPage,
+    goAdminSubjectsPage,
+    goAdminTeachersPage,
     goLoginPage,
-    goMainPage,
-    goProfilePage,
-    goStudentGroupPage,
     goServerErrorPage,
-    goStudentTeacherPage
+    goStudentGroupPage,
+    goStudentMainPage,
+    goStudentProfilePage,
+    goStudentTeacherPage,
+    goTeacherInfoPage,
+    goTeacherLessonPage,
+    goTeacherMainPage,
+    goTeacherProfilePage
 } from "../redirect";
 import validateRecPasswordsInput from "../validate/validateRecPasswordsInput";
 import * as constants from '../constants';
@@ -35,13 +44,10 @@ class ChangePasswordPage extends React.Component {
         } else {
             switch (role) {
                 case "ROLE_STUDENT":
-                    this.setState({isStudent: true});
                     break;
                 case "ROLE_TEACHER":
-                    this.setState({isTeacher: true});
                     break;
                 case "ROLE_ADMIN":
-                    this.setState({isAdmin: true});
                     break;
                 default:
                     goLoginPage(this.props);
@@ -80,7 +86,7 @@ class ChangePasswordPage extends React.Component {
             } else {
                 this.setState({
                     errors: {
-                        confirmPassword: 'Confirm passwords not match'
+                        confirmPassword: 'Пароль-подтверждение не верен'
                     }
                 })
             }
@@ -162,67 +168,71 @@ class ChangePasswordPage extends React.Component {
         localStorage.removeItem("email");
         const role = localStorage.getItem("role");
         if (role === constants.STUDENT_ROLE) {
-            goProfilePage(this.props, '/student');
+            goStudentProfilePage(this.props);
         } else if (role === constants.TEACHER_ROLE) {
-            goProfilePage(this.props, '/teacher');
+            goTeacherProfilePage(this.props);
         } else if (role === constants.ADMIN_ROLE) {
-            goProfilePage(this.props, '/admin');
+            goAdminProfilePage(this.props);
         }
     }
 
-    handleMainClick(role) {
+    renderBarButtons() {
+        const role = localStorage.getItem("role");
         if (role === constants.STUDENT_ROLE) {
-            goMainPage(this.props, '/student');
+            return (
+                <div className="bar">
+                    <div className="sys_image"/>
+                    <div className="sys_name">SYSTEM</div>
+                    <a className="logout" onClick={() => goLoginPage(this.props)}>Выйти</a>
+                    <a onClick={() => goStudentProfilePage(this.props)}>Профиль</a>
+                    <a onClick={() => goStudentTeacherPage(this.props)}>Учителя</a>
+                    <a onClick={() => goStudentGroupPage(this.props)}>Группа</a>
+                    <a onClick={() => goStudentMainPage(this.props)}>Главная</a>
+                </div>
+            );
         } else if (role === constants.TEACHER_ROLE) {
-            goMainPage(this.props, '/teacher');
+            return (
+                <div className="bar">
+                    <div className="sys_image"/>
+                    <div className="sys_name">SYSTEM</div>
+                    <a className="logout" onClick={() => goLoginPage(this.props)}>Выйти</a>
+                    <a onClick={() => goTeacherProfilePage(this.props)}>Профиль</a>
+                    <a onClick={() => goTeacherInfoPage(this.props)}>Информация</a>
+                    <a onClick={() => goTeacherLessonPage(this.props)}>Занятие</a>
+                    <a onClick={() => goTeacherMainPage(this.props)}>Главная</a>
+                </div>
+            );
         } else if (role === constants.ADMIN_ROLE) {
-            goMainPage(this.props, '/admin');
+            return (
+                <div className="bar">
+                    <div className="sys_image"/>
+                    <div className="sys_name">SYSTEM</div>
+                    <a className="logout" onClick={() => goLoginPage(this.props)}>Выйти</a>
+                    <a onClick={() => goAdminProfilePage(this.props)}>Профиль</a>
+                    <a onClick={() => goAdminTeachersPage(this.props)}>Учителя</a>
+                    <a onClick={() => goAdminGroupsPage(this.props)}>Группы</a>
+                    <a onClick={() => goAdminStudentsPage(this.props)}>Студенты</a>
+                    <a onClick={() => goAdminSubjectsPage(this.props)}>Предметы</a>
+                </div>
+            );
         }
     }
 
     render() {
         return (
             <div className="main">
-                {this.state.isStudent && (
-                    <div className="bar">
-                        <div className="sys_image"/>
-                        <div className="sys_name">SYSTEM</div>
-                        <a className="logout" onClick={() => goLoginPage(this.props)}>Logout</a>
-                        <a onClick={() => this.goToProfilePage()}>Profile</a>
-                        <a onClick={() => goStudentTeacherPage(this.props)}>Teachers</a>
-                        <a onClick={() => goStudentGroupPage(this.props)}>Group</a>
-                        <a onClick={() => this.handleMainClick(localStorage.getItem("role"))}>Main</a>
-                    </div>
-                )}
-                {this.state.isTeacher && (
-                    <div className="bar">
-                        <div className="sys_image"/>
-                        <div className="sys_name">SYSTEM</div>
-                        <a className="logout" onClick={() => goLoginPage(this.props)}>Logout</a>
-                        <a onClick={() => this.goToProfilePage()}>Profile</a>
-                        <a onClick={() => this.handleMainClick(localStorage.getItem("role"))}>Main</a>
-                    </div>
-                )}
-                {this.state.isAdmin && (
-                    <div className="bar">
-                        <div className="sys_image"/>
-                        <div className="sys_name">SYSTEM</div>
-                        <a className="logout" onClick={() => goLoginPage(this.props)}>Logout</a>
-                        <a onClick={() => this.goToProfilePage()}>Profile</a>
-                        <a onClick={() => this.handleMainClick(localStorage.getItem("role"))}>Main</a>
-                    </div>
-                )}
+                {this.renderBarButtons()}
                 <div className="small_panel">
                     <svg className="recovery_image"/>
                 </div>
                 <div className="panel_second panel_ch">
                     <div className="begin_rec">
-                        Password change
+                        Изменить пароль
                     </div>
-                    <form className="login" onSubmit={(event) => this.handleSubmitPasswordsInput(event)}>
+                    <form className="login" onSubmit={event => this.handleSubmitPasswordsInput(event)}>
                         <div className="part">
                             <div className="desc">
-                                Confirm password
+                                Пароль-подтвеждение
                             </div>
                             <input
                                 name="confirmPassword"
@@ -230,7 +240,7 @@ class ChangePasswordPage extends React.Component {
                                 type={this.state.isPasswordVisibility ? "text" : "password"}
                                 placeholder="Enter confirmation password"
                                 value={this.state.data.confirmPassword}
-                                onChange={(event) => this.handlePasswordsInputChange(event)}
+                                onChange={event => this.handlePasswordsInputChange(event)}
                             />
                         </div>
                         {this.state.errors.confirmPassword && (
@@ -240,24 +250,24 @@ class ChangePasswordPage extends React.Component {
                         )}
                         <div className="part_password">
                             <div className="desc">
-                                New password
+                                Новый пароль
                             </div>
                             <input
                                 name="newPassword"
                                 className="data_input"
                                 type={this.state.isPasswordVisibility ? "text" : "password"}
-                                placeholder="Enter new password"
+                                placeholder="Введите новый пароль"
                                 value={this.state.data.newPassword}
-                                onChange={(event) => this.handlePasswordsInputChange(event)}
+                                onChange={event => this.handlePasswordsInputChange(event)}
                             />
                             <div className="small_indent"/>
                             <input
                                 name="repeatPassword"
                                 className="data_input"
                                 type={this.state.isPasswordVisibility ? "text" : "password"}
-                                placeholder="Enter new password"
+                                placeholder="Введите пароль повторно"
                                 value={this.state.data.repeatPassword}
-                                onChange={(event) => this.handlePasswordsInputChange(event)}
+                                onChange={event => this.handlePasswordsInputChange(event)}
                             />
                         </div>
                         <input type="checkbox"
@@ -265,13 +275,13 @@ class ChangePasswordPage extends React.Component {
                                className="check_recovery"
                                onChange={() => this.handleChangePasswordVisibility()}
                         />
-                        <label htmlFor="check">Show passwords</label>
+                        <label htmlFor="check">Посмотреть пароли</label>
                         {this.state.errors.newPassword && (
                             <div className="error_text_2">
                                 {this.state.errors.newPassword}
                             </div>
                         )}
-                        <button type="submit" className="btn_rec">Change password</button>
+                        <button className="btn_rec">Изменить</button>
                     </form>
                 </div>
                 {this.state.isModalOpen && (
@@ -281,10 +291,10 @@ class ChangePasswordPage extends React.Component {
                                 <div className="modal_body_rm success_rec">
                                     <h1>Information</h1>
                                     <h3>
-                                        Confirmation password was sent to your account mail.
+                                        Пароль-подтверждение был выслан на вашу почту.
                                     </h3>
                                     <h3>
-                                        Check it.
+                                        Проверьте её.
                                     </h3>
                                     <button
                                         className="btn_rm"
@@ -304,14 +314,14 @@ class ChangePasswordPage extends React.Component {
                                 <div className="modal_body_rm success_rec">
                                     <h1>Success</h1>
                                     <h3>
-                                        Password successfully updated.
-                                        Click on return button to go to profile page.
+                                        Пароль успешно обновлен.
+                                        Нажмите на кнопку, чтобы выйти.
                                     </h3>
                                     <button
                                         className="btn_rm"
                                         onClick={() => this.goToProfilePage()}
                                     >
-                                        Return
+                                        Завершить
                                     </button>
                                 </div>
                             </div>

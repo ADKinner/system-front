@@ -3,17 +3,17 @@ export default function validateRecPasswordsInput(values) {
     let errors = {}
 
     if (!values.confirmPassword) {
-        errors.confirmPassword = "Confirmation password required"
+        errors.confirmPassword = "Требуется пароль-подтверждение"
     }
 
     if (!values.newPassword && !values.repeatPassword) {
-        errors.newPassword = "Passwords are required"
+        errors.newPassword = "Требуются пароли"
     } else if (!values.newPassword || !values.repeatPassword) {
-        errors.newPassword = "Password is required"
+        errors.newPassword = "Требуется пароль"
     } else if (!/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/.test(values.newPassword)) {
-        errors.newPassword = "Incorrect password format."
+        errors.newPassword = "Неправльный формат пароля"
     } else if (values.newPassword !== values.repeatPassword) {
-        errors.newPassword = "Passwords do not match"
+        errors.newPassword = "Пароли не совпадают"
     }
 
     return errors;

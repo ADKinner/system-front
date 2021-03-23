@@ -3,21 +3,21 @@ export default function validateRegInput(values) {
     let errors = {}
 
     if (!values.studentID) {
-        errors.studentID = "Student ID number required"
+        errors.studentID = "Требуется ID"
     }
 
     if (!values.studentIDPassword) {
-        errors.studentIDPassword = "Student ID confirmation password required"
+        errors.studentIDPassword = "Требуется пароль для подтверждения ID"
     }
 
     if (!values.password && !values.confirmPassword) {
-        errors.password = "Passwords are required"
+        errors.password = "Требуются пароли"
     } else if (!values.password || !values.confirmPassword) {
-        errors.password = "Password is required"
+        errors.password = "Требуется пароль"
     } else if (!/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/.test(values.password)) {
-        errors.password = "Incorrect password format."
+        errors.password = "Неправльный формат пароля"
     } else if (values.password !== values.confirmPassword) {
-        errors.password = "Passwords do not match"
+        errors.password = "Пароли не совпадают"
     }
 
     return errors;
