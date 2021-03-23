@@ -5,6 +5,7 @@ export const REGISTRATION_DATA_URL = "/registration-data";
 export const AUTHENTICATION_URL = "/authentication"
 export const STUDENTS_URL = "/students";
 export const TEACHERS_URL = "/teachers";
+export const LESSON_ULR = "/lesson";
 export const ADMINS_URL = "/admins";
 export const GROUPS_URL = "/groups";
 export const GROUP_URL = "/group";

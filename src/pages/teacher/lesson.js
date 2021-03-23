@@ -17,7 +17,8 @@ class TeacherLessonPage extends React.Component {
         this.state = {
             isFindGroup: true,
             isSubjects: false,
-            isLessonData: false,
+            isLesson: false,
+            isError: false,
             groupId: '',
             subjectId: '',
             subjects: [],
@@ -41,14 +42,14 @@ class TeacherLessonPage extends React.Component {
     }
 
     getSubjects() {
-        axios.get(constants.DEFAULT_URL + constants.TEACHERS_URL + constants.SLASH + localStorage.getItem("id")
-            + constants.GROUPS_URL + constants.SLASH + this.state.groupId + constants.SUBJECTS_URL, {
+        axios.get(constants.DEFAULT_URL + constants.SUBJECTS_URL + constants.TEACHERS_URL + constants.SLASH
+            + localStorage.getItem("id") + constants.GROUPS_URL + constants.SLASH + this.state.groupId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
         })
             .then((response) => {
-                if (response.data.length === 0) {
+                if (response.data.length == 0) {
                     this.setState({
                         isError: true,
                         errorMessage: 'You not work with this group'
@@ -76,6 +77,72 @@ class TeacherLessonPage extends React.Component {
             });
     }
 
+    getLessonInfo() {
+        axios.get(constants.DEFAULT_URL + constants.LESSON_ULR + constants.GROUPS_URL + constants.SLASH
+            + this.state.groupId, {
+            headers: {
+                Authorization: localStorage.getItem("token")
+            }
+        })
+            .then((response) => {
+                if (response.data.length == 0) {
+                    this.setState({
+                        isSubjects: false,
+                        isFindGroup: true,
+                        isError: true,
+                        errorMessage: 'Group is empty'
+                    });
+                } else {
+                    this.setState({
+                        students: response.data,
+                        isSubjects: false,
+                        isLesson: true
+                    });
+                }
+            })
+            .catch((error) => {
+                if (error.response.status === 500) {
+                    goServerErrorPage(this.props);
+                } else if (error.response.status === 401) {
+                    goLoginPage(this.props);
+                }
+            });
+    }
+
+    saveLessonInfo() {
+        const data = [];
+        this.state.students.forEach((st) => {
+            const info = {
+                id: st["id"],
+                mark: st["mark"],
+                isSkip: st["isSkip"]
+            };
+            data.push(info);
+        });
+        axios.post(constants.DEFAULT_URL + constants.LESSON_ULR, {
+            groupId: this.state.groupId,
+            subjectId: this.state.subjectId,
+            data: data
+        }, {
+            headers: {
+                Authorization: localStorage.getItem("token")
+            }
+        })
+            .then(() => {
+                this.setState({
+                    isSubjects: true,
+                    isLesson: false
+                });
+            })
+            .catch((error) => {
+                if (error.response.status === 500) {
+                    goServerErrorPage(this.props);
+                } else if (error.response.status === 401) {
+                    goLoginPage(this.props);
+                }
+            });
+    }
+
     handleGroupInputChange(event) {
         this.setState({
             groupId: event.target.value,
@@ -83,14 +150,15 @@ class TeacherLessonPage extends React.Component {
     }
 
     handleSearchGroupButtonClick() {
-        this.getSubjects();
+        if (this.state.groupId != '') {
+            this.getSubjects();
+        }
     }
 
     handleSubjectButtonClick(event) {
+        this.getLessonInfo();
         this.setState({
-            subjectId: event.target.value,
-            isSubjects: false,
-            isLessonData: true //add logic tomorrow
+            subjectId: event.target.value
         });
     }
 
@@ -100,35 +168,42 @@ class TeacherLessonPage extends React.Component {
                 isFindGroup: true,
                 isSubjects: false
             });
-        } else if (this.state.isLessonData) {
+        } else if (this.state.isLesson) {
             this.setState({
                 isSubjects: true,
-                isLessonData: false
+                isLesson: false
             });
         }
     }
 
-    renderSubjectsButtons() {
-        return this.state.subjects.map((subject, index) => {
-            const {id, name, form} = subject
-            return (
-                <div>
-                    <button
-                        className="btn_s_t"
-                        value={id}
-                        onClick={(e) => this.handleSubjectButtonClick(e)}
-                    >
-                        {name + ' - ' + form}
-                    </button>
-                </div>
-            );
-        });
+    handleSubmitLessonForm(event) {
+        event.preventDefault();
+        this.saveLessonInfo();
+    }
+
+    handleSelectSkip(event) {
+        this.setState(state => ({
+            students: state.students.map(
+                (st, i) => i == event.target.id ? {
+                    ...st,
+                    isSkip: !!JSON.parse(String(event.target.value).toLowerCase())
+                } : st
+            )
+        }));
+    }
+
+    handleGradeValue(event) {
+        this.setState(state => ({
+            students: state.students.map(
+                (st, i) => i == event.target.id ? {...st, mark: parseInt(event.target.value)} : st
+            )
+        }));
     }
 
     render() {
         return (
-            <div className="main_t">
-                <div className="bar_p">
+            <div className="main">
+                <div className="bar">
                     <div className="sys_image"/>
                     <div className="sys_name">SYSTEM</div>
                     <a className="logout" onClick={() => goLoginPage(this.props)}>Logout</a>
@@ -138,20 +213,20 @@ class TeacherLessonPage extends React.Component {
                     <a onClick={() => goTeacherMainPage(this.props)}>Main</a>
                 </div>
                 {this.state.isFindGroup && (
-                    <div className="panel_t">
-                        <div className="begin_t">
+                    <div className="find_group_panel">
+                        <div className="head">
                             Find group
                         </div>
-                        <div className="find_panel_t">
-                            <div className="part_t">
-                                <div className="description_t">
+                        <div className="find_panel">
+                            <div className="panel_part">
+                                <div className="input_description">
                                     Group ID
                                 </div>
                                 <input
                                     name="groupId"
                                     type="text"
                                     placeholder="Enter group ID"
-                                    className="in_data_t"
+                                    className="input_group"
                                     value={this.state.groupId}
                                     onChange={(event) => this.handleGroupInputChange(event)}
                                 />
@@ -168,12 +243,81 @@ class TeacherLessonPage extends React.Component {
                 )}
                 {this.state.isSubjects && (
                     <div className="subjects_panel_t">
-                        {this.renderSubjectsButtons()}
+                        {this.state.subjects.map((subject) => {
+                            const {id, name, form} = subject
+                            return (
+                                <div>
+                                    <button
+                                        className="btn_s_t"
+                                        value={id}
+                                        onClick={event => this.handleSubjectButtonClick(event)}
+                                    >
+                                        {name + ' - ' + form}
+                                    </button>
+                                </div>
+                            );
+                        })}
                     </div>
                 )}
-                {this.state.isGroupInfo && (
-                    <div>
-                        <h1>Tomorrow</h1>
+                {this.state.isLesson && (
+                    <div className="table_panel">
+                        <h1 id='title'>Занятие</h1>
+                        <form onSubmit={(event => this.handleSubmitLessonForm(event))}>
+                            <table id='students'>
+                                <tbody>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Фамилия</th>
+                                    <th>Имя</th>
+                                    <th>Отчество</th>
+                                    <th>Отсутсвие</th>
+                                    <th>Оценка</th>
+                                </tr>
+                                {this.state.students.map((student, index) => {
+                                    const {id, surname, name, patronymic} = student;
+                                    return (
+                                        <tr key={id}>
+                                            <td>{index + 1}</td>
+                                            <td>{surname}</td>
+                                            <td>{name}</td>
+                                            <td>{patronymic}</td>
+                                            <td>
+                                                <select
+                                                    id={index}
+                                                    className="select_skip"
+                                                    onChange={event => this.handleSelectSkip(event)}
+                                                >
+                                                    <option value={false}>Нет</option>
+                                                    <option value={true}>Да</option>
+                                                </select>
+                                            </td>
+                                            <td>
+
+                                                <select
+                                                    id={index}
+                                                    className="select_mark"
+                                                    onChange={event => this.handleGradeValue(event)}
+                                                >
+                                                    <option value={0}>Нет оценки</option>
+                                                    <option value={1}>1</option>
+                                                    <option value={2}>2</option>
+                                                    <option value={3}>3</option>
+                                                    <option value={4}>4</option>
+                                                    <option value={5}>5</option>
+                                                    <option value={6}>6</option>
+                                                    <option value={7}>7</option>
+                                                    <option value={8}>8</option>
+                                                    <option value={9}>9</option>
+                                                    <option value={10}>10</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    )
+                                })}
+                                </tbody>
+                            </table>
+                            <button className="btn_end_lesson">Закончить занятие</button>
+                        </form>
                     </div>
                 )}
             </div>

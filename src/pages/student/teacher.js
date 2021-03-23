@@ -88,7 +88,7 @@ class StudentTeacherPage extends React.Component {
     render() {
         return (
             <div className="main_teacher_st">
-                <div className="bar_p">
+                <div className="bar">
                     <div className="sys_image"/>
                     <div className="sys_name">SYSTEM</div>
                     <a className="logout" onClick={() => goLoginPage(this.props)}>Logout</a>

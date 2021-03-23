@@ -47,8 +47,8 @@ class MainTeacherPage extends React.Component {
     }
 
     getSubjects() {
-        axios.get(constants.DEFAULT_URL + constants.TEACHERS_URL + constants.SLASH + localStorage.getItem("id")
-            + constants.GROUPS_URL + constants.SLASH + this.state.groupId + constants.SUBJECTS_URL, {
+        axios.get(constants.DEFAULT_URL + constants.SUBJECTS_URL + constants.TEACHERS_URL + constants.SLASH
+            + localStorage.getItem("id") + constants.GROUPS_URL + constants.SLASH + this.state.groupId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -83,13 +83,15 @@ class MainTeacherPage extends React.Component {
     }
 
     getGroupInfo(subjectId) {
-        axios.get(constants.DEFAULT_URL + constants.TEACHERS_URL + constants.GROUPS_URL + constants.SLASH
-            + this.state.groupId + constants.SUBJECTS_URL + constants.SLASH + subjectId, {
+        console.log(constants.DEFAULT_URL + constants.SUBJECTS_URL + constants.SLASH + subjectId
+            + constants.GROUPS_URL + constants.SLASH + this.state.groupId);
+        axios.get(constants.DEFAULT_URL + constants.SUBJECTS_URL + constants.SLASH + subjectId
+            + constants.GROUPS_URL + constants.SLASH + this.state.groupId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
         })
-            .then((response) => {
+            .then(response => {
                 this.setState({
                     groupInfo: response.data,
                     isGroupInfo: true,
@@ -97,7 +99,6 @@ class MainTeacherPage extends React.Component {
                 });
             })
             .catch((error) => {
-                console.log(error);
                 if (error.response.status === 500) {
                     goServerErrorPage(this.props);
                 } else if (error.response.status === 401) {
@@ -106,9 +107,9 @@ class MainTeacherPage extends React.Component {
             });
     }
 
-    getGroupStudents() {
-        axios.get(constants.DEFAULT_URL + constants.TEACHERS_URL + constants.GROUPS_URL + constants.SLASH
-            + this.state.groupId + constants.STUDENTS_URL, {
+    getStudents() {
+        axios.get(constants.DEFAULT_URL + constants.GROUPS_URL + constants.SLASH + this.state.groupId
+            + constants.STUDENTS_URL, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -130,8 +131,8 @@ class MainTeacherPage extends React.Component {
     }
 
     getStudentInfo(studentId) {
-        axios.get(constants.DEFAULT_URL + constants.TEACHERS_URL + constants.GROUPS_URL + constants.STUDENTS_URL + constants.SLASH
-            + studentId + constants.SUBJECTS_URL + constants.SLASH + this.state.subjectId, {
+        axios.get(constants.DEFAULT_URL + constants.SUBJECTS_URL + constants.SLASH + this.state.subjectId
+            + constants.STUDENTS_URL + constants.SLASH + studentId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -139,6 +140,7 @@ class MainTeacherPage extends React.Component {
             .then((response) => {
                 this.setState({
                     studentInfo: response.data,
+                    studentId: studentId,
                     isStudentInfo: true,
                     isGroupStudents: false,
                 });
@@ -194,89 +196,42 @@ class MainTeacherPage extends React.Component {
     }
 
     handleViewGroupButtonClick() {
-        this.getGroupStudents();
+        this.getStudents();
     }
 
     handleViewStudentButtonClick(event) {
         this.getStudentInfo(event.target.value);
     }
 
-    renderSubjectsButtons() {
-        return this.state.subjects.map((subject, index) => {
-            const {id, name, form} = subject
-            return (
-                <div>
-                    <button
-                        className="btn_s_t"
-                        value={id}
-                        onClick={(e) => this.handleSubjectButtonClick(e)}
-                    >
-                        {name + ' - ' + form}
-                    </button>
-                </div>
-            );
-        });
-    }
-
-    renderTableData() {
-        return this.state.students.map((student, index) => {
-            const {id, surname, name, patronymic, email} = student
-            return (
-                <tr key={id}>
-                    <td>{index + 1}</td>
-                    <td>{name}</td>
-                    <td>{surname}</td>
-                    <td>{patronymic}</td>
-                    <td>{email}</td>
-                    <td>
-                        <button
-                            className="btn_view"
-                            value={id}
-                            onClick={(e) => this.handleViewStudentButtonClick(e)}
-                        >View
-                        </button>
-                    </td>
-                </tr>
-            )
-        })
-    }
-
-    renderTableHeader() {
-        let header = Object.keys(this.state.students[0])
-        return header.map((key, index) => {
-            return <th key={index}>{key.toUpperCase()}</th>
-        })
-    }
-
     render() {
         return (
-            <div className="main_t">
-                <div className="bar_p">
+            <div className="main">
+                <div className="bar">
                     <div className="sys_image"/>
                     <div className="sys_name">SYSTEM</div>
-                    <a className="logout" onClick={() => goLoginPage(this.props)}>Logout</a>
-                    <a onClick={() => goTeacherProfilePage(this.props)}>Profile</a>
-                    <a onClick={() => goTeacherInfoPage(this.props)}>Info</a>
-                    <a onClick={() => goTeacherLessonPage(this.props)}>Lesson</a>
-                    <a onClick={() => this.handleMainClick()} className="active">Main</a>
+                    <a className="logout" onClick={() => goLoginPage(this.props)}>Выйти</a>
+                    <a onClick={() => goTeacherProfilePage(this.props)}>Профиль</a>
+                    <a onClick={() => goTeacherInfoPage(this.props)}>Информация</a>
+                    <a onClick={() => goTeacherLessonPage(this.props)}>Занятие</a>
+                    <a onClick={() => this.handleMainClick()} className="active">Главная</a>
                 </div>
                 {this.state.isFindGroup && (
-                    <div className="panel_t">
-                        <div className="begin_t">
-                            Find group
+                    <div className="find_group_panel">
+                        <div className="head">
+                            Поиск группы
                         </div>
-                        <div className="find_panel_t">
-                            <div className="part_t">
-                                <div className="description_t">
-                                    Group ID
+                        <div className="find_panel">
+                            <div className="panel_part">
+                                <div className="input_description">
+                                    ID учебной группы
                                 </div>
                                 <input
                                     name="groupId"
                                     type="text"
-                                    placeholder="Enter group ID"
-                                    className="in_data_t"
+                                    placeholder="Введите ID учебной группы"
+                                    className="input_group"
                                     value={this.state.groupId}
-                                    onChange={(event) => this.handleGroupInputChange(event)}
+                                    onChange={event => this.handleGroupInputChange(event)}
                                 />
                             </div>
                             {this.state.isError && (
@@ -291,81 +246,115 @@ class MainTeacherPage extends React.Component {
                 )}
                 {this.state.isSubjects && (
                     <div className="subjects_panel_t">
-                        {this.renderSubjectsButtons()}
+                        {this.state.subjects.map(subject => {
+                            const {id, name, form} = subject
+                            return (
+                                <div>
+                                    <button
+                                        className="btn_s_t"
+                                        value={id}
+                                        onClick={event => this.handleSubjectButtonClick(event)}
+                                    >
+                                        {name + ' - ' + form}
+                                    </button>
+                                </div>
+                            );
+                        })}
                     </div>
                 )}
                 {this.state.isGroupInfo && (
                     <div className="subject_data_panel_t">
-                        <div className="subject_data_st">
-                            <h1>Group: {this.state.groupId}</h1>
-                            <h2>Subject: {this.state.groupInfo.subjectName}</h2>
-                            <div className="subject_detail">
-                                <div className="subject_detail_name">Average mark:</div>
-                                <div className="subject_detail_value">
-                                    {this.state.groupInfo.averageGrade.toFixed(1)}
-                                </div>
+                        <h1>Учебная группа: {this.state.groupId}</h1>
+                        <h2>Предмет: {this.state.groupInfo.subjectName}</h2>
+                        <div className="detail">
+                            <div className="detail_name">Средняя оценка:</div>
+                            <div className="detail_value">
+                                {this.state.groupInfo.averageGrade.toFixed(1)}
                             </div>
-                            <div className="subject_detail">
-                                <div className="subject_detail_name">Average skips count:</div>
-                                <div className="subject_detail_value">
-                                    {this.state.groupInfo.averageSkipsCount.toFixed(1)}
-                                </div>
-                            </div>
-                            <div className="subject_detail">
-                                <div className="subject_detail_name">Past classes:</div>
-                                <div className="subject_detail_value">{this.state.groupInfo.pastLessonsCount}</div>
-                            </div>
-                            <div className="subject_detail">
-                                <div className="subject_detail_name">Planned classes:</div>
-                                <div className="subject_detail_value">{this.state.groupInfo.planLessonsCount}</div>
-                            </div>
-                            <button onClick={() => this.handleViewGroupButtonClick()} className="btn_st_t">
-                                View group students
-                            </button>
                         </div>
+                        <div className="detail">
+                            <div className="detail_name">Среднее количество пропусков:</div>
+                            <div className="detail_value">
+                                {this.state.groupInfo.averageSkipsCount.toFixed(1)}
+                            </div>
+                        </div>
+                        <div className="detail">
+                            <div className="detail_name">Проведено занятий:</div>
+                            <div className="detail_value">{this.state.groupInfo.pastLessonsCount}</div>
+                        </div>
+                        <div className="detail">
+                            <div className="detail_name">Всего занятий:</div>
+                            <div className="detail_value">{this.state.groupInfo.planLessonsCount}</div>
+                        </div>
+                        <button onClick={() => this.handleViewGroupButtonClick()} className="btn_view_group">
+                            Посмотреть студентов
+                        </button>
                     </div>
                 )}
                 {this.state.isGroupStudents && (
-                    <div className="student_panel">
-                        <h1 id='title'>Group: {this.state.groupId}</h1>
+                    <div className="table_panel">
+                        <h1 id='title'>Учебная группа: {this.state.groupId}</h1>
                         <table id='students'>
                             <tbody>
                             <tr>
-                                {this.renderTableHeader()}
-                                <th></th>
+                                <th>ID</th>
+                                <th>Фамилия</th>
+                                <th>Имя</th>
+                                <th>Отчество</th>
+                                <th>Email</th>
+                                <th/>
                             </tr>
-                            {this.renderTableData()}
+                            {this.state.students.map((student, index) => {
+                                const {id, surname, name, patronymic, email} = student
+                                return (
+                                    <tr key={id}>
+                                        <td>{index + 1}</td>
+                                        <td>{surname}</td>
+                                        <td>{name}</td>
+                                        <td>{patronymic}</td>
+                                        <td>{email}</td>
+                                        <td>
+                                            <button
+                                                className="btn_view"
+                                                value={id}
+                                                onClick={event => this.handleViewStudentButtonClick(event)}
+                                            >Посмотреть
+                                            </button>
+                                        </td>
+                                    </tr>
+                                )
+                            })}
                             </tbody>
                         </table>
                     </div>
                 )}
                 {this.state.isStudentInfo && (
                     <div className="subject_data_panel_t">
-                        <div className="subject_data_st">
-                            <h1>Student: {this.state.studentInfo.cred}</h1>
-                            <h2>Subject: {this.state.groupInfo.subjectName}</h2>
-                            <div className="subject_detail">
-                                <div className="subject_detail_name">Grades:</div>
-                                <div className="subject_detail_value">{this.state.studentInfo.grades.join(', ')}</div>
+                        {/*<h1>Student: {this.state.students.forEach((st) => {*/}
+                        {/*    st.id == this.state.studentId ? */}
+                        {/*})}</h1>*/}
+                        <h2>Предмет: {this.state.groupInfo.subjectName}</h2>
+                        <div className="detail">
+                            <div className="detail_name">Оценки:</div>
+                            <div className="detail_value">{this.state.studentInfo.grades.join(', ')}</div>
+                        </div>
+                        <div className="detail">
+                            <div className="detail_name">Средний балл:</div>
+                            <div className="detail_value">
+                                {this.state.studentInfo.averageGrade.toFixed(1)}
                             </div>
-                            <div className="subject_detail">
-                                <div className="subject_detail_name">Average mark:</div>
-                                <div className="subject_detail_value">
-                                    {this.state.studentInfo.averageGrade.toFixed(1)}
-                                </div>
-                            </div>
-                            <div className="subject_detail">
-                                <div className="subject_detail_name">Skips count:</div>
-                                <div className="subject_detail_value">{this.state.studentInfo.skipsCount}</div>
-                            </div>
-                            <div className="subject_detail">
-                                <div className="subject_detail_name">Past classes:</div>
-                                <div className="subject_detail_value">{this.state.studentInfo.pastLessonsCount}</div>
-                            </div>
-                            <div className="subject_detail">
-                                <div className="subject_detail_name">Planned classes:</div>
-                                <div className="subject_detail_value">{this.state.studentInfo.planLessonsCount}</div>
-                            </div>
+                        </div>
+                        <div className="detail">
+                            <div className="detail_name">Количество пропусков:</div>
+                            <div className="detail_value">{this.state.studentInfo.skipsCount}</div>
+                        </div>
+                        <div className="detail">
+                            <div className="detail_name">Проведено занятий:</div>
+                            <div className="detail_value">{this.state.studentInfo.pastLessonsCount}</div>
+                        </div>
+                        <div className="detail">
+                            <div className="detail_name">Всего занятий:</div>
+                            <div className="detail_value">{this.state.studentInfo.planLessonsCount}</div>
                         </div>
                     </div>
                 )}

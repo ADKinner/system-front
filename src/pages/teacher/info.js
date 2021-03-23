@@ -16,9 +16,7 @@ class TeacherInfoPage extends React.Component {
         super(props);
         this.state = {
             subjects: [],
-            subject: {
-
-            },
+            subject: {},
             isSubjectsInfo: false,
             isSubjectInfo: false
         }
@@ -40,9 +38,9 @@ class TeacherInfoPage extends React.Component {
         }
     }
 
-    getSubjectsInfo() {
-        axios.get(constants.DEFAULT_URL + constants.TEACHERS_URL + constants.SLASH + localStorage.getItem("id")
-            + constants.GROUPS_URL + constants.SUBJECTS_URL, {
+    getSubjectsInfo() { // /teachers/id/groups/subjects
+        axios.get(constants.DEFAULT_URL + constants.SUBJECTS_URL + constants.TEACHERS_URL + constants.SLASH +
+            localStorage.getItem("id"), {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -63,8 +61,8 @@ class TeacherInfoPage extends React.Component {
     }
 
     getSubjectInfo(subjectId) {
-        axios.get(constants.DEFAULT_URL + constants.TEACHERS_URL + constants.GROUPS_URL + constants.SUBJECTS_URL
-            + constants.SLASH + subjectId, {
+        axios.get(constants.DEFAULT_URL + constants.SUBJECTS_URL + constants.SLASH + subjectId
+            + constants.GROUPS_URL, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -123,7 +121,7 @@ class TeacherInfoPage extends React.Component {
     }
 
     renderTableHeader() {
-        let header = Object.keys(this.state.subjects[0])
+        let header = Object.keys(this.state.subjects[0]);
         return header.map((key, index) => {
             return <th key={index}>{key.toUpperCase()}</th>
         })
@@ -131,8 +129,8 @@ class TeacherInfoPage extends React.Component {
 
     render() {
         return (
-            <div className="main_t">
-                <div className="bar_p">
+            <div className="main">
+                <div className="bar">
                     <div className="sys_image"/>
                     <div className="sys_name">SYSTEM</div>
                     <a className="logout" onClick={() => goLoginPage(this.props)}>Logout</a>
@@ -142,13 +140,13 @@ class TeacherInfoPage extends React.Component {
                     <a onClick={() => goTeacherMainPage(this.props)}>Main</a>
                 </div>
                 {this.state.isSubjectsInfo && (
-                    <div className="student_panel">
+                    <div className="table_panel">
                         <h1 id='title'>Subjects</h1>
                         <table id='students'>
                             <tbody>
                             <tr>
                                 {this.renderTableHeader()}
-                                <th></th>
+                                <th/>
                             </tr>
                             {this.renderTableData()}
                             </tbody>

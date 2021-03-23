@@ -186,7 +186,7 @@ class ChangePasswordPage extends React.Component {
         return (
             <div className="main_rec">
                 {this.state.isStudent && (
-                    <div className="bar_p">
+                    <div className="bar">
                         <div className="sys_image"/>
                         <div className="sys_name">SYSTEM</div>
                         <a className="logout" onClick={() => goLoginPage(this.props)}>Logout</a>
@@ -197,7 +197,7 @@ class ChangePasswordPage extends React.Component {
                     </div>
                 )}
                 {this.state.isTeacher && (
-                    <div className="bar_p">
+                    <div className="bar">
                         <div className="sys_image"/>
                         <div className="sys_name">SYSTEM</div>
                         <a className="logout" onClick={() => goLoginPage(this.props)}>Logout</a>
@@ -206,7 +206,7 @@ class ChangePasswordPage extends React.Component {
                     </div>
                 )}
                 {this.state.isAdmin && (
-                    <div className="bar_p">
+                    <div className="bar">
                         <div className="sys_image"/>
                         <div className="sys_name">SYSTEM</div>
                         <a className="logout" onClick={() => goLoginPage(this.props)}>Logout</a>
