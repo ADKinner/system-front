@@ -138,8 +138,6 @@ class ChangePasswordPage extends React.Component {
         } else if (role === constants.ADMIN_ROLE) {
             url += constants.ADMINS_URL;
         }
-        console.log(this.state.data.newPassword);
-        console.log(url);
         axios.put(url, {
             id: localStorage.getItem("id"),
             password: this.state.data.newPassword
@@ -184,7 +182,7 @@ class ChangePasswordPage extends React.Component {
 
     render() {
         return (
-            <div className="main_rec">
+            <div className="main">
                 {this.state.isStudent && (
                     <div className="bar">
                         <div className="sys_image"/>
@@ -214,21 +212,21 @@ class ChangePasswordPage extends React.Component {
                         <a onClick={() => this.handleMainClick(localStorage.getItem("role"))}>Main</a>
                     </div>
                 )}
-                <div className="small_panel_rec">
-                    <svg className="img_rec"/>
+                <div className="small_panel">
+                    <svg className="recovery_image"/>
                 </div>
-                <div className="panel_second_rec panel_ch">
+                <div className="panel_second panel_ch">
                     <div className="begin_rec">
                         Password change
                     </div>
-                    <form className="login_rec" onSubmit={(event) => this.handleSubmitPasswordsInput(event)}>
-                        <div className="part_rec">
-                            <div className="description_rec">
+                    <form className="login" onSubmit={(event) => this.handleSubmitPasswordsInput(event)}>
+                        <div className="part">
+                            <div className="desc">
                                 Confirm password
                             </div>
                             <input
                                 name="confirmPassword"
-                                className="in_data_rec"
+                                className="data_input"
                                 type={this.state.isPasswordVisibility ? "text" : "password"}
                                 placeholder="Enter confirmation password"
                                 value={this.state.data.confirmPassword}
@@ -240,22 +238,22 @@ class ChangePasswordPage extends React.Component {
                                 {this.state.errors.confirmPassword}
                             </div>
                         )}
-                        <div className="part_pass_rec">
-                            <div className="description_rec">
+                        <div className="part_password">
+                            <div className="desc">
                                 New password
                             </div>
                             <input
                                 name="newPassword"
-                                className="in_data_rec"
+                                className="data_input"
                                 type={this.state.isPasswordVisibility ? "text" : "password"}
                                 placeholder="Enter new password"
                                 value={this.state.data.newPassword}
                                 onChange={(event) => this.handlePasswordsInputChange(event)}
                             />
-                            <div className="small_indent_rec"/>
+                            <div className="small_indent"/>
                             <input
                                 name="repeatPassword"
-                                className="in_data_rec"
+                                className="data_input"
                                 type={this.state.isPasswordVisibility ? "text" : "password"}
                                 placeholder="Enter new password"
                                 value={this.state.data.repeatPassword}
@@ -264,12 +262,12 @@ class ChangePasswordPage extends React.Component {
                         </div>
                         <input type="checkbox"
                                id="check"
-                               className="check_rm"
+                               className="check_recovery"
                                onChange={() => this.handleChangePasswordVisibility()}
                         />
                         <label htmlFor="check">Show passwords</label>
                         {this.state.errors.newPassword && (
-                            <div className="indent_rec_2">
+                            <div className="error_text_2">
                                 {this.state.errors.newPassword}
                             </div>
                         )}

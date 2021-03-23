@@ -262,7 +262,7 @@ class RegisterPage extends React.Component {
                             </div>
                             <input type="checkbox"
                                    id="check"
-                                   className="check_rm"
+                                   className="check_recovery"
                                    onChange={() => this.handleChangePasswordVisibility()}
                             />
                             <label htmlFor="check">Show passwords</label>
