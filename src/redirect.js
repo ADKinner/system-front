@@ -15,10 +15,6 @@ export function goAdminProfilePage(props) {
     props.history.push('/admin/profile');
 }
 
-export function goMainPage(props, url) {
-    props.history.push(url);
-}
-
 export function goStudentMainPage(props) {
     props.history.push('/student')
 }
@@ -57,6 +53,10 @@ export function goAdminTeachersPage(props) {
 
 export function goAdminGroupsPage(props) {
     props.history.push('/admin/groups');
+}
+
+export function goAdminsPage(props) {
+    props.history.push('/admins');
 }
 
 export function goChangePasswordPage(props, email) {

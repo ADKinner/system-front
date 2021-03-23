@@ -7,6 +7,7 @@ import StudentTeacherPage from "./pages/student/teacher";
 import TeacherMainPage from "./pages/teacher/main";
 import TeacherLessonPage from "./pages/teacher/lesson";
 import TeacherInfoPage from "./pages/teacher/info";
+import AdminsPage from "./pages/admin/admins";
 import AdminStudentsPage from "./pages/admin/students";
 import AdminSubjectsPage from "./pages/admin/subjects";
 import AdminGroupsPage from "./pages/admin/groups";
@@ -17,7 +18,6 @@ import RecoveryPasswordPage from "./pages/recovery";
 import ChangePasswordPage from "./pages/changePassword";
 import NotFoundErrorPage from "./pages/404";
 import ServerErrorPage from "./pages/500";
-import './App.css';
 
 class App extends Component {
 
@@ -29,6 +29,7 @@ class App extends Component {
                 <Route exact path="/teacher" component={TeacherMainPage}/>
                 <Route exact path="/teacher/lessons" component={TeacherLessonPage}/>
                 <Route exact path="/teacher/info" component={TeacherInfoPage}/>
+                <Route exact path="/admins" component={AdminsPage}/>
                 <Route exact path="/admin/students" component={AdminStudentsPage}/>
                 <Route exact path="/admin/teachers" component={AdminTeachersPage}/>
                 <Route exact path="/admin/groups" component={AdminGroupsPage}/>

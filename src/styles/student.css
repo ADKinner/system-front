@@ -110,7 +110,7 @@
 
 #title {
     text-align: center;
-    font-family: arial, sans-serif;
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
     color: #f2f2f2;
 }
 
@@ -126,11 +126,6 @@
 #data td, #data th {
     border: 1px solid #ddd;
     padding: 8px;
-}
-
-#title {
-    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-    text-align: center;
 }
 
 #data {

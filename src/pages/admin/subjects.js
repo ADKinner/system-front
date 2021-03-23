@@ -2,7 +2,7 @@ import React from "react";
 import '../../styles/admin.css'
 import {
     goAdminGroupsPage,
-    goAdminProfilePage,
+    goAdminProfilePage, goAdminsPage,
     goAdminStudentsPage,
     goAdminTeachersPage,
     goLoginPage
@@ -43,11 +43,12 @@ class AdminSubjectsPage extends React.Component {
                     <div className="sys_image"/>
                     <div className="sys_name">SYSTEM</div>
                     <a className="logout" onClick={() => goLoginPage(this.props)}>Выйти</a>
-                    <a className="active" onClick={() => goAdminProfilePage(this.props)}>Профиль</a>
+                    <a onClick={() => goAdminProfilePage(this.props)}>Профиль</a>
+                    <a onClick={() => goAdminsPage(this.props)}>Администраторы</a>
                     <a onClick={() => goAdminTeachersPage(this.props)}>Учителя</a>
                     <a onClick={() => goAdminGroupsPage(this.props)}>Группы</a>
                     <a onClick={() => goAdminStudentsPage(this.props)}>Студенты</a>
-                    <a onClick={() => this.handleSubjectsClick()}>Предметы</a>
+                    <a className="active" onClick={() => this.handleSubjectsClick()}>Предметы</a>
                 </div>
             </div>
         )

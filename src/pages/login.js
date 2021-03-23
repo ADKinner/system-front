@@ -1,7 +1,7 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import axios from "axios";
-import {goMainPage, goServerErrorPage} from "../redirect";
+import {goAdminSubjectsPage, goServerErrorPage, goStudentMainPage, goTeacherMainPage} from "../redirect";
 import * as constants from '../constants';
 import '../styles/login.css';
 
@@ -66,11 +66,11 @@ class LoginPage extends React.Component {
 
     goToUserPageByRole(role) {
         if (role === constants.STUDENT_ROLE) {
-            goMainPage(this.props, '/student');
+            goStudentMainPage(this.props);
         } else if (role === constants.TEACHER_ROLE) {
-            goMainPage(this.props, '/teacher');
+            goTeacherMainPage(this.props);
         } else if (role === constants.ADMIN_ROLE) {
-            goMainPage(this.props, '/admin');
+            goAdminSubjectsPage(this.props);
         }
     }
 

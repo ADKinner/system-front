@@ -3,7 +3,7 @@ import axios from "axios";
 import * as constants from "../constants";
 import {
     goAdminGroupsPage,
-    goAdminProfilePage, goAdminStudentsPage, goAdminSubjectsPage, goAdminTeachersPage,
+    goAdminProfilePage, goAdminsPage, goAdminStudentsPage, goAdminSubjectsPage, goAdminTeachersPage,
     goChangePasswordPage,
     goLoginPage,
     goServerErrorPage,
@@ -41,10 +41,7 @@ class ProfilePage extends React.Component {
                 password: '',
                 email: ''
 
-            },
-            isStudent: false,
-            isTeacher: false,
-            isAdmin: false
+            }
         };
     }
 
@@ -55,15 +52,12 @@ class ProfilePage extends React.Component {
         } else {
             switch (role) {
                 case "ROLE_STUDENT":
-                    this.setState({isStudent: true});
                     this.getStudentData();
                     break;
                 case "ROLE_TEACHER":
-                    this.setState({isTeacher: true});
                     this.getTeacherData();
                     break;
                 case "ROLE_ADMIN":
-                    this.setState({isAdmin: true});
                     this.getAdminData();
                     break;
                 default:
@@ -161,7 +155,6 @@ class ProfilePage extends React.Component {
                 })
             })
             .catch((error) => {
-                console.log(error);
                 if (error.response.status === 500) {
                     goServerErrorPage(this.props);
                 } else if (error.response.status === 401) {
@@ -212,7 +205,7 @@ class ProfilePage extends React.Component {
             );
         } else if (role === constants.ADMIN_ROLE) {
             return (
-                <div>
+                <div className="add_data">
                     <div className="user_detail">
                         <div className="user_detail_name">Должность:</div>
                         <div className="user_detail_value">{this.state.admin.post}</div>
@@ -272,6 +265,7 @@ class ProfilePage extends React.Component {
                     <div className="sys_name">SYSTEM</div>
                     <a className="logout" onClick={() => goLoginPage(this.props)}>Выйти</a>
                     <a className="active" onClick={() => goAdminProfilePage(this.props)}>Профиль</a>
+                    <a onClick={() => goAdminsPage(this.props)}>Администраторы</a>
                     <a onClick={() => goAdminTeachersPage(this.props)}>Учителя</a>
                     <a onClick={() => goAdminGroupsPage(this.props)}>Группы</a>
                     <a onClick={() => goAdminStudentsPage(this.props)}>Студенты</a>

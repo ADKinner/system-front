@@ -46,7 +46,7 @@ class RegisterPage extends React.Component {
             isSubmitted: val
         });
         if (val) {
-            this.checkInputOnServer();
+            this.checkStudentData();
         }
         this.setState({
             isReady: true
@@ -90,7 +90,7 @@ class RegisterPage extends React.Component {
         return Object.keys(errors).length === 0;
     }
 
-    checkInputOnServer() {
+    checkStudentData() {
         axios.get(constants.DEFAULT_URL + constants.REGISTRATION_DATA_URL + constants.SLASH
             + this.state.values.studentID +
             constants.PASSWORD_URL_PARAM + this.state.values.studentIDPassword)
@@ -123,7 +123,7 @@ class RegisterPage extends React.Component {
 
     checkConfirmPassword() {
         if (this.state.confirmPassword === this.state.values.emailConfirmPassword) {
-            this.createStudentAccount();
+            this.createStudent();
         } else {
             this.setState({
                 values: {
@@ -148,7 +148,7 @@ class RegisterPage extends React.Component {
             });
     }
 
-    createStudentAccount() {
+    createStudent() {
         axios.post(constants.DEFAULT_URL + constants.STUDENTS_URL, {
             id: this.state.student.id,
             name: this.state.student.name,

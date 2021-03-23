@@ -7,6 +7,7 @@ export const STUDENTS_URL = "/students";
 export const TEACHERS_URL = "/teachers";
 export const LESSON_ULR = "/lesson";
 export const ADMINS_URL = "/admins";
+export const POSTS_URL = "/posts";
 export const GROUPS_URL = "/groups";
 export const SUBJECTS_URL = "/subjects";
 export const EMAIL_URL = "/email";
