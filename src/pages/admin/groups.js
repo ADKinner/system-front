@@ -159,7 +159,7 @@ class AdminGroupsPage extends React.Component {
     createGroup() {
         console.log(this.state.values.TID)
         axios.post(constants.DEFAULT_URL + constants.GROUPS_URL, {
-            id: this.state.values.id,
+            id: this.state.values.newId,
             termId: this.state.values.TID
         }, {
             headers: {
@@ -253,29 +253,24 @@ class AdminGroupsPage extends React.Component {
         } else if (this.state.isStudents) {
             this.setState({
                 isStudents: false,
-                isGroups: true,
-                students: []
+                isGroups: true
             });
         } else if (this.state.isGroups) {
             this.setState({
                 isGroups: false,
-                isTerms: true,
-                groups: []
+                isTerms: true
             });
         } else if (this.state.isTerms) {
             this.setState({
-                isTerms: false,
-                terms: []
+                isTerms: false
             });
         } else if (this.state.isSpecialities) {
             this.setState({
-                isSpecialities: false,
-                specialities: []
+                isSpecialities: false
             });
         } else if (this.state.isCathedras) {
             this.setState({
-                isCathedras: false,
-                cathedras: []
+                isCathedras: false
             });
         }
     }
@@ -297,11 +292,9 @@ class AdminGroupsPage extends React.Component {
         } else {
             this.createGroup();
             this.setState({
-                groups: [],
                 isCreateGroup: false,
                 isGroups: true
             });
-            this.getGroups();
         }
     }
 
