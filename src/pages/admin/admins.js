@@ -24,7 +24,7 @@ class AdminsPage extends React.Component {
             values: {},
             defPID: 0,
             isPasswordVisibility: false,
-            isDeleteModal: false,
+            isDeleteAdminModal: false,
             isCreateAdmin: false
         }
     }
@@ -119,7 +119,7 @@ class AdminsPage extends React.Component {
             } else if (error.response.status === 401) {
                 goLoginPage(this.props);
             }
-        })
+        });
     }
 
     handleAdminsClick() {
@@ -130,27 +130,27 @@ class AdminsPage extends React.Component {
         }
     }
 
-    handleDeleteAdminButtonClick(event) {
+    handleDeleteAdminBtnClick(event) {
         this.setState({
             adminId: event.target.value,
             isDeleteModal: true
         });
     }
 
-    handleCloseButtonClick() {
+    handleCloseBtnClick() {
         this.setState({
             isDeleteModal: false
         });
     }
 
-    handleDeleteButtonClick() {
+    handleDeleteBtnClick() {
         this.deleteAdmin();
         this.setState({
             isDeleteModal: false
         });
     }
 
-    handleGoCreateAdminButton() {
+    handleGoCreateAdminBtn() {
         this.getPosts();
         this.setState({
             isCreateAdmin: true,
@@ -242,7 +242,7 @@ class AdminsPage extends React.Component {
                                                     <button
                                                         className="btn_delete"
                                                         value={id}
-                                                        onClick={event => this.handleDeleteAdminButtonClick(event)}
+                                                        onClick={event => this.handleDeleteAdminBtnClick(event)}
                                                     >
                                                         Удалить
                                                     </button>
@@ -257,7 +257,7 @@ class AdminsPage extends React.Component {
                                 })}
                                 </tbody>
                             </table>
-                            <button className="btn_add_admin" onClick={() => this.handleGoCreateAdminButton()}>
+                            <button className="btn_add_admin" onClick={() => this.handleGoCreateAdminBtn()}>
                                 Добавить администратора
                             </button>
                         </div>
@@ -414,8 +414,7 @@ class AdminsPage extends React.Component {
                         </form>
                     </div>
                 )}
-                {this.state.isDeleteModal &&
-                (
+                {this.state.isDeleteModal && (
                     <React.Fragment>
                         {
                             <div className="modal_rm">
@@ -425,14 +424,14 @@ class AdminsPage extends React.Component {
                                     <h3>Действие будет невозможно отменить.</h3>
                                     <button
                                         className="btn_rm"
-                                        onClick={() => this.handleDeleteButtonClick()}
+                                        onClick={() => this.handleDeleteBtnClick()}
                                     >
                                         Удалить
                                     </button>
                                     <div/>
                                     <button
                                         className="btn_close"
-                                        onClick={() => this.handleCloseButtonClick()}
+                                        onClick={() => this.handleCloseBtnClick()}
                                     >
                                         Закрыть
                                     </button>

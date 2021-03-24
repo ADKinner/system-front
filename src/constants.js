@@ -16,6 +16,10 @@ export const PASSWORD_REPAIR_URL = "/password-repair";
 export const PASSWORD_URL_PARAM = "?password=";
 export const EMAIL_URL_PARAM = "?email=";
 export const SLASH = "/";
+export const FACULTIES_URL = "/faculties";
+export const CATHEDRAS_URL = "/cathedras";
+export const SPECIALITIES_URL = "/specialities";
+export const TERMS_URL = "/terms";
 
 export const STUDENT_ROLE = "ROLE_STUDENT";
 export const TEACHER_ROLE = "ROLE_TEACHER";

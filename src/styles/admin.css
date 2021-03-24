@@ -73,18 +73,13 @@ h2 {
     margin-left: 250px;
 }
 
-#data td, #data th {
-    border: 1px solid #ddd;
-    padding: 8px;
-}
-
-#data {
+#small_data {
     text-align: center;
     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
     border-collapse: collapse;
     border: 3px solid #ddd;
-    width: 75%;
-    margin-left: 250px;
+    width: 45%;
+    margin-left: 550px;
 }
 
 #data td, #data th {
@@ -112,6 +107,31 @@ h2 {
     color: white;
 }
 
+#small_data td, #small_data th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#small_data tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+#small_data tr:nth-child(odd) {
+    background-color: #ddd;
+}
+
+#small_data tr:hover {
+    background-color: #38629C;
+}
+
+#small_data th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: center;
+    background-color: #4CAF50;
+    color: white;
+}
+
 .btn_delete {
     height: 25px;
     font-size: 15px;
@@ -120,6 +140,18 @@ h2 {
 }
 
 .btn_delete:hover {
+    color: #f2f2f2;
+    background-color: red;
+}
+
+.btn_view {
+    height: 25px;
+    font-size: 15px;
+    border-radius: 3px;
+    border-color: red;
+}
+
+.btn_view:hover {
     color: #f2f2f2;
     background-color: red;
 }
@@ -145,6 +177,16 @@ h2 {
     width: 450px;
     height: 790px;
     margin-left: 75vh;
+}
+
+.panel_add_medium {
+    margin-top: 250px;
+    height: 490px;
+}
+
+.panel_add_small {
+    margin-top: 300px;
+    height: 220px;
 }
 
 .begin_add {
