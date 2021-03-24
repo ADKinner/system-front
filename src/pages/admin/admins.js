@@ -22,6 +22,7 @@ class AdminsPage extends React.Component {
             posts: [],
             errors: {},
             values: {},
+            defPID: 0,
             isPasswordVisibility: false,
             isDeleteModal: false,
             isCreateAdmin: false
@@ -72,6 +73,7 @@ class AdminsPage extends React.Component {
         })
             .then(response => {
                 this.setState({
+                    defPID: response.data[0]["id"],
                     posts: response.data
                 });
             })
@@ -85,7 +87,17 @@ class AdminsPage extends React.Component {
     }
 
     deleteAdmin() {
-
+        axios.delete(constants.DEFAULT_URL + constants.ADMINS_URL + constants.SLASH + this.state.adminId, {
+            headers: {
+                Authorization: localStorage.getItem("token")
+            }
+        }).then().catch(error => {
+            if (error.response.status === 500) {
+                goServerErrorPage(this.props);
+            } else if (error.response.status === 401) {
+                goLoginPage(this.props);
+            }
+        });
     }
 
     createAdmin() {
@@ -97,8 +109,10 @@ class AdminsPage extends React.Component {
             password: this.state.values.password,
             email: this.state.values.email,
             postId: this.state.values.postId
-        }).then(response => {
-
+        }, {
+            headers: {
+                Authorization: localStorage.getItem("token")
+            }
         }).catch(error => {
             if (error.response.status === 500) {
                 goServerErrorPage(this.props);
@@ -131,7 +145,6 @@ class AdminsPage extends React.Component {
 
     handleDeleteButtonClick() {
         this.deleteAdmin();
-        this.getAdmins();
         this.setState({
             isDeleteModal: false
         });
@@ -146,9 +159,10 @@ class AdminsPage extends React.Component {
                 name: '',
                 surname: '',
                 patronymic: '',
+                email: '',
                 password: '',
                 confirmPassword: '',
-                postId: 0
+                postId: this.state.defPID
             }
         });
     }
@@ -177,7 +191,6 @@ class AdminsPage extends React.Component {
             });
         } else {
             this.createAdmin();
-            this.getAdmins();
             this.setState({
                 isCreateAdmin: false
             });
@@ -330,6 +343,24 @@ class AdminsPage extends React.Component {
                             )}
                             <div className="part_add">
                                 <div className="description_add">
+                                    Email
+                                </div>
+                                <input
+                                    name="email"
+                                    type="email"
+                                    className="in_data_add"
+                                    placeholder="Введите почту администратора"
+                                    value={this.state.values.email}
+                                    onChange={event => this.handleInputChange(event)}
+                                />
+                            </div>
+                            {this.state.errors.email && (
+                                <div className="error_panel_add">
+                                    {this.state.errors.email}
+                                </div>
+                            )}
+                            <div className="part_add">
+                                <div className="description_add">
                                     Должность
                                 </div>
                                 <select
@@ -394,14 +425,14 @@ class AdminsPage extends React.Component {
                                     <h3>Действие будет невозможно отменить.</h3>
                                     <button
                                         className="btn_rm"
-                                        onClick={() => this.handleCloseButtonClick()}
+                                        onClick={() => this.handleDeleteButtonClick()}
                                     >
                                         Удалить
                                     </button>
                                     <div/>
                                     <button
                                         className="btn_close"
-                                        onClick={() => this.handleDeleteButtonClick()}
+                                        onClick={() => this.handleCloseButtonClick()}
                                     >
                                         Закрыть
                                     </button>

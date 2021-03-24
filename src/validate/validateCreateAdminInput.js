@@ -20,6 +20,10 @@ export default function validateCreateAdminInput(values, admins) {
         errors.patronymic = "Введите отчество правильно";
     }
 
+    if (!/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(values.email)) {
+        errors.email = "Введите почту правильно";
+    }
+
     if (!values.password && !values.confirmPassword) {
         errors.password = "Требуются пароли";
     } else if (!values.password || !values.confirmPassword) {
