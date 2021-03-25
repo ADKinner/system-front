@@ -257,7 +257,7 @@ class AdminsPage extends React.Component {
                                 })}
                                 </tbody>
                             </table>
-                            <button className="btn_add_admin" onClick={() => this.handleGoCreateAdminBtn()}>
+                            <button className="btn_add_medium" onClick={() => this.handleGoCreateAdminBtn()}>
                                 Добавить администратора
                             </button>
                         </div>

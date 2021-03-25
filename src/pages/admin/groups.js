@@ -468,7 +468,7 @@ class AdminGroupsPage extends React.Component {
                                 })}
                                 </tbody>
                             </table>
-                            <button className="btn_add_admin" onClick={() => this.handleAddTableBtnClick()}>
+                            <button className="btn_add_medium" onClick={() => this.handleAddTableBtnClick()}>
                                 Добавить группу
                             </button>
                         </div>

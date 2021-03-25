@@ -1,36 +1,34 @@
-export default function validateCreateTeacherInput(values, teachers) {
+export default function validateCreateTeacherInput(id, name, surname, patronymic, email, password, confirmPassword) {
 
-    let errors = {}
+    let errors = {};
 
-    if (teachers.some(a => a.id == values.id)) {
-        errors.id = "Такой ID уже используется";
-    } else if (values.id == "" || values.id < 1) {
-        errors.id = "ID не может быть пустым";
+    if (id == "" || id < 1) {
+        errors.id = "ID не может быть пустым или < 0";
     }
 
-    if (!/[A-Za-z]{2,32}/.test(values.name)) {
+    if (!/[A-Za-z]{2,32}/.test(name)) {
         errors.name = "Введите имя правильно";
     }
 
-    if (!/[A-Za-z]{2,32}/.test(values.surname)) {
+    if (!/[A-Za-z]{2,32}/.test(surname)) {
         errors.surname = "Введите фамилию правильно";
     }
 
-    if (!/[A-Za-z]{2,32}/.test(values.patronymic)) {
+    if (!/[A-Za-z]{2,32}/.test(patronymic)) {
         errors.patronymic = "Введите отчество правильно";
     }
 
-    if (!/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(values.email)) {
+    if (!/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(email)) {
         errors.email = "Введите почту правильно";
     }
 
-    if (!values.password && !values.confirmPassword) {
+    if (!password && !confirmPassword) {
         errors.password = "Требуются пароли";
-    } else if (!values.password || !values.confirmPassword) {
+    } else if (!password || !confirmPassword) {
         errors.password = "Требуется пароль";
-    } else if (!/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/.test(values.password)) {
+    } else if (!/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/.test(password)) {
         errors.password = "Неправльный формат пароля"
-    } else if (values.password !== values.confirmPassword) {
+    } else if (password !== confirmPassword) {
         errors.password = "Пароли не совпадают";
     }
 
