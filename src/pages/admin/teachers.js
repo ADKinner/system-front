@@ -51,10 +51,14 @@ class AdminTeachersPage extends React.Component {
             }
         })
             .then(response => {
-                this.setState({
-                    values: {CId: response.data[0]["id"]},
-                    cathedras: response.data
-                });
+                if (response.data.length !== 0) {
+                    this.setState({
+                        values: {
+                            CId: response.data[0]["id"]
+                        },
+                        cathedras: response.data
+                    });
+                }
             })
             .catch(error => {
                 if (error.response.status === 500) {
@@ -200,14 +204,15 @@ class AdminTeachersPage extends React.Component {
     }
 
     find() {
-        this.getTeachers();
-        this.setState({
-            part: 1
-        });
+        if (this.state.cathedras.length !== 0) {
+            this.getTeachers();
+            this.setState({
+                part: 1
+            });
+        }
     }
 
     add() {
-        console.log(this.state);
         this.defaultCreateValues();
         this.getPosts();
         this.setState({
