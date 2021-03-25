@@ -157,7 +157,6 @@ class AdminGroupsPage extends React.Component {
     }
 
     createGroup() {
-        console.log(this.state.values.TID)
         axios.post(constants.DEFAULT_URL + constants.GROUPS_URL, {
             id: this.state.values.newId,
             termId: this.state.values.TID
@@ -179,7 +178,7 @@ class AdminGroupsPage extends React.Component {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
-        }).then().catch(error => {
+        }).catch(error => {
             if (error.response.status === 500) {
                 goServerErrorPage(this.props);
             } else if (error.response.status === 401) {
@@ -217,7 +216,7 @@ class AdminGroupsPage extends React.Component {
         });
     }
 
-    handleFindClick() {
+    handleFindBtnClick() {
         if (this.state.isFaculties) {
             this.setState({
                 isCathedras: true
@@ -310,7 +309,7 @@ class AdminGroupsPage extends React.Component {
         this.setState({
             values: {groupId: event.target.value},
             isDeleteGroupModal: true
-        })
+        });
     }
 
     handleDeleteModalClick() {
@@ -422,8 +421,9 @@ class AdminGroupsPage extends React.Component {
                         )}
                         <button
                             className="btn_add"
-                            onClick={() => this.handleFindClick()}
-                        >Поиск
+                            onClick={() => this.handleFindBtnClick()}
+                        >
+                            Поиск
                         </button>
                     </div>
                 )}
