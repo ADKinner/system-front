@@ -9,7 +9,7 @@ import {
     goStudentTeacherPage
 } from "../../redirect";
 import * as constants from "../../constants";
-import '../../styles/student.css';
+import '../../styles/admin.css';
 
 class StudentGroupPage extends React.Component {
 
@@ -27,7 +27,7 @@ class StudentGroupPage extends React.Component {
         } else {
             switch (role) {
                 case "ROLE_STUDENT":
-                    this.getStudentData();
+                    this.getStudents(localStorage.getItem("id"));
                     break;
                 default:
                     goLoginPage(this.props);
@@ -36,16 +36,14 @@ class StudentGroupPage extends React.Component {
         }
     }
 
-    getStudentData() {
-        axios.get(constants.DEFAULT_URL + constants.GROUPS_URL + constants.STUDENTS_URL + constants.SLASH
-            + localStorage.getItem("id"), {
+    getStudents(id) {
+        axios.get(constants.DEFAULT_URL + constants.STUDENTS_URL + constants.SLASH + id + "/group", {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
         })
             .then(response => {
                 this.setState({
-                    isEmpty: false,
                     students: response.data
                 });
             })
@@ -71,32 +69,39 @@ class StudentGroupPage extends React.Component {
                     <a onClick={() => goStudentMainPage(this.props)}>Главная</a>
                 </div>
                 <div className="table_panel">
-                    <div>
-                        <h1 id='title'>Группа</h1>
-                        <table id='data'>
-                            <tbody>
-                            <tr>
-                                <th>ID</th>
-                                <th>Фамилия</th>
-                                <th>Имя</th>
-                                <th>Отчество</th>
-                                <th>Email</th>
-                            </tr>
-                            {this.state.students.map((student, index) => {
-                                const {id, surname, name, patronymic, email} = student
-                                return (
-                                    <tr key={id}>
-                                        <td>{index + 1}</td>
-                                        <td>{surname}</td>
-                                        <td>{name}</td>
-                                        <td>{patronymic}</td>
-                                        <td>{email}</td>
-                                    </tr>
-                                )
-                            })}
-                            </tbody>
-                        </table>
-                    </div>
+                    {this.state.students.length === 0 && (
+                        <div>
+                            <h2 className="h2_margin">Студентов в группе нет</h2>
+                        </div>
+                    )}
+                    {this.state.students.length !== 0 && (
+                        <div>
+                            <h1 id='title'>Группа</h1>
+                            <table id='data'>
+                                <tbody>
+                                <tr>
+                                    <th>№</th>
+                                    <th>Фамилия</th>
+                                    <th>Имя</th>
+                                    <th>Отчество</th>
+                                    <th>Email</th>
+                                </tr>
+                                {this.state.students.map((student, index) => {
+                                    const {id, surname, name, patronymic, email} = student
+                                    return (
+                                        <tr key={id}>
+                                            <td>{index + 1}</td>
+                                            <td>{surname}</td>
+                                            <td>{name}</td>
+                                            <td>{patronymic}</td>
+                                            <td>{email}</td>
+                                        </tr>
+                                    )
+                                })}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
                 </div>
             </div>
         )
