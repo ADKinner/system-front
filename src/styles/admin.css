@@ -1,7 +1,11 @@
 .main {
     width: 100%;
     height: 100%;
-    font-family: Consolas, serif;
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+}
+
+.main button {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
 }
 
 .bar {
@@ -348,4 +352,113 @@ h2 {
 .h2_margin {
     color: red;
     text-align: center;
+}
+
+.indent {
+    height: 5px;
+}
+
+.user_detail {
+    height: 30px;
+    margin-left: 25px;
+    font-size: 20px;
+    width: 350px;
+}
+
+.add_data {
+    height: 100px;
+}
+
+.user_detail_name {
+    text-align: left;
+    width: 175px;
+    display: inline-block;
+}
+
+.user_detail_value {
+    text-align: right;
+    width: 175px;
+    display: inline-block;
+}
+
+.sys_name {
+    margin-top: -25px;
+    margin-left: 5px;
+    height: auto;
+    font-size: 30px;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+.panel {
+    margin-top: 100px;
+    margin-left: 200px;
+    width: 1500px;
+    height: 680px;
+}
+
+.user_panel {
+    margin-top: 100px;
+    margin-left: 100px;
+    height: 500px;
+    width: 520px;
+    border-radius: 20px;
+    border-color: #38629C;
+    background-color: #38629C;
+    display: inline-block;
+}
+
+.user_details_panel {
+    display: inline-block;
+    margin-left: 200px;
+    height: 385px;
+    width: 400px;
+    border-radius: 20px;
+    background-color: sandybrown;
+}
+
+.user_image {
+    margin-top: 25px;
+    margin-left: 50px;
+    width: 400px;
+    height: 400px;
+}
+
+.user_image_st {
+    background-image: url("../images/student.png");
+}
+
+.user_image_t {
+    background-image: url("../images/teacher.png");
+}
+
+.user_image_a {
+    background-image: url("../images/admin.png");
+}
+
+.user_id {
+    margin-top: 15px;
+    font-size: 23px;
+    height: 50px;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.main_text {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    color: #f2f2f2;
+    margin-top: 20px;
+    font-size: 30px;
+    height: 40px;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.sys_image {
+    margin-top: 5px;
+    height: 40px;
+    width: 40px;
+    margin-left: 10px;
+    background-image: url("../images/icon_40.png");
+    display: inline-block;
 }

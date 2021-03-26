@@ -17,7 +17,7 @@ import {
     goTeacherProfilePage
 } from "../redirect";
 import '../styles/modal.css';
-import '../styles/profile.css';
+import '../styles/admin.css';
 
 class ProfilePage extends React.Component {
 
@@ -40,7 +40,6 @@ class ProfilePage extends React.Component {
                 patronymic: '',
                 password: '',
                 email: ''
-
             }
         };
     }
@@ -50,15 +49,16 @@ class ProfilePage extends React.Component {
         if (localStorage.length === 0 || role === null) {
             goLoginPage(this.props);
         } else {
+            const id = localStorage.getItem("id");
             switch (role) {
                 case "ROLE_STUDENT":
-                    this.getStudentData();
+                    this.getStudent(id);
                     break;
                 case "ROLE_TEACHER":
-                    this.getTeacherData();
+                    this.getTeacher(id);
                     break;
                 case "ROLE_ADMIN":
-                    this.getAdminData();
+                    this.getAdmin(id);
                     break;
                 default:
                     goLoginPage(this.props);
@@ -67,9 +67,8 @@ class ProfilePage extends React.Component {
         }
     }
 
-    getStudentData() {
-        axios.get(constants.DEFAULT_URL + constants.STUDENTS_URL + constants.SLASH +
-            localStorage.getItem("id"), {
+    getStudent(id) {
+        axios.get(constants.DEFAULT_URL + constants.STUDENTS_URL + constants.SLASH + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -101,9 +100,8 @@ class ProfilePage extends React.Component {
             });
     }
 
-    getTeacherData() {
-        axios.get(constants.DEFAULT_URL + constants.TEACHERS_URL + constants.SLASH +
-            localStorage.getItem("id"), {
+    getTeacher(id) {
+        axios.get(constants.DEFAULT_URL + constants.TEACHERS_URL + constants.SLASH + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -133,9 +131,8 @@ class ProfilePage extends React.Component {
             });
     }
 
-    getAdminData() {
-        axios.get(constants.DEFAULT_URL + constants.ADMINS_URL + constants.SLASH +
-            localStorage.getItem("id"), {
+    getAdmin(id) {
+        axios.get(constants.DEFAULT_URL + constants.ADMINS_URL + constants.SLASH + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -312,7 +309,7 @@ class ProfilePage extends React.Component {
                         <div className="indent"/>
                         {this.renderAdditionalData()}
                         <button
-                            className="btn_change_password"
+                            className="btn_add"
                             onClick={() => goChangePasswordPage(this.props, this.state.user.email)}
                         >
                             Сменить пароль
