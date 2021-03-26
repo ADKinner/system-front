@@ -1,10 +1,8 @@
-export default function validateCreateGroupInput(id, groups) {
+export default function validateCreateGroupInput(id) {
 
-    let errors = {}
+    let errors = {};
 
-    if (groups.some(g => g.id == id)) {
-        errors.id = "Такой ID уже используется";
-    } else if (id == "" || id < 1) {
+    if (id == "" || id < 1) {
         errors.id = "ID не может быть пустым";
     }
 

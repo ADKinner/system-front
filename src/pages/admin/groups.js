@@ -174,7 +174,7 @@ class AdminGroupsPage extends React.Component {
 
     createGroup() {
         axios.post(constants.DEFAULT_URL + constants.GROUPS_URL, {
-            id: this.state.values.newId,
+            id: this.state.values.NGId,
             termId: this.state.values.TId
         }, {
             headers: {
@@ -185,6 +185,12 @@ class AdminGroupsPage extends React.Component {
                 goServerErrorPage(this.props);
             } else if (error.response.status === 401) {
                 goLoginPage(this.props);
+            } else if (error.response.status === 400) {
+                this.setState({
+                    errors: {
+                        id: "ID занят"
+                    }
+                });
             }
         });
     }
@@ -295,6 +301,10 @@ class AdminGroupsPage extends React.Component {
         }
     }
 
+    timeout(delay) {
+        return new Promise(res => setTimeout(res, delay));
+    }
+
     find() {
         if (this.state.smallPart < 3) {
             this.getData(this.state.smallPart);
@@ -336,22 +346,33 @@ class AdminGroupsPage extends React.Component {
 
     add() {
         this.setState({
-            part: 3
+            part: 3,
+            values: {
+                ...this.state.values,
+                NGId: ''
+            }
         });
     }
 
-    create() {
-        const errors = validateCreateGroupInput(this.state.values.newId, this.state.groups);
+    async create() {
+        const errors = validateCreateGroupInput(this.state.values.NGId);
         if (Object.keys(errors).length !== 0) {
             this.setState({
                 errors: errors
             });
         } else {
-            this.createGroup();
             this.setState({
-                isCreateGroup: false,
-                isGroups: true
+                errors: {}
             });
+            this.createGroup();
+            await this.timeout(500);
+            this.getGroups();
+            await this.timeout(500);
+            if (Object.keys(this.state.errors).length === 0) {
+                this.setState({
+                    part: 1
+                });
+            }
         }
     }
 
@@ -376,17 +397,18 @@ class AdminGroupsPage extends React.Component {
         });
     }
 
-    deleteModal() {
+    async modalDelete() {
         this.deleteGroup();
+        await this.timeout(1000);
         this.getGroups();
         this.setState({
-            part: 2
+            part: 1
         });
     }
 
-    closeModal() {
+    modalClose() {
         this.setState({
-            part: 2
+            part: 1
         });
     }
 
@@ -597,10 +619,11 @@ class AdminGroupsPage extends React.Component {
                                 Id
                             </div>
                             <input
-                                name="newId"
+                                name="NGId"
                                 className="in_data_add"
                                 type="text"
                                 placeholder="Введите Id новой группы"
+                                values={this.state.values.NGId}
                                 onChange={event => this.change(event)}
                             />
                         </div>
@@ -629,14 +652,14 @@ class AdminGroupsPage extends React.Component {
                                     </h3>
                                     <button
                                         className="btn_rm"
-                                        onClick={() => this.deleteModal()}
+                                        onClick={() => this.modalDelete()}
                                     >
                                         Удалить
                                     </button>
                                     <div/>
                                     <button
                                         className="btn_close"
-                                        onClick={() => this.closeModal()}
+                                        onClick={() => this.modalClose()}
                                     >
                                         Закрыть
                                     </button>

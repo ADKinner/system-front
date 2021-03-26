@@ -168,10 +168,16 @@ class AdminTeachersPage extends React.Component {
                 goLoginPage(this.props);
             } else if (error.response.status === 400) {
                 this.setState({
-                    errors: {id: "ID занят"}
+                    errors: {
+                        id: "ID занят"
+                    }
                 });
             }
         });
+    }
+
+    timeout(delay) {
+        return new Promise(res => setTimeout(res, delay));
     }
 
     defaultCreateValues() {
@@ -237,10 +243,11 @@ class AdminTeachersPage extends React.Component {
         });
     }
 
-    modalDelete() {
-        console.log(this.state);
+    async modalDelete() {
         this.deleteTeacher();
+        await this.timeout(500);
         this.getTeachers();
+        await this.timeout(500);
         this.setState({
             part: 1
         });
@@ -262,7 +269,7 @@ class AdminTeachersPage extends React.Component {
         });
     }
 
-    create() {
+    async create() {
         const errors = validateCreateTeacherInput(this.state.values.TNId, this.state.values.TName,
             this.state.values.TSurname, this.state.values.TPatronymic, this.state.values.TEmail,
             this.state.values.TPassword, this.state.values.TCPassword);
@@ -275,8 +282,10 @@ class AdminTeachersPage extends React.Component {
                 errors: {}
             });
             this.createTeacher();
-            console.log(this.state);
-            if (Object.keys(errors).length === 0) {
+            await this.timeout(500);
+            this.getTeachers();
+            await this.timeout(500);
+            if (Object.keys(this.state.errors).length === 0) {
                 this.setState({
                     part: 1
                 });
