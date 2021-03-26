@@ -616,13 +616,13 @@ class AdminGroupsPage extends React.Component {
                         </div>
                         <div className="part_add">
                             <div className="description_add">
-                                Id
+                                ID
                             </div>
                             <input
                                 name="NGId"
                                 className="in_data_add"
                                 type="text"
-                                placeholder="Введите Id новой группы"
+                                placeholder="Введите ID новой группы"
                                 values={this.state.values.NGId}
                                 onChange={event => this.change(event)}
                             />

@@ -18,6 +18,7 @@ class AdminsPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            part: 0,
             admins: [],
             posts: [],
             errors: {},
@@ -73,7 +74,10 @@ class AdminsPage extends React.Component {
         })
             .then(response => {
                 this.setState({
-                    defPID: response.data[0]["id"],
+                    values: {
+                        ...this.state.values,
+                        PId: response.data[0]["id"]   
+                    },
                     posts: response.data
                 });
             })
@@ -87,29 +91,7 @@ class AdminsPage extends React.Component {
     }
 
     deleteAdmin() {
-        axios.delete(constants.DEFAULT_URL + constants.ADMINS_URL + constants.SLASH + this.state.adminId, {
-            headers: {
-                Authorization: localStorage.getItem("token")
-            }
-        }).then().catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
-        });
-    }
-
-    createAdmin() {
-        axios.post(constants.DEFAULT_URL + constants.ADMINS_URL, {
-            id: this.state.values.id,
-            name: this.state.values.name,
-            surname: this.state.values.surname,
-            patronymic: this.state.values.patronymic,
-            password: this.state.values.password,
-            email: this.state.values.email,
-            postId: this.state.values.postId
-        }, {
+        axios.delete(constants.DEFAULT_URL + constants.ADMINS_URL + constants.SLASH + this.state.values.AId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -122,52 +104,95 @@ class AdminsPage extends React.Component {
         });
     }
 
-    handleAdminsClick() {
-        if (this.state.isCreateAdmin) {
-            this.setState({
-                isCreateAdmin: false
-            });
-        }
-    }
-
-    handleDeleteAdminBtnClick(event) {
-        this.setState({
-            adminId: event.target.value,
-            isDeleteModal: true
-        });
-    }
-
-    handleCloseBtnClick() {
-        this.setState({
-            isDeleteModal: false
-        });
-    }
-
-    handleDeleteBtnClick() {
-        this.deleteAdmin();
-        this.setState({
-            isDeleteModal: false
-        });
-    }
-
-    handleGoCreateAdminBtn() {
-        this.getPosts();
-        this.setState({
-            isCreateAdmin: true,
-            values: {
-                id: '',
-                name: '',
-                surname: '',
-                patronymic: '',
-                email: '',
-                password: '',
-                confirmPassword: '',
-                postId: this.state.defPID
+    createAdmin() {
+        axios.post(constants.DEFAULT_URL + constants.ADMINS_URL, {
+            id: this.state.values.ANId,
+            name: this.state.values.AName,
+            surname: this.state.values.ASurname,
+            patronymic: this.state.values.APatronymic,
+            password: this.state.values.APassword,
+            email: this.state.values.AEmail,
+            postId: this.state.values.PId
+        }, {
+            headers: {
+                Authorization: localStorage.getItem("token")
+            }
+        }).catch(error => {
+            if (error.response.status === 500) {
+                goServerErrorPage(this.props);
+            } else if (error.response.status === 401) {
+                goLoginPage(this.props);
+            } else if (error.response.status === 400) {
+                this.setState({
+                    errors: {
+                        id: "ID занят"
+                    }
+                });
             }
         });
     }
 
-    handleInputChange(event) {
+    timeout(delay) {
+        return new Promise(res => setTimeout(res, delay));
+    }
+
+    adminsBar() {
+        if (this.state.part > 0) {
+            this.setState((state) => ({
+                part: state.part - 1
+            }));
+        }
+    }
+
+    delete(event) {
+        this.setState({
+            values: {
+                ...this.state.values,
+                AId: event.target.value
+            },
+            part: 2
+        });
+    }
+
+    modalClose() {
+        this.setState({
+            part: 0
+        });
+    }
+
+    async modalDelete() {
+        this.deleteAdmin();
+        await this.timeout(1000);
+        this.getAdmins();
+        this.setState({
+            part: 0
+        });
+    }
+
+    defaultCreateValues() {
+        this.setState({
+            values: {
+                ...this.state.values,
+                ANId: '',
+                APassword: '',
+                ACPassword: '',
+                AName: '',
+                ASurname: '',
+                APatronymic: '',
+                AEmail: ''
+            }
+        });
+    }
+
+    add() {
+        this.getPosts();
+        this.defaultCreateValues();
+        this.setState({
+            part: 1
+        });
+    }
+
+    change(event) {
         this.setState({
             values: {
                 ...this.state.values,
@@ -176,24 +201,33 @@ class AdminsPage extends React.Component {
         });
     }
 
-    handleChangePasswordVisibility() {
+    changeVisibility() {
         this.setState((state) => ({
             isPasswordVisibility: !state.isPasswordVisibility
         }));
     }
 
-    handleCreateAdminSubmitForm(event) {
-        event.preventDefault();
-        const errors = validateCreateAdminInput(this.state.values, this.state.admins);
+    async create() {
+        const errors = validateCreateAdminInput(this.state.values.ANId, this.state.values.AName,
+            this.state.values.ASurname, this.state.values.APatronymic, this.state.values.AEmail,
+            this.state.values.APassword, this.state.values.ACPassword);
         if (Object.keys(errors).length !== 0) {
             this.setState({
                 errors: errors
             });
         } else {
-            this.createAdmin();
             this.setState({
-                isCreateAdmin: false
+                errors: {}
             });
+            this.createAdmin();
+            await this.timeout(500);
+            this.getAdmins();
+            await this.timeout(500);
+            if (Object.keys(this.state.errors).length === 0) {
+                this.setState({
+                    part: 0
+                });
+            }
         }
     }
 
@@ -205,81 +239,87 @@ class AdminsPage extends React.Component {
                     <div className="sys_name">SYSTEM</div>
                     <a className="logout" onClick={() => goLoginPage(this.props)}>Выйти</a>
                     <a onClick={() => goAdminProfilePage(this.props)}>Профиль</a>
-                    <a className="active" onClick={() => this.handleAdminsClick()}>Администраторы</a>
+                    <a className="active" onClick={() => this.adminsBar()}>Администраторы</a>
                     <a onClick={() => goAdminTeachersPage(this.props)}>Учителя</a>
                     <a onClick={() => goAdminGroupsPage(this.props)}>Группы</a>
                     <a onClick={() => goAdminStudentsPage(this.props)}>Студенты</a>
                     <a onClick={() => goAdminSubjectsPage(this.props)}>Предметы</a>
                 </div>
-                {!this.state.isCreateAdmin && (
+                {this.state.part == 0 && (
                     <div className="table_panel">
-                        <div>
-                            <h1 id='title'>Администраторы</h1>
-                            <table id='data'>
-                                <tbody>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Фамилия</th>
-                                    <th>Имя</th>
-                                    <th>Отчество</th>
-                                    <th>Email</th>
-                                    <th>Должность</th>
-                                    <th/>
-                                </tr>
-                                {this.state.admins.map((admin) => {
-                                    const {id, surname, name, patronymic, email} = admin
-                                    const adminId = localStorage.getItem("id");
-                                    return (
-                                        <tr key={id}>
-                                            <td>{id}</td>
-                                            <td>{surname}</td>
-                                            <td>{name}</td>
-                                            <td>{patronymic}</td>
-                                            <td>{email}</td>
-                                            <td>{admin.post.name}</td>
-                                            {id != adminId && (
-                                                <td>
-                                                    <button
-                                                        className="btn_delete"
-                                                        value={id}
-                                                        onClick={event => this.handleDeleteAdminBtnClick(event)}
-                                                    >
-                                                        Удалить
-                                                    </button>
-                                                </td>
-                                            )}
-                                            {id == adminId && (
-                                                <td/>
-                                            )}
-                                        </tr>
-                                    )
+                        {this.state.admins.length === 0 && (
+                            <div>
+                                <h2 className="h2_margin">Администраторов нет</h2>
+                            </div>
+                        )}
+                        {this.state.admins.length !== 0 && (
+                            <div>
+                                <h1 id='title'>Администраторы</h1>
+                                <table id='data'>
+                                    <tbody>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Фамилия</th>
+                                        <th>Имя</th>
+                                        <th>Отчество</th>
+                                        <th>Email</th>
+                                        <th>Должность</th>
+                                        <th/>
+                                    </tr>
+                                    {this.state.admins.map(admin => {
+                                        const {id, surname, name, patronymic, email} = admin
+                                        const adminId = localStorage.getItem("id");
+                                        return (
+                                            <tr key={id}>
+                                                <td>{id}</td>
+                                                <td>{surname}</td>
+                                                <td>{name}</td>
+                                                <td>{patronymic}</td>
+                                                <td>{email}</td>
+                                                <td>{admin.post.name}</td>
+                                                {id != adminId && (
+                                                    <td>
+                                                        <button
+                                                            className="btn_delete"
+                                                            value={id}
+                                                            onClick={event => this.delete(event)}
+                                                        >
+                                                            Удалить
+                                                        </button>
+                                                    </td>
+                                                )}
+                                                {id == adminId && (
+                                                    <td/>
+                                                )}
+                                            </tr>
+                                        )
 
-                                })}
-                                </tbody>
-                            </table>
-                            <button className="btn_add_medium" onClick={() => this.handleGoCreateAdminBtn()}>
-                                Добавить администратора
-                            </button>
-                        </div>
+                                    })}
+                                    </tbody>
+                                </table>
+                                <button className="btn_add_medium" onClick={() => this.add()}>
+                                    Добавить администратора
+                                </button>
+                            </div>
+                        )}
                     </div>
                 )}
-                {this.state.isCreateAdmin && (
-                    <div className="panel_add">
+                {this.state.part == 1 && (
+                    <div className="panel_add big">
                         <div className="begin_add">
                             Добавление администратора
                         </div>
-                        <form className="reg_add" onSubmit={event => this.handleCreateAdminSubmitForm(event)}>
                             <div className="part_add">
                                 <div className="description_add">
                                     ID
                                 </div>
                                 <input
-                                    name="id"
+                                    name="ANId"
                                     className="in_data_add"
                                     type="text"
                                     placeholder="Введите ID администратора"
-                                    value={this.state.values.id}
-                                    onChange={event => this.handleInputChange(event)}
+                                    value={this.state.values.ANId}
+                                    onChange={event => this.change(event)}
                                 />
                             </div>
                             {this.state.errors.id && (
@@ -292,12 +332,12 @@ class AdminsPage extends React.Component {
                                     Фамилия
                                 </div>
                                 <input
-                                    name="surname"
+                                    name="ASurname"
                                     type="text"
                                     className="in_data_add"
                                     placeholder="Введите фамилию администратора"
-                                    value={this.state.values.surname}
-                                    onChange={event => this.handleInputChange(event)}
+                                    value={this.state.values.ASurname}
+                                    onChange={event => this.change(event)}
                                 />
                             </div>
                             {this.state.errors.surname && (
@@ -310,12 +350,12 @@ class AdminsPage extends React.Component {
                                     Имя
                                 </div>
                                 <input
-                                    name="name"
+                                    name="AName"
                                     type="text"
                                     className="in_data_add"
                                     placeholder="Введите имя администратора"
-                                    value={this.state.values.name}
-                                    onChange={event => this.handleInputChange(event)}
+                                    value={this.state.values.AName}
+                                    onChange={event => this.change(event)}
                                 />
                             </div>
                             {this.state.errors.name && (
@@ -328,12 +368,12 @@ class AdminsPage extends React.Component {
                                     Отчество
                                 </div>
                                 <input
-                                    name="patronymic"
+                                    name="APatronymic"
                                     type="text"
                                     className="in_data_add"
                                     placeholder="Введите отчество администратора"
-                                    value={this.state.values.patronymic}
-                                    onChange={event => this.handleInputChange(event)}
+                                    value={this.state.values.APatronymic}
+                                    onChange={event => this.change(event)}
                                 />
                             </div>
                             {this.state.errors.patronymic && (
@@ -346,12 +386,12 @@ class AdminsPage extends React.Component {
                                     Email
                                 </div>
                                 <input
-                                    name="email"
+                                    name="AEmail"
                                     type="email"
                                     className="in_data_add"
                                     placeholder="Введите почту администратора"
-                                    value={this.state.values.email}
-                                    onChange={event => this.handleInputChange(event)}
+                                    value={this.state.values.AEmail}
+                                    onChange={event => this.change(event)}
                                 />
                             </div>
                             {this.state.errors.email && (
@@ -364,9 +404,10 @@ class AdminsPage extends React.Component {
                                     Должность
                                 </div>
                                 <select
-                                    name="postId"
+                                    name="PId"
                                     className="select_data"
-                                    onChange={event => this.handleInputChange(event)}
+                                    value={this.state.values.PId}
+                                    onChange={event => this.change(event)}
                                 >
                                     {this.state.posts.map(post => {
                                         const {id, name} = post;
@@ -381,28 +422,28 @@ class AdminsPage extends React.Component {
                                     Пароль
                                 </div>
                                 <input
-                                    name="password"
+                                    name="APassword"
                                     className="in_data_add"
                                     type={this.state.isPasswordVisibility ? "text" : "password"}
                                     placeholder="Введите пароль"
                                     title="≥ одной цифры, ≥ одной буквы в верхнем и нижнем регистре and ≥ восьми знаков"
-                                    value={this.state.values.password}
-                                    onChange={event => this.handleInputChange(event)}
+                                    value={this.state.values.APassword}
+                                    onChange={event => this.change(event)}
                                 />
                                 <div className="small_indent"/>
                                 <input
-                                    name="confirmPassword"
+                                    name="ACPassword"
                                     className="in_data_add"
                                     type={this.state.isPasswordVisibility ? "text" : "password"}
                                     placeholder="Повторно введите пароль"
-                                    value={this.state.values.confirmPassword}
-                                    onChange={event => this.handleInputChange(event)}
+                                    value={this.state.values.ACPassword}
+                                    onChange={event => this.change(event)}
                                 />
                             </div>
                             <input type="checkbox"
                                    id="check"
                                    className="check_recovery"
-                                   onChange={() => this.handleChangePasswordVisibility()}
+                                   onChange={() => this.changeVisibility()}
                             />
                             <label htmlFor="check">Посмотреть пароли</label>
                             {this.state.errors.password && (
@@ -410,28 +451,31 @@ class AdminsPage extends React.Component {
                                     {this.state.errors.password}
                                 </div>
                             )}
-                            <button className="btn_add">Подтвердить</button>
-                        </form>
+                            <button
+                                className="btn_add"
+                                onClick={() => this.create()}
+                            >
+                                Подтвердить
+                            </button>
                     </div>
                 )}
-                {this.state.isDeleteModal && (
+                {this.state.part == 2 && (
                     <React.Fragment>
                         {
                             <div className="modal_rm">
                                 <div className="modal_body_rm">
                                     <h1>УДАЛЕНИЕ</h1>
                                     <h3>Вы действительно хотите удалить администратора?</h3>
-                                    <h3>Действие будет невозможно отменить.</h3>
                                     <button
                                         className="btn_rm"
-                                        onClick={() => this.handleDeleteBtnClick()}
+                                        onClick={() => this.modalDelete()}
                                     >
                                         Удалить
                                     </button>
                                     <div/>
                                     <button
                                         className="btn_close"
-                                        onClick={() => this.handleCloseBtnClick()}
+                                        onClick={() => this.modalClose()}
                                     >
                                         Закрыть
                                     </button>
