@@ -76,7 +76,7 @@ class AdminsPage extends React.Component {
                 this.setState({
                     values: {
                         ...this.state.values,
-                        PId: response.data[0]["id"]   
+                        PId: response.data[0]["id"]
                     },
                     posts: response.data
                 });
@@ -309,154 +309,154 @@ class AdminsPage extends React.Component {
                         <div className="begin_add">
                             Добавление администратора
                         </div>
-                            <div className="part_add">
-                                <div className="description_add">
-                                    ID
-                                </div>
-                                <input
-                                    name="ANId"
-                                    className="in_data_add"
-                                    type="text"
-                                    placeholder="Введите ID администратора"
-                                    value={this.state.values.ANId}
-                                    onChange={event => this.change(event)}
-                                />
+                        <div className="part_add">
+                            <div className="description_add">
+                                ID
                             </div>
-                            {this.state.errors.id && (
-                                <div className="error_panel_add">
-                                    {this.state.errors.id}
-                                </div>
-                            )}
-                            <div className="part_add">
-                                <div className="description_add">
-                                    Фамилия
-                                </div>
-                                <input
-                                    name="ASurname"
-                                    type="text"
-                                    className="in_data_add"
-                                    placeholder="Введите фамилию администратора"
-                                    value={this.state.values.ASurname}
-                                    onChange={event => this.change(event)}
-                                />
-                            </div>
-                            {this.state.errors.surname && (
-                                <div className="error_panel_add">
-                                    {this.state.errors.surname}
-                                </div>
-                            )}
-                            <div className="part_add">
-                                <div className="description_add">
-                                    Имя
-                                </div>
-                                <input
-                                    name="AName"
-                                    type="text"
-                                    className="in_data_add"
-                                    placeholder="Введите имя администратора"
-                                    value={this.state.values.AName}
-                                    onChange={event => this.change(event)}
-                                />
-                            </div>
-                            {this.state.errors.name && (
-                                <div className="error_panel_add">
-                                    {this.state.errors.name}
-                                </div>
-                            )}
-                            <div className="part_add">
-                                <div className="description_add">
-                                    Отчество
-                                </div>
-                                <input
-                                    name="APatronymic"
-                                    type="text"
-                                    className="in_data_add"
-                                    placeholder="Введите отчество администратора"
-                                    value={this.state.values.APatronymic}
-                                    onChange={event => this.change(event)}
-                                />
-                            </div>
-                            {this.state.errors.patronymic && (
-                                <div className="error_panel_add">
-                                    {this.state.errors.patronymic}
-                                </div>
-                            )}
-                            <div className="part_add">
-                                <div className="description_add">
-                                    Email
-                                </div>
-                                <input
-                                    name="AEmail"
-                                    type="email"
-                                    className="in_data_add"
-                                    placeholder="Введите почту администратора"
-                                    value={this.state.values.AEmail}
-                                    onChange={event => this.change(event)}
-                                />
-                            </div>
-                            {this.state.errors.email && (
-                                <div className="error_panel_add">
-                                    {this.state.errors.email}
-                                </div>
-                            )}
-                            <div className="part_add">
-                                <div className="description_add">
-                                    Должность
-                                </div>
-                                <select
-                                    name="PId"
-                                    className="select_data"
-                                    value={this.state.values.PId}
-                                    onChange={event => this.change(event)}
-                                >
-                                    {this.state.posts.map(post => {
-                                        const {id, name} = post;
-                                        return (
-                                            <option value={id}>{name}</option>
-                                        )
-                                    })}
-                                </select>
-                            </div>
-                            <div className="part_password_add">
-                                <div className="description_add">
-                                    Пароль
-                                </div>
-                                <input
-                                    name="APassword"
-                                    className="in_data_add"
-                                    type={this.state.isPasswordVisibility ? "text" : "password"}
-                                    placeholder="Введите пароль"
-                                    title="≥ одной цифры, ≥ одной буквы в верхнем и нижнем регистре and ≥ восьми знаков"
-                                    value={this.state.values.APassword}
-                                    onChange={event => this.change(event)}
-                                />
-                                <div className="small_indent"/>
-                                <input
-                                    name="ACPassword"
-                                    className="in_data_add"
-                                    type={this.state.isPasswordVisibility ? "text" : "password"}
-                                    placeholder="Повторно введите пароль"
-                                    value={this.state.values.ACPassword}
-                                    onChange={event => this.change(event)}
-                                />
-                            </div>
-                            <input type="checkbox"
-                                   id="check"
-                                   className="check_recovery"
-                                   onChange={() => this.changeVisibility()}
+                            <input
+                                name="ANId"
+                                className="in_data_add"
+                                type="text"
+                                placeholder="Введите ID администратора"
+                                value={this.state.values.ANId}
+                                onChange={event => this.change(event)}
                             />
-                            <label htmlFor="check">Посмотреть пароли</label>
-                            {this.state.errors.password && (
-                                <div className="error_panel">
-                                    {this.state.errors.password}
-                                </div>
-                            )}
-                            <button
-                                className="btn_add"
-                                onClick={() => this.create()}
+                        </div>
+                        {this.state.errors.id && (
+                            <div className="error_panel_add">
+                                {this.state.errors.id}
+                            </div>
+                        )}
+                        <div className="part_add">
+                            <div className="description_add">
+                                Фамилия
+                            </div>
+                            <input
+                                name="ASurname"
+                                type="text"
+                                className="in_data_add"
+                                placeholder="Введите фамилию администратора"
+                                value={this.state.values.ASurname}
+                                onChange={event => this.change(event)}
+                            />
+                        </div>
+                        {this.state.errors.surname && (
+                            <div className="error_panel_add">
+                                {this.state.errors.surname}
+                            </div>
+                        )}
+                        <div className="part_add">
+                            <div className="description_add">
+                                Имя
+                            </div>
+                            <input
+                                name="AName"
+                                type="text"
+                                className="in_data_add"
+                                placeholder="Введите имя администратора"
+                                value={this.state.values.AName}
+                                onChange={event => this.change(event)}
+                            />
+                        </div>
+                        {this.state.errors.name && (
+                            <div className="error_panel_add">
+                                {this.state.errors.name}
+                            </div>
+                        )}
+                        <div className="part_add">
+                            <div className="description_add">
+                                Отчество
+                            </div>
+                            <input
+                                name="APatronymic"
+                                type="text"
+                                className="in_data_add"
+                                placeholder="Введите отчество администратора"
+                                value={this.state.values.APatronymic}
+                                onChange={event => this.change(event)}
+                            />
+                        </div>
+                        {this.state.errors.patronymic && (
+                            <div className="error_panel_add">
+                                {this.state.errors.patronymic}
+                            </div>
+                        )}
+                        <div className="part_add">
+                            <div className="description_add">
+                                Email
+                            </div>
+                            <input
+                                name="AEmail"
+                                type="email"
+                                className="in_data_add"
+                                placeholder="Введите почту администратора"
+                                value={this.state.values.AEmail}
+                                onChange={event => this.change(event)}
+                            />
+                        </div>
+                        {this.state.errors.email && (
+                            <div className="error_panel_add">
+                                {this.state.errors.email}
+                            </div>
+                        )}
+                        <div className="part_add">
+                            <div className="description_add">
+                                Должность
+                            </div>
+                            <select
+                                name="PId"
+                                className="select_data"
+                                value={this.state.values.PId}
+                                onChange={event => this.change(event)}
                             >
-                                Подтвердить
-                            </button>
+                                {this.state.posts.map(post => {
+                                    const {id, name} = post;
+                                    return (
+                                        <option value={id}>{name}</option>
+                                    )
+                                })}
+                            </select>
+                        </div>
+                        <div className="part_password_add">
+                            <div className="description_add">
+                                Пароль
+                            </div>
+                            <input
+                                name="APassword"
+                                className="in_data_add"
+                                type={this.state.isPasswordVisibility ? "text" : "password"}
+                                placeholder="Введите пароль"
+                                title="≥ одной цифры, ≥ одной буквы в верхнем и нижнем регистре and ≥ восьми знаков"
+                                value={this.state.values.APassword}
+                                onChange={event => this.change(event)}
+                            />
+                            <div className="small_indent"/>
+                            <input
+                                name="ACPassword"
+                                className="in_data_add"
+                                type={this.state.isPasswordVisibility ? "text" : "password"}
+                                placeholder="Повторно введите пароль"
+                                value={this.state.values.ACPassword}
+                                onChange={event => this.change(event)}
+                            />
+                        </div>
+                        <input type="checkbox"
+                               id="check"
+                               className="check_recovery"
+                               onChange={() => this.changeVisibility()}
+                        />
+                        <label htmlFor="check">Посмотреть пароли</label>
+                        {this.state.errors.password && (
+                            <div className="error_panel">
+                                {this.state.errors.password}
+                            </div>
+                        )}
+                        <button
+                            className="btn_add"
+                            onClick={() => this.create()}
+                        >
+                            Подтвердить
+                        </button>
                     </div>
                 )}
                 {this.state.part == 2 && (

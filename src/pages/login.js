@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 import axios from "axios";
 import {goAdminSubjectsPage, goServerErrorPage, goStudentMainPage, goTeacherMainPage} from "../redirect";
 import * as constants from '../constants';
-import '../styles/login.css';
+import '../styles/admin.css';
 
 class LoginPage extends React.Component {
 
@@ -19,12 +19,11 @@ class LoginPage extends React.Component {
         }
     }
 
-    handleSubmitLoginInput(event) {
-        event.preventDefault();
+    login() {
         this.checkInputOnServer();
     }
 
-    handleLoginInputChange(event) {
+    change(event) {
         this.setState({
             values: {
                 ...this.state.values,
@@ -33,7 +32,7 @@ class LoginPage extends React.Component {
         });
     }
 
-    handleChangePasswordVisibility() {
+    changeVisibility() {
         this.setState((state) => ({
             isPasswordVisibility: !state.isPasswordVisibility
         }));
@@ -51,7 +50,7 @@ class LoginPage extends React.Component {
                 localStorage.setItem("role", role);
                 localStorage.setItem("token", token);
                 localStorage.setItem("id", this.state.values.id);
-                this.goToUserPageByRole(role);
+                this.goByRole(role);
             })
             .catch((error) => {
                 if (error.response.status === 500) {
@@ -64,7 +63,7 @@ class LoginPage extends React.Component {
             });
     }
 
-    goToUserPageByRole(role) {
+    goByRole(role) {
         if (role === constants.STUDENT_ROLE) {
             goStudentMainPage(this.props);
         } else if (role === constants.TEACHER_ROLE) {
@@ -80,53 +79,56 @@ class LoginPage extends React.Component {
                 <div className="image">
                     <svg className="img"/>
                 </div>
-                <div className="big_panel">
-                    <div className="title">
+                <div className="panel_add big">
+                    <div className="begin_add">
                         Вход в систему
                     </div>
-                    <form className="login_form" onSubmit={event => this.handleSubmitLoginInput(event)}>
-                        <div className="form_part">
-                            <div className="description">
-                                ID
-                            </div>
-                            <input
-                                name="id"
-                                type="text"
-                                placeholder="Введите ваш ID"
-                                className="input"
-                                value={this.state.values.id}
-                                onChange={event => this.handleLoginInputChange(event)}
-                            />
+                    <div className="part_add">
+                        <div className="description_add">
+                            ID
                         </div>
-                        <div className="form_part form_part_password">
-                            <div className="description">
-                                Пароль
-                            </div>
-                            <input
-                                name="password"
-                                className="input"
-                                type={this.state.isPasswordVisibility ? "text" : "password"}
-                                placeholder="Введите ваш пароль"
-                                value={this.state.values.password}
-                                onChange={event => this.handleLoginInputChange(event)}
-                            />
-                        </div>
-                        <input type="checkbox"
-                               id="check"
-                               className="check_box"
-                               onChange={() => this.handleChangePasswordVisibility()}
+                        <input
+                            name="id"
+                            type="text"
+                            placeholder="Введите ваш ID"
+                            className="in_data_add"
+                            value={this.state.values.id}
+                            onChange={event => this.change(event)}
                         />
-                        <label htmlFor="check">Посмотреть пароль</label>
-                        {this.state.isError && (
-                            <div className="error_panel">
-                                ID или пароль не верны
-                            </div>
-                        )}
-                        <div className="repair_panel">
-                            <Link to="/recovery">Забыли пароль? Восстановите его.</Link>
+                    </div>
+                    <div className="part_add">
+                        <div className="description_add">
+                            Пароль
                         </div>
-                        <button type="submit" className="btn">Войти</button>
-                    </form>
+                        <input
+                            name="password"
+                            className="in_data_add"
+                            type={this.state.isPasswordVisibility ? "text" : "password"}
+                            placeholder="Введите ваш пароль"
+                            value={this.state.values.password}
+                            onChange={event => this.change(event)}
+                        />
+                    </div>
+                    <input type="checkbox"
+                           id="check"
+                           className="check_recovery"
+                           onChange={() => this.changeVisibility()}
+                    />
+                    <label htmlFor="check">Посмотреть пароль</label>
+                    {this.state.isError && (
+                        <div className="error_panel_add">
+                            ID или пароль не верны
+                        </div>
+                    )}
+                    <div className="repair_panel">
+                        <Link to="/recovery">Забыли пароль? Восстановите его.</Link>
+                    </div>
+                    <button
+                        className="btn_add"
+                        onClick={() => this.login()}
+                    >
+                        Войти
+                    </button>
                 </div>
             </div>
         )

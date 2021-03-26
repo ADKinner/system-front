@@ -462,3 +462,43 @@ h2 {
     background-image: url("../images/icon_40.png");
     display: inline-block;
 }
+
+.check_box {
+    margin-left: 35px;
+    height: 15px;
+    width: 15px;
+    border-color: saddlebrown;
+}
+
+.repair_panel {
+    margin-top: 5px;
+    margin-left: 35px;
+    margin-bottom: 5px;
+}
+
+.repair_panel a {
+    color: blue;
+}
+
+.repair_panel a:hover {
+    color: blue;
+}
+
+.big_panel {
+    background: antiquewhite;
+    border-radius: 10px;
+    width: 450px;
+    height: 350px;
+    margin-left: 75vh;
+}
+
+.image {
+    padding-top: 200px;
+    margin-left: 47%;
+}
+
+.img {
+    width: 128px;
+    height: 128px;
+    background-image: url("../images/icon_128.png");
+}
