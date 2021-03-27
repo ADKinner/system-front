@@ -75,7 +75,7 @@ class AdminGroupsPage extends React.Component {
     }
 
     getCathedras() {
-        axios.get(constants.DEFAULT_URL + constants.CATHEDRAS_URL + "/faculty/" + this.state.values.FId, {
+        axios.get(constants.DEFAULT_URL + constants.CATHEDRAS_URL + "/faculties/" + this.state.values.FId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -101,7 +101,7 @@ class AdminGroupsPage extends React.Component {
     }
 
     getSpecialities() {
-        axios.get(constants.DEFAULT_URL + constants.SPECIALITIES_URL + "/cathedra/" + this.state.values.CId, {
+        axios.get(constants.DEFAULT_URL + constants.SPECIALITIES_URL + "/cathedras/" + this.state.values.CId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -127,7 +127,7 @@ class AdminGroupsPage extends React.Component {
     }
 
     getTerms() {
-        axios.get(constants.DEFAULT_URL + constants.TERMS_URL + "/speciality/" + this.state.values.SId, {
+        axios.get(constants.DEFAULT_URL + constants.TERMS_URL + "/specialities/" + this.state.values.SId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -153,7 +153,7 @@ class AdminGroupsPage extends React.Component {
     }
 
     getGroups() {
-        axios.get(constants.DEFAULT_URL + constants.GROUPS_URL + "/term/" + this.state.values.TId, {
+        axios.get(constants.DEFAULT_URL + constants.GROUPS_URL + "/terms/" + this.state.values.TId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -209,8 +209,8 @@ class AdminGroupsPage extends React.Component {
         });
     }
 
-    getStudents(id) {
-        axios.get(constants.DEFAULT_URL + constants.STUDENTS_URL + "/group/" + id, {
+    getStudents(groupId) {
+        axios.get(constants.DEFAULT_URL + constants.STUDENTS_URL + "/groups/" + groupId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -623,7 +623,7 @@ class AdminGroupsPage extends React.Component {
                                 className="in_data_add"
                                 type="text"
                                 placeholder="Введите ID новой группы"
-                                values={this.state.values.NGId}
+                                value={this.state.values.NGId}
                                 onChange={event => this.change(event)}
                             />
                         </div>

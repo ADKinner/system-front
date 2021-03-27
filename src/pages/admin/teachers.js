@@ -70,7 +70,7 @@ class AdminTeachersPage extends React.Component {
     }
 
     getTeachers() {
-        axios.get(constants.DEFAULT_URL + constants.TEACHERS_URL + "/cathedra/" + this.state.values.CId, {
+        axios.get(constants.DEFAULT_URL + constants.TEACHERS_URL + "/cathedras/" + this.state.values.CId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -89,8 +89,8 @@ class AdminTeachersPage extends React.Component {
             });
     }
 
-    getSubjects(id) {
-        axios.get(constants.DEFAULT_URL + constants.SUBJECTS_URL + "/teacher/" + id, {
+    getSubjects(subjectId) {
+        axios.get(constants.DEFAULT_URL + constants.SUBJECTS_URL + "/teachers/" + subjectId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -196,7 +196,7 @@ class AdminTeachersPage extends React.Component {
     }
 
     teachersBar() {
-        if (this.state.part == 3) {
+        if (this.state.part === 3) {
             this.getTeachers();
             this.setState({
                 part: 1,
@@ -307,7 +307,7 @@ class AdminTeachersPage extends React.Component {
                     <a onClick={() => goAdminStudentsPage(this.props)}>Студенты</a>
                     <a onClick={() => goAdminSubjectsPage(this.props)}>Предметы</a>
                 </div>
-                {this.state.part == 0 && (
+                {this.state.part === 0 && (
                     <div className="panel_add panel_add_small">
                         <div className="begin_add">
                             Поиск учителя
@@ -338,7 +338,7 @@ class AdminTeachersPage extends React.Component {
                         </button>
                     </div>
                 )}
-                {this.state.part == 1 && (
+                {this.state.part === 1 && (
                     <div className="table_panel">
                         {this.state.teachers.length === 0 && (
                             <div>
@@ -400,7 +400,7 @@ class AdminTeachersPage extends React.Component {
                         )}
                     </div>
                 )}
-                {this.state.part == 2 && (
+                {this.state.part === 2 && (
                     <div className="table_panel">
                         <div>
                             {this.state.subjects.length === 0 && (
@@ -445,7 +445,7 @@ class AdminTeachersPage extends React.Component {
                         </div>
                     </div>
                 )}
-                {this.state.part == 3 && (
+                {this.state.part === 3 && (
                     <div className="panel_add big">
                         <div className="begin_add">
                             Добавление учителя
@@ -595,7 +595,7 @@ class AdminTeachersPage extends React.Component {
                         <button className="btn_add" onClick={() => this.create()}>Подтвердить</button>
                     </div>
                 )}
-                {this.state.part == 4 && (
+                {this.state.part === 4 && (
                     <React.Fragment>
                         {
                             <div className="modal_rm">
