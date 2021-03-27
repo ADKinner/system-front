@@ -5,7 +5,7 @@ import {
     goServerErrorPage,
     goStudentGroupPage,
     goStudentProfilePage,
-    goStudentTeacherPage
+    goStudentRecordBookPage
 } from "../../redirect";
 import axios from "axios";
 import * as constants from "../../constants";
@@ -28,7 +28,7 @@ class StudentMainPage extends React.Component {
         } else {
             switch (role) {
                 case "ROLE_STUDENT":
-                    this.getSubjects();
+                    //this.getSubjects();
                     break;
                 default:
                     goLoginPage(this.props);
@@ -110,55 +110,55 @@ class StudentMainPage extends React.Component {
                     <div className="sys_name">SYSTEM</div>
                     <a className="logout" onClick={() => goLoginPage(this.props)}>Выйти</a>
                     <a onClick={() => goStudentProfilePage(this.props)}>Профиль</a>
-                    <a onClick={() => goStudentTeacherPage(this.props)}>Учителя</a>
+                    <a onClick={() => goStudentRecordBookPage(this.props)}>Учителя</a>
                     <a onClick={() => goStudentGroupPage(this.props)}>Группа</a>
                     <a className="active" onClick={() => this.handleMainClick()}>Главная</a>
                 </div>
-                <div className="main_data">
-                    {this.state.isStart && (
-                        <div className="subject_panel">
-                            {this.state.subjects.map((subject, index) => {
-                                const {id, name, form} = subject
-                                return (
-                                    <div>
-                                        <button
-                                            className="btn_subject"
-                                            value={id}
-                                            onClick={event => this.handleSubjectButtonClick(event)}
-                                        >
-                                            {name + ' - ' + form}
-                                        </button>
-                                    </div>
-                                )
-                            })}
-                        </div>
-                    )}
-                    {!this.state.isStart && (
-                        <div className="data_panel_student">
-                            <h1>Предмет: {this.state.subject.name}</h1>
-                            <div className="subject_detail">
-                                <div className="subject_detail_name">Оценки:</div>
-                                <div className="subject_detail_value">{this.state.subject.grades}</div>
-                            </div>
-                            <div className="subject_detail">
-                                <div className="subject_detail_name">Средний балл:</div>
-                                <div className="subject_detail_value">{this.state.subject.averageGrade}</div>
-                            </div>
-                            <div className="subject_detail">
-                                <div className="subject_detail_name">Количество пропусков:</div>
-                                <div className="subject_detail_value">{this.state.subject.skipsCount}</div>
-                            </div>
-                            <div className="subject_detail">
-                                <div className="subject_detail_name">Прошло занятий:</div>
-                                <div className="subject_detail_value">{this.state.subject.pastLessonsCount}</div>
-                            </div>
-                            <div className="subject_detail">
-                                <div className="subject_detail_name">Всего занятий:</div>
-                                <div className="subject_detail_value">{this.state.subject.planLessonsCount}</div>
-                            </div>
-                        </div>
-                    )}
-                </div>
+                {/*<div className="main_data">*/}
+                {/*    {this.state.isStart && (*/}
+                {/*        <div className="subject_panel">*/}
+                {/*            {this.state.subjects.map((subject, index) => {*/}
+                {/*                const {id, name, form} = subject*/}
+                {/*                return (*/}
+                {/*                    <div>*/}
+                {/*                        <button*/}
+                {/*                            className="btn_subject"*/}
+                {/*                            value={id}*/}
+                {/*                            onClick={event => this.handleSubjectButtonClick(event)}*/}
+                {/*                        >*/}
+                {/*                            {name + ' - ' + form}*/}
+                {/*                        </button>*/}
+                {/*                    </div>*/}
+                {/*                )*/}
+                {/*            })}*/}
+                {/*        </div>*/}
+                {/*    )}*/}
+                {/*    {!this.state.isStart && (*/}
+                {/*        <div className="data_panel_student">*/}
+                {/*            <h1>Предмет: {this.state.subject.name}</h1>*/}
+                {/*            <div className="subject_detail">*/}
+                {/*                <div className="subject_detail_name">Оценки:</div>*/}
+                {/*                <div className="subject_detail_value">{this.state.subject.grades}</div>*/}
+                {/*            </div>*/}
+                {/*            <div className="subject_detail">*/}
+                {/*                <div className="subject_detail_name">Средний балл:</div>*/}
+                {/*                <div className="subject_detail_value">{this.state.subject.averageGrade}</div>*/}
+                {/*            </div>*/}
+                {/*            <div className="subject_detail">*/}
+                {/*                <div className="subject_detail_name">Количество пропусков:</div>*/}
+                {/*                <div className="subject_detail_value">{this.state.subject.skipsCount}</div>*/}
+                {/*            </div>*/}
+                {/*            <div className="subject_detail">*/}
+                {/*                <div className="subject_detail_name">Прошло занятий:</div>*/}
+                {/*                <div className="subject_detail_value">{this.state.subject.pastLessonsCount}</div>*/}
+                {/*            </div>*/}
+                {/*            <div className="subject_detail">*/}
+                {/*                <div className="subject_detail_name">Всего занятий:</div>*/}
+                {/*                <div className="subject_detail_value">{this.state.subject.planLessonsCount}</div>*/}
+                {/*            </div>*/}
+                {/*        </div>*/}
+                {/*    )}*/}
+                {/*</div>*/}
             </div>
         )
     }

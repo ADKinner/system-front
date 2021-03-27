@@ -3,7 +3,7 @@ import {BrowserRouter as Router, Route, Switch, Redirect} from "react-router-dom
 import LoginPage from "./pages/login";
 import StudentMainPage from "./pages/student/main";
 import StudentGroupPage from "./pages/student/group";
-import StudentTeacherPage from "./pages/student/teacher";
+import StudentRecordBookPage from "./pages/student/recordBook";
 import TeacherMainPage from "./pages/teacher/main";
 import TeacherLessonPage from "./pages/teacher/lesson";
 import TeacherInfoPage from "./pages/teacher/info";
@@ -37,7 +37,7 @@ class App extends Component {
                 <Route exact path="/admin/profile" component={ProfilePage}/>
                 <Route exact path="/student/profile" component={ProfilePage}/>
                 <Route exact path="/student/group" component={StudentGroupPage}/>
-                <Route exact path="/student/teachers" component={StudentTeacherPage}/>
+                <Route exact path="/student/record-book" component={StudentRecordBookPage}/>
                 <Route exact path="/teacher/profile" component={ProfilePage}/>
                 <Route exact path="/register" component={RegisterPage}/>
                 <Route exact path="/recovery" component={RecoveryPasswordPage}/>

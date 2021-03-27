@@ -10,7 +10,7 @@ import {
     goStudentGroupPage,
     goStudentMainPage,
     goStudentProfilePage,
-    goStudentTeacherPage,
+    goStudentRecordBookPage,
     goTeacherInfoPage,
     goTeacherLessonPage,
     goTeacherMainPage,
@@ -24,24 +24,11 @@ class ProfilePage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            student: {
-                group: ''
-            },
-            teacher: {
-                cathedra: ''
-            },
-            admin: {
-                post: ''
-            },
-            user: {
-                id: '',
-                name: '',
-                surname: '',
-                patronymic: '',
-                password: '',
-                email: ''
-            }
-        };
+            user: {},
+            student: {},
+            teacher: {},
+            admin: {}
+        }
     }
 
     componentDidMount() {
@@ -94,7 +81,7 @@ class ProfilePage extends React.Component {
                 console.log(error);
                 if (error.response.status === 500) {
                     goServerErrorPage(this.props);
-                } else if (error.response.status === 401) {
+                } else if (error.response.status === 401 || error.response.status === 404) {
                     goLoginPage(this.props);
                 }
             });
@@ -125,7 +112,7 @@ class ProfilePage extends React.Component {
                 console.log(error);
                 if (error.response.status === 500) {
                     goServerErrorPage(this.props);
-                } else if (error.response.status === 401) {
+                } else if (error.response.status === 401 || error.response.status === 404) {
                     goLoginPage(this.props);
                 }
             });
@@ -154,7 +141,7 @@ class ProfilePage extends React.Component {
             .catch((error) => {
                 if (error.response.status === 500) {
                     goServerErrorPage(this.props);
-                } else if (error.response.status === 401) {
+                } else if (error.response.status === 401 || error.response.status === 404) {
                     goLoginPage(this.props);
                 }
             });
@@ -238,7 +225,7 @@ class ProfilePage extends React.Component {
                     <div className="sys_name">SYSTEM</div>
                     <a className="logout" onClick={() => goLoginPage(this.props)}>Выйти</a>
                     <a className="active" onClick={() => goStudentProfilePage(this.props)}>Профиль</a>
-                    <a onClick={() => goStudentTeacherPage(this.props)}>Учителя</a>
+                    <a onClick={() => goStudentRecordBookPage(this.props)}>Учителя</a>
                     <a onClick={() => goStudentGroupPage(this.props)}>Группа</a>
                     <a onClick={() => goStudentMainPage(this.props)}>Главная</a>
                 </div>
@@ -309,7 +296,7 @@ class ProfilePage extends React.Component {
                         <div className="indent"/>
                         {this.renderAdditionalData()}
                         <button
-                            className="btn_add"
+                            className="btn_add change"
                             onClick={() => goChangePasswordPage(this.props, this.state.user.email)}
                         >
                             Сменить пароль

@@ -23,8 +23,8 @@ export function goStudentGroupPage(props) {
     props.history.push("/student/group");
 }
 
-export function goStudentTeacherPage(props) {
-    props.history.push("/student/teachers");
+export function goStudentRecordBookPage(props) {
+    props.history.push("/student/record-book");
 }
 
 export function goTeacherMainPage(props) {

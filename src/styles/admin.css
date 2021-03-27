@@ -411,7 +411,7 @@ h2 {
 .user_details_panel {
     display: inline-block;
     margin-left: 200px;
-    height: 385px;
+    height: auto;
     width: 400px;
     border-radius: 20px;
     background-color: sandybrown;
@@ -501,4 +501,9 @@ h2 {
     width: 128px;
     height: 128px;
     background-image: url("../images/icon_128.png");
+}
+
+.change {
+    margin-left: 25px;
+    width: 350px;
 }
