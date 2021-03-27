@@ -57,7 +57,7 @@ class LoginPage extends React.Component {
                 localStorage.setItem("role", role);
                 localStorage.setItem("token", token);
                 localStorage.setItem("id", id);
-                this.goByRole(role, id);
+                this.go(role, id);
             })
             .catch((error) => {
                 if (error.response.status === 500) {
@@ -73,7 +73,6 @@ class LoginPage extends React.Component {
     getGroup(id) {
         axios.get(constants.DEFAULT_URL + "/groups/students/" + id)
             .then(response => {
-                console.log(response.data.id);
                 localStorage.setItem("groupId", response.data.id);
             })
             .catch((error) => {
@@ -85,15 +84,20 @@ class LoginPage extends React.Component {
             });
     }
 
-    goByRole(role, id) {
+    async go(role, id) {
         if (role === constants.STUDENT_ROLE) {
             this.getGroup(id);
+            await this.timeout(150);
             goStudentSubjectsPage(this.props);
         } else if (role === constants.TEACHER_ROLE) {
             goTeacherMainPage(this.props);
         } else if (role === constants.ADMIN_ROLE) {
             goAdminSubjectsPage(this.props);
         }
+    }
+
+    timeout(delay) {
+        return new Promise(res => setTimeout(res, delay));
     }
 
     render() {

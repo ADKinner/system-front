@@ -69,39 +69,32 @@ class StudentGroupPage extends React.Component {
                     <a onClick={() => goStudentSubjectsPage(this.props)}>Предметы</a>
                 </div>
                 <div className="table_panel">
-                    {this.state.students.length === 0 && (
-                        <div>
-                            <h2 className="h2_margin">Студентов в группе нет</h2>
-                        </div>
-                    )}
-                    {this.state.students.length !== 0 && (
-                        <div>
-                            <h1 id='title'>Группа</h1>
-                            <table id='data'>
-                                <tbody>
-                                <tr>
-                                    <th>№</th>
-                                    <th>Фамилия</th>
-                                    <th>Имя</th>
-                                    <th>Отчество</th>
-                                    <th>Email</th>
-                                </tr>
-                                {this.state.students.map((student, index) => {
-                                    const {id, surname, name, patronymic, email} = student
-                                    return (
-                                        <tr key={id}>
-                                            <td>{index + 1}</td>
-                                            <td>{surname}</td>
-                                            <td>{name}</td>
-                                            <td>{patronymic}</td>
-                                            <td>{email}</td>
-                                        </tr>
-                                    )
-                                })}
-                                </tbody>
-                            </table>
-                        </div>
-                    )}
+                    <div>
+                        <h1 id='title'>Группа</h1>
+                        <table id='data'>
+                            <tbody>
+                            <tr>
+                                <th>№</th>
+                                <th>Фамилия</th>
+                                <th>Имя</th>
+                                <th>Отчество</th>
+                                <th>Email</th>
+                            </tr>
+                            {this.state.students.map((student, index) => {
+                                const {id, surname, name, patronymic, email} = student
+                                return (
+                                    <tr key={id}>
+                                        <td>{index + 1}</td>
+                                        <td>{surname}</td>
+                                        <td>{name}</td>
+                                        <td>{patronymic}</td>
+                                        <td>{email}</td>
+                                    </tr>
+                                )
+                            })}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         )
