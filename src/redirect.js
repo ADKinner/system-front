@@ -15,8 +15,8 @@ export function goAdminProfilePage(props) {
     props.history.push('/admin/profile');
 }
 
-export function goStudentMainPage(props) {
-    props.history.push('/student')
+export function goStudentSubjectsPage(props) {
+    props.history.push('/student/subjects')
 }
 
 export function goStudentGroupPage(props) {

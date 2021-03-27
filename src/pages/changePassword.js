@@ -9,7 +9,7 @@ import {
     goLoginPage,
     goServerErrorPage,
     goStudentGroupPage,
-    goStudentMainPage,
+    goStudentSubjectsPage,
     goStudentProfilePage,
     goStudentRecordBookPage,
     goTeacherInfoPage,
@@ -187,7 +187,7 @@ class ChangePasswordPage extends React.Component {
                     <a onClick={() => goStudentProfilePage(this.props)}>Профиль</a>
                     <a onClick={() => goStudentRecordBookPage(this.props)}>Учителя</a>
                     <a onClick={() => goStudentGroupPage(this.props)}>Группа</a>
-                    <a onClick={() => goStudentMainPage(this.props)}>Главная</a>
+                    <a onClick={() => goStudentSubjectsPage(this.props)}>Главная</a>
                 </div>
             );
         } else if (role === constants.TEACHER_ROLE) {

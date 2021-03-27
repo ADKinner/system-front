@@ -507,3 +507,69 @@ h2 {
     margin-left: 25px;
     width: 350px;
 }
+
+.subject_panel {
+    margin-left: 600px;
+    width: 500px;
+    padding: 25px 25px;
+}
+
+.btn_subject {
+    margin-left: 100px;
+    margin-top: 20px;
+    width: 250px;
+    padding: 8px;
+    height: 50px;
+    font-size: 21px;
+    border-radius: 5px;
+    border-color: #4CAF50;
+}
+
+.btn_subject:hover {
+    background-color: #4CAF50;
+}
+
+.subject_panel {
+    margin-left: 600px;
+    width: 500px;
+    padding: 25px 25px;
+}
+
+.small {
+    margin-top: 150px;
+}
+
+.main_data {
+    padding: 150px 100px;
+}
+
+.data_panel_student {
+    padding-top: 25px;
+    margin-left: 600px;
+    padding-bottom: 20px;
+    width: 800px;
+    height: auto;
+    background-color: saddlebrown;
+}
+
+.subject_detail {
+    margin-top: 25px;
+    height: 50px;
+    margin-left: 40px;
+    font-size: 20px;
+    width: 350px;
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+}
+
+.subject_detail_name {
+    text-align: left;
+    margin-top: 10px;
+    width: 250px;
+    color: white;
+}
+
+.subject_detail_value {
+    margin-top: 5px;
+    text-align: left;
+    color: #4CAF50;
+}

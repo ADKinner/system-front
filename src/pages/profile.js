@@ -8,7 +8,7 @@ import {
     goLoginPage,
     goServerErrorPage,
     goStudentGroupPage,
-    goStudentMainPage,
+    goStudentSubjectsPage,
     goStudentProfilePage,
     goStudentRecordBookPage,
     goTeacherInfoPage,
@@ -225,9 +225,9 @@ class ProfilePage extends React.Component {
                     <div className="sys_name">SYSTEM</div>
                     <a className="logout" onClick={() => goLoginPage(this.props)}>Выйти</a>
                     <a className="active" onClick={() => goStudentProfilePage(this.props)}>Профиль</a>
-                    <a onClick={() => goStudentRecordBookPage(this.props)}>Учителя</a>
+                    <a onClick={() => goStudentRecordBookPage(this.props)}>Зачётка</a>
                     <a onClick={() => goStudentGroupPage(this.props)}>Группа</a>
-                    <a onClick={() => goStudentMainPage(this.props)}>Главная</a>
+                    <a onClick={() => goStudentSubjectsPage(this.props)}>Предметы</a>
                 </div>
             );
         } else if (role === constants.TEACHER_ROLE) {

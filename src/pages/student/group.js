@@ -4,7 +4,7 @@ import {
     goLoginPage,
     goServerErrorPage,
     goStudentGroupPage,
-    goStudentMainPage,
+    goStudentSubjectsPage,
     goStudentProfilePage,
     goStudentRecordBookPage
 } from "../../redirect";
@@ -64,9 +64,9 @@ class StudentGroupPage extends React.Component {
                     <div className="sys_name">SYSTEM</div>
                     <a className="logout" onClick={() => goLoginPage(this.props)}>Выйти</a>
                     <a onClick={() => goStudentProfilePage(this.props)}>Профиль</a>
-                    <a onClick={() => goStudentRecordBookPage(this.props)}>Учителя</a>
+                    <a onClick={() => goStudentRecordBookPage(this.props)}>Зачётка</a>
                     <a className="active" onClick={() => goStudentGroupPage(this.props)}>Группа</a>
-                    <a onClick={() => goStudentMainPage(this.props)}>Главная</a>
+                    <a onClick={() => goStudentSubjectsPage(this.props)}>Предметы</a>
                 </div>
                 <div className="table_panel">
                     {this.state.students.length === 0 && (

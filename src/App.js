@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {BrowserRouter as Router, Route, Switch, Redirect} from "react-router-dom";
 import LoginPage from "./pages/login";
-import StudentMainPage from "./pages/student/main";
+import StudentSubjectsPage from "./pages/student/subjects";
 import StudentGroupPage from "./pages/student/group";
 import StudentRecordBookPage from "./pages/student/recordBook";
 import TeacherMainPage from "./pages/teacher/main";
@@ -25,7 +25,7 @@ class App extends Component {
         return <Router>
             <Switch>
                 <Route exact path="/login" component={LoginPage}/>
-                <Route exact path="/student" component={StudentMainPage}/>
+                <Route exact path="/student/subjects" component={StudentSubjectsPage}/>
                 <Route exact path="/teacher" component={TeacherMainPage}/>
                 <Route exact path="/teacher/lessons" component={TeacherLessonPage}/>
                 <Route exact path="/teacher/info" component={TeacherInfoPage}/>
