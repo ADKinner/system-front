@@ -249,7 +249,7 @@ class TeacherLessonPage extends React.Component {
                             return (
                                 <div>
                                     <button
-                                        className="btn_subject"
+                                        className="btn_data"
                                         value={id}
                                         onClick={event => this.handleSubjectButtonClick(event)}
                                     >

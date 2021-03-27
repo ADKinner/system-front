@@ -426,7 +426,7 @@ class AdminGroupsPage extends React.Component {
                     <a onClick={() => goAdminStudentsPage(this.props)}>Студенты</a>
                     <a onClick={() => goAdminSubjectsPage(this.props)}>Предметы</a>
                 </div>
-                {this.state.part == 0 && (
+                {this.state.part === 0 && (
                     <div className="panel_add panel_add_medium">
                         <div className="begin_add">
                             Поиск группы
@@ -518,7 +518,7 @@ class AdminGroupsPage extends React.Component {
                         </button>
                     </div>
                 )}
-                {this.state.part == 1 && (
+                {this.state.part === 1 && (
                     <div className="table_panel">
                         {this.state.groups.length === 0 && (
                             <div>
@@ -572,7 +572,7 @@ class AdminGroupsPage extends React.Component {
                         )}
                     </div>
                 )}
-                {this.state.part == 2 && (
+                {this.state.part === 2 && (
                     <div className="table_panel">
                         {this.state.students.length === 0 && (
                             <div>
@@ -609,7 +609,7 @@ class AdminGroupsPage extends React.Component {
                         )}
                     </div>
                 )}
-                {this.state.part == 3 && (
+                {this.state.part === 3 && (
                     <div className="panel_add panel_add_small">
                         <div className="begin_add">
                             Добавление группы
@@ -640,7 +640,7 @@ class AdminGroupsPage extends React.Component {
                         </button>
                     </div>
                 )}
-                {this.state.part == 4 && (
+                {this.state.part === 4 && (
                     <React.Fragment>
                         {
                             <div className="modal_rm">

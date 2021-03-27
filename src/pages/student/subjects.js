@@ -32,6 +32,7 @@ class StudentSubjectsPage extends React.Component {
         } else {
             switch (role) {
                 case "ROLE_STUDENT":
+                    console.log(localStorage.getItem("groupId"));
                     this.getSubjects(localStorage.getItem("groupId"));
                     break;
                 default:
@@ -41,8 +42,8 @@ class StudentSubjectsPage extends React.Component {
         }
     }
 
-    getSubjects(id) {
-        axios.get(constants.DEFAULT_URL + constants.SUBJECTS_URL + "/groups/" + id, {
+    getSubjects(groupId) {
+        axios.get(constants.DEFAULT_URL + constants.SUBJECTS_URL + "/groups/" + groupId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -53,7 +54,6 @@ class StudentSubjectsPage extends React.Component {
                 });
             })
             .catch((error) => {
-                console.log(error);
                 if (error.response.status === 500) {
                     goServerErrorPage(this.props);
                 } else if (error.response.status === 401) {
@@ -62,8 +62,8 @@ class StudentSubjectsPage extends React.Component {
             });
     }
 
-    getSubjectTypes(id) {
-        axios.get(constants.DEFAULT_URL + constants.SUBJECTS_URL + constants.SLASH + id + "/types", {
+    getSubjectTypes(subjectId) {
+        axios.get(constants.DEFAULT_URL + constants.SUBJECTS_URL + constants.SLASH + subjectId + "/types", {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -74,7 +74,6 @@ class StudentSubjectsPage extends React.Component {
                 });
             })
             .catch((error) => {
-                console.log(error);
                 if (error.response.status === 500) {
                     goServerErrorPage(this.props);
                 } else if (error.response.status === 401) {
@@ -96,7 +95,6 @@ class StudentSubjectsPage extends React.Component {
                 });
             })
             .catch((error) => {
-                console.log(error);
                 if (error.response.status === 500) {
                     goServerErrorPage(this.props);
                 } else if (error.response.status === 401) {
@@ -118,7 +116,6 @@ class StudentSubjectsPage extends React.Component {
                 });
             })
             .catch((error) => {
-                console.log(error);
                 if (error.response.status === 500) {
                     goServerErrorPage(this.props);
                 } else if (error.response.status === 401) {
@@ -139,7 +136,6 @@ class StudentSubjectsPage extends React.Component {
                 });
             })
             .catch((error) => {
-                console.log(error);
                 if (error.response.status === 500) {
                     goServerErrorPage(this.props);
                 } else if (error.response.status === 401) {
@@ -160,7 +156,6 @@ class StudentSubjectsPage extends React.Component {
                 });
             })
             .catch((error) => {
-                console.log(error);
                 if (error.response.status === 500) {
                     goServerErrorPage(this.props);
                 } else if (error.response.status === 401) {
@@ -194,11 +189,11 @@ class StudentSubjectsPage extends React.Component {
         const studentId = localStorage.getItem("id");
         const groupId = localStorage.getItem("groupId");
         this.getSubjectInfo(this.state.SId, typeId);
-        await this.timeout(500);
+        await this.timeout(150);
         this.getGrades(this.state.subjectInfo.id, studentId);
         this.getSkip(this.state.subjectInfo.id, studentId);
         this.getGroupInfo(this.state.subjectInfo.id, groupId);
-        await this.timeout(300);
+        await this.timeout(150);
         this.setState({
             part: 2,
             STId: typeId
@@ -228,13 +223,14 @@ class StudentSubjectsPage extends React.Component {
                 </div>
                 <div className="main_data">
                     {this.state.part === 0 && (
-                        <div className="subject_panel">
-                            {this.state.subjects.map(subject => {
+                        <div className="data_panel">
+                            {
+                                this.state.subjects.map(subject => {
                                 const {id, name} = subject
                                 return (
                                     <div>
                                         <button
-                                            className="btn_subject"
+                                            className="btn_data"
                                             value={id}
                                             onClick={event => this.view(event.target.value)}
                                         >
@@ -246,13 +242,13 @@ class StudentSubjectsPage extends React.Component {
                         </div>
                     )}
                     {this.state.part === 1 && (
-                        <div className="subject_panel small">
+                        <div className="data_panel small">
                             {this.state.subjectTypes.map(subject => {
                                 const {id, name} = subject
                                 return (
                                     <div>
                                         <button
-                                            className="btn_subject"
+                                            className="btn_data"
                                             value={id}
                                             onClick={event => this.get(event.target.value)}
                                         >
@@ -270,34 +266,49 @@ class StudentSubjectsPage extends React.Component {
                             <div className="subject_detail">
                                 <div className="subject_detail_name">Преподаватель:</div>
                                 <div className="subject_detail_value">
-                                    {this.state.subjectInfo.subjectTeacher.surname} {this.state.subjectInfo.subjectTeacher.name} {this.state.subjectInfo.subjectTeacher.patronymic}
+                                    {this.state.subjectInfo.subjectTeacher.surname + " "}
+                                    {this.state.subjectInfo.subjectTeacher.name + " "}
+                                    {this.state.subjectInfo.subjectTeacher.patronymic}
                                 </div>
                             </div>
                             <div className="subject_detail">
                                 <div className="subject_detail_name">Оценки:</div>
-                                <div className="subject_detail_value">{this.state.grades.map(grade => {
-                                    return grade.value + " ";
-                                })}</div>
+                                <div className="subject_detail_value">
+                                    {this.state.grades.map(grade => {
+                                        return grade.value + " ";
+                                    })}
+                                </div>
                             </div>
                             <div className="subject_detail">
                                 <div className="subject_detail_name">Средний балл:</div>
-                                <div className="subject_detail_value">{this.state.avGrade}</div>
+                                <div className="subject_detail_value">
+                                    {this.state.avGrade}
+                                </div>
                             </div>
                             <div className="subject_detail">
                                 <div className="subject_detail_name">Тип сдачи:</div>
-                                <div className="subject_detail_value">{this.state.subjectInfo.subject.examinationType.name}</div>
+                                <div
+                                    className="subject_detail_value">
+                                    {this.state.subjectInfo.subject.examinationType.name}
+                                </div>
                             </div>
                             <div className="subject_detail">
                                 <div className="subject_detail_name">Количество пропусков:</div>
-                                <div className="subject_detail_value">{this.state.skip.count}</div>
+                                <div className="subject_detail_value">
+                                    {this.state.skip.count}
+                                </div>
                             </div>
                             <div className="subject_detail">
                                 <div className="subject_detail_name">Прошло занятий:</div>
-                                <div className="subject_detail_value">{this.state.groupInfo.pastLessonsCount}</div>
+                                <div className="subject_detail_value">
+                                    {this.state.groupInfo.pastLessonsCount}
+                                </div>
                             </div>
                             <div className="subject_detail">
                                 <div className="subject_detail_name">Всего занятий:</div>
-                                <div className="subject_detail_value">{this.state.subjectInfo.count}</div>
+                                <div className="subject_detail_value">
+                                    {this.state.subjectInfo.count}
+                                </div>
                             </div>
                         </div>
                     )}

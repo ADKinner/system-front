@@ -96,7 +96,7 @@
     border: 3px solid #38629C;
 }
 
-.btn_subject {
+.btn_data {
     margin-left: 100px;
     margin-top: 20px;
     width: 250px;
@@ -107,7 +107,7 @@
     border-color: #4CAF50;
 }
 
-.btn_subject:hover {
+.btn_data:hover {
     background-color: #4CAF50;
 }
 
