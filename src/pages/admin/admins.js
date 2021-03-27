@@ -245,7 +245,7 @@ class AdminsPage extends React.Component {
                     <a onClick={() => goAdminStudentsPage(this.props)}>Студенты</a>
                     <a onClick={() => goAdminSubjectsPage(this.props)}>Предметы</a>
                 </div>
-                {this.state.part == 0 && (
+                {this.state.part === 0 && (
                     <div className="table_panel">
                         {this.state.admins.length === 0 && (
                             <div>
@@ -304,7 +304,7 @@ class AdminsPage extends React.Component {
                         )}
                     </div>
                 )}
-                {this.state.part == 1 && (
+                {this.state.part === 1 && (
                     <div className="panel_add big">
                         <div className="begin_add">
                             Добавление администратора
@@ -459,7 +459,7 @@ class AdminsPage extends React.Component {
                         </button>
                     </div>
                 )}
-                {this.state.part == 2 && (
+                {this.state.part === 2 && (
                     <React.Fragment>
                         {
                             <div className="modal_rm">
