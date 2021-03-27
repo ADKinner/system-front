@@ -27,7 +27,7 @@ class StudentGroupPage extends React.Component {
         } else {
             switch (role) {
                 case "ROLE_STUDENT":
-                    this.getStudents(localStorage.getItem("id"));
+                    this.getStudents(localStorage.getItem("groupId"));
                     break;
                 default:
                     goLoginPage(this.props);
@@ -37,7 +37,7 @@ class StudentGroupPage extends React.Component {
     }
 
     getStudents(id) {
-        axios.get(constants.DEFAULT_URL + constants.STUDENTS_URL + constants.SLASH + id + "/group", {
+        axios.get(constants.DEFAULT_URL + constants.STUDENTS_URL + "/groups/" + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }

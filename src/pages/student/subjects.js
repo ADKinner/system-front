@@ -32,7 +32,7 @@ class StudentSubjectsPage extends React.Component {
         } else {
             switch (role) {
                 case "ROLE_STUDENT":
-                    this.getSubjects(localStorage.getItem("id"));
+                    this.getSubjects(localStorage.getItem("groupId"));
                     break;
                 default:
                     goLoginPage(this.props);
@@ -42,7 +42,7 @@ class StudentSubjectsPage extends React.Component {
     }
 
     getSubjects(id) {
-        axios.get(constants.DEFAULT_URL + constants.SUBJECTS_URL + "/students/" + id, {
+        axios.get(constants.DEFAULT_URL + constants.SUBJECTS_URL + "/groups/" + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -148,8 +148,8 @@ class StudentSubjectsPage extends React.Component {
             });
     }
 
-    getGroupInfo(subjectId, studentId) {
-        axios.get(constants.DEFAULT_URL + "/groups/info/subjects/" + subjectId + "/students/" + studentId, {
+    getGroupInfo(subjectId, groupId) {
+        axios.get(constants.DEFAULT_URL + "/groups/" + groupId + "/info/subjects/" + subjectId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -191,13 +191,13 @@ class StudentSubjectsPage extends React.Component {
     }
 
     async get(typeId) {
-        console.log(typeId);
         const studentId = localStorage.getItem("id");
+        const groupId = localStorage.getItem("groupId");
         this.getSubjectInfo(this.state.SId, typeId);
         await this.timeout(500);
         this.getGrades(this.state.subjectInfo.id, studentId);
         this.getSkip(this.state.subjectInfo.id, studentId);
-        this.getGroupInfo(this.state.subjectInfo.id, studentId);
+        this.getGroupInfo(this.state.subjectInfo.id, groupId);
         await this.timeout(300);
         this.setState({
             part: 2,

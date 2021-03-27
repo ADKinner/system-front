@@ -1,7 +1,13 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import axios from "axios";
-import {goAdminSubjectsPage, goServerErrorPage, goStudentSubjectsPage, goTeacherMainPage} from "../redirect";
+import {
+    goAdminSubjectsPage,
+    goLoginPage,
+    goServerErrorPage,
+    goStudentSubjectsPage,
+    goTeacherMainPage
+} from "../redirect";
 import * as constants from '../constants';
 import '../styles/admin.css';
 
@@ -20,7 +26,7 @@ class LoginPage extends React.Component {
     }
 
     login() {
-        this.checkInputOnServer();
+        this.authenticate();
     }
 
     change(event) {
@@ -38,7 +44,7 @@ class LoginPage extends React.Component {
         }));
     }
 
-    checkInputOnServer() {
+    authenticate() {
         axios.post(constants.DEFAULT_URL + constants.AUTHENTICATION_URL, {
             id: this.state.values.id,
             password: this.state.values.password
@@ -47,10 +53,11 @@ class LoginPage extends React.Component {
                 localStorage.clear();
                 const role = response.data["role"];
                 const token = response.data["jwtToken"];
+                const id = this.state.values.id;
                 localStorage.setItem("role", role);
                 localStorage.setItem("token", token);
-                localStorage.setItem("id", this.state.values.id);
-                this.goByRole(role);
+                localStorage.setItem("id", id);
+                this.goByRole(role, id);
             })
             .catch((error) => {
                 if (error.response.status === 500) {
@@ -63,8 +70,24 @@ class LoginPage extends React.Component {
             });
     }
 
-    goByRole(role) {
+    getGroup(id) {
+        axios.get(constants.DEFAULT_URL + "/groups/students/" + id)
+            .then(response => {
+                console.log(response.data.id);
+                localStorage.setItem("groupId", response.data.id);
+            })
+            .catch((error) => {
+                if (error.response.status === 500) {
+                    goServerErrorPage(this.props);
+                } else if (error.response.status === 401) {
+                    goLoginPage(this.props);
+                }
+            });
+    }
+
+    goByRole(role, id) {
         if (role === constants.STUDENT_ROLE) {
+            this.getGroup(id);
             goStudentSubjectsPage(this.props);
         } else if (role === constants.TEACHER_ROLE) {
             goTeacherMainPage(this.props);
