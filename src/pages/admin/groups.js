@@ -1,5 +1,5 @@
 import React from "react";
-import '../../styles/admin.css';
+import '../../styles/main.css';
 import {
     goAdminProfilePage, goAdminRegisterStudentsPage,
     goAdminsPage,

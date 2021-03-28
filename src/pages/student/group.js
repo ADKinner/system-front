@@ -9,7 +9,7 @@ import {
     goStudentRecordBookPage
 } from "../../redirect";
 import * as constants from "../../constants";
-import '../../styles/admin.css';
+import '../../styles/main.css';
 
 class StudentGroupPage extends React.Component {
 

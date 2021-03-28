@@ -6,7 +6,7 @@ import {
     goStudentProfilePage,
     goServerErrorPage
 } from "../../redirect";
-import '../../styles/admin.css';
+import '../../styles/main.css';
 import axios from "axios";
 import * as constants from "../../constants";
 

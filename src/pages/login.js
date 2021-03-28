@@ -9,7 +9,7 @@ import {
     goTeacherMainPage
 } from "../redirect";
 import * as constants from '../constants';
-import '../styles/admin.css';
+import '../styles/main.css';
 
 class LoginPage extends React.Component {
 
@@ -147,9 +147,6 @@ class LoginPage extends React.Component {
                             ID или пароль не верны
                         </div>
                     )}
-                    <div className="repair_panel">
-                        <Link to="/recovery">Забыли пароль? Восстановите его.</Link>
-                    </div>
                     <button
                         className="btn_add"
                         onClick={() => this.login()}

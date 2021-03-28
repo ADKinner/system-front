@@ -15,7 +15,6 @@ import AdminGroupsPage from "./pages/admin/groups";
 import AdminTeachersPage from "./pages/admin/teachers";
 import ProfilePage from "./pages/profile";
 import RegisterPage from "./pages/register";
-import RecoveryPasswordPage from "./pages/recovery";
 import ChangePasswordPage from "./pages/changePassword";
 import NotFoundErrorPage from "./pages/404";
 import ServerErrorPage from "./pages/500";
@@ -42,7 +41,6 @@ class App extends Component {
                 <Route exact path="/student/record-book" component={StudentRecordBookPage}/>
                 <Route exact path="/teacher/profile" component={ProfilePage}/>
                 <Route exact path="/register" component={RegisterPage}/>
-                <Route exact path="/recovery" component={RecoveryPasswordPage}/>
                 <Route exact path="/change-password" component={ChangePasswordPage}/>
                 <Route exact path="/404" component={NotFoundErrorPage}/>
                 <Route exact path="/500" component={ServerErrorPage}/>

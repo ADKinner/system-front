@@ -3,15 +3,17 @@ import axios from "axios";
 import {
     goAdminGroupsPage,
     goAdminProfilePage,
+    goAdminRegisterStudentsPage,
+    goAdminsPage,
     goAdminStudentsPage,
     goAdminSubjectsPage,
     goAdminTeachersPage,
     goLoginPage,
     goServerErrorPage,
     goStudentGroupPage,
-    goStudentSubjectsPage,
     goStudentProfilePage,
     goStudentRecordBookPage,
+    goStudentSubjectsPage,
     goTeacherInfoPage,
     goTeacherLessonPage,
     goTeacherMainPage,
@@ -27,13 +29,10 @@ class ChangePasswordPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isModalOpen: true,
+            isStart: true,
             isPasswordVisibility: false,
             data: {},
-            errors: {},
-            isStudent: false,
-            isTeacher: false,
-            isAdmin: false
+            errors: {}
         }
     }
 
@@ -44,10 +43,19 @@ class ChangePasswordPage extends React.Component {
         } else {
             switch (role) {
                 case "ROLE_STUDENT":
+                    this.setState({
+                        url: constants.DEFAULT_URL + "/students/password"
+                    });
                     break;
                 case "ROLE_TEACHER":
+                    this.setState({
+                        url: constants.DEFAULT_URL + "/teachers/password"
+                    });
                     break;
                 case "ROLE_ADMIN":
+                    this.setState({
+                        url: constants.DEFAULT_URL + "/admins/password"
+                    });
                     break;
                 default:
                     goLoginPage(this.props);
@@ -57,7 +65,7 @@ class ChangePasswordPage extends React.Component {
         }
     }
 
-    handlePasswordsInputChange(event) {
+    change(event) {
         this.setState({
             data: {
                 ...this.state.data,
@@ -66,20 +74,18 @@ class ChangePasswordPage extends React.Component {
         });
     }
 
-    handleChangePasswordVisibility() {
+    changeVisibility() {
         this.setState((state) => ({
             isPasswordVisibility: !state.isPasswordVisibility
         }));
     }
 
-    handleSubmitPasswordsInput(event) {
-        event.preventDefault();
+    changePassword() {
         if (Object.keys(this.state.errors).length === 0) {
             this.setState({
                 errors: {}
             })
         }
-        console.log(this.state);
         if (this.checkPasswordsInputError()) {
             if (this.checkConfirmPasswordsIdentity()) {
                 this.changePasswordOnAccount();
@@ -88,14 +94,14 @@ class ChangePasswordPage extends React.Component {
                     errors: {
                         confirmPassword: 'Пароль-подтверждение не верен'
                     }
-                })
+                });
             }
         }
     }
 
-    handleCloseButtonClick() {
+    close() {
         this.setState({
-            isModalOpen: false
+            isStart: false
         });
     }
 
@@ -135,17 +141,8 @@ class ChangePasswordPage extends React.Component {
     }
 
     changePasswordOnAccount() {
-        const role = localStorage.getItem("role");
-        let url = constants.DEFAULT_URL;
-        if (role === constants.STUDENT_ROLE) {
-            url += constants.STUDENTS_URL;
-        } else if (role === constants.TEACHER_ROLE) {
-            url += constants.TEACHERS_URL;
-        } else if (role === constants.ADMIN_ROLE) {
-            url += constants.ADMINS_URL;
-        }
-        axios.put(url, {
-            id: localStorage.getItem("id"),
+        axios.put(this.state.url, {
+            userId: localStorage.getItem("id"),
             password: this.state.data.newPassword
         }, {
             headers: {
@@ -185,9 +182,9 @@ class ChangePasswordPage extends React.Component {
                     <div className="sys_name">SYSTEM</div>
                     <a className="logout" onClick={() => goLoginPage(this.props)}>Выйти</a>
                     <a onClick={() => goStudentProfilePage(this.props)}>Профиль</a>
-                    <a onClick={() => goStudentRecordBookPage(this.props)}>Учителя</a>
+                    <a onClick={() => goStudentRecordBookPage(this.props)}>Зачётка</a>
                     <a onClick={() => goStudentGroupPage(this.props)}>Группа</a>
-                    <a onClick={() => goStudentSubjectsPage(this.props)}>Главная</a>
+                    <a onClick={() => goStudentSubjectsPage(this.props)}>Предметы</a>
                 </div>
             );
         } else if (role === constants.TEACHER_ROLE) {
@@ -209,8 +206,10 @@ class ChangePasswordPage extends React.Component {
                     <div className="sys_name">SYSTEM</div>
                     <a className="logout" onClick={() => goLoginPage(this.props)}>Выйти</a>
                     <a onClick={() => goAdminProfilePage(this.props)}>Профиль</a>
+                    <a onClick={() => goAdminsPage(this.props)}>Администраторы</a>
                     <a onClick={() => goAdminTeachersPage(this.props)}>Учителя</a>
                     <a onClick={() => goAdminGroupsPage(this.props)}>Группы</a>
+                    <a onClick={() => goAdminRegisterStudentsPage(this.props)}>Регистрация студентов</a>
                     <a onClick={() => goAdminStudentsPage(this.props)}>Студенты</a>
                     <a onClick={() => goAdminSubjectsPage(this.props)}>Предметы</a>
                 </div>
@@ -229,62 +228,60 @@ class ChangePasswordPage extends React.Component {
                     <div className="begin_rec">
                         Изменить пароль
                     </div>
-                    <form className="login" onSubmit={event => this.handleSubmitPasswordsInput(event)}>
-                        <div className="part">
-                            <div className="desc">
-                                Пароль-подтвеждение
-                            </div>
-                            <input
-                                name="confirmPassword"
-                                className="data_input"
-                                type={this.state.isPasswordVisibility ? "text" : "password"}
-                                placeholder="Enter confirmation password"
-                                value={this.state.data.confirmPassword}
-                                onChange={event => this.handlePasswordsInputChange(event)}
-                            />
+                    <div className="part">
+                        <div className="desc">
+                            Пароль-подтвеждение
                         </div>
-                        {this.state.errors.confirmPassword && (
-                            <div className="error_panel_register">
-                                {this.state.errors.confirmPassword}
-                            </div>
-                        )}
-                        <div className="part_password">
-                            <div className="desc">
-                                Новый пароль
-                            </div>
-                            <input
-                                name="newPassword"
-                                className="data_input"
-                                type={this.state.isPasswordVisibility ? "text" : "password"}
-                                placeholder="Введите новый пароль"
-                                value={this.state.data.newPassword}
-                                onChange={event => this.handlePasswordsInputChange(event)}
-                            />
-                            <div className="small_indent"/>
-                            <input
-                                name="repeatPassword"
-                                className="data_input"
-                                type={this.state.isPasswordVisibility ? "text" : "password"}
-                                placeholder="Введите пароль повторно"
-                                value={this.state.data.repeatPassword}
-                                onChange={event => this.handlePasswordsInputChange(event)}
-                            />
-                        </div>
-                        <input type="checkbox"
-                               id="check"
-                               className="check_recovery"
-                               onChange={() => this.handleChangePasswordVisibility()}
+                        <input
+                            name="confirmPassword"
+                            className="data_input"
+                            type={this.state.isPasswordVisibility ? "text" : "password"}
+                            placeholder="Enter confirmation password"
+                            value={this.state.data.confirmPassword}
+                            onChange={event => this.change(event)}
                         />
-                        <label htmlFor="check">Посмотреть пароли</label>
-                        {this.state.errors.newPassword && (
-                            <div className="error_text_2">
-                                {this.state.errors.newPassword}
-                            </div>
-                        )}
-                        <button className="btn_rec">Изменить</button>
-                    </form>
+                    </div>
+                    {this.state.errors.confirmPassword && (
+                        <div className="error_panel_register">
+                            {this.state.errors.confirmPassword}
+                        </div>
+                    )}
+                    <div className="part_password">
+                        <div className="desc">
+                            Новый пароль
+                        </div>
+                        <input
+                            name="newPassword"
+                            className="data_input"
+                            type={this.state.isPasswordVisibility ? "text" : "password"}
+                            placeholder="Введите новый пароль"
+                            value={this.state.data.newPassword}
+                            onChange={event => this.change(event)}
+                        />
+                        <div className="small_indent"/>
+                        <input
+                            name="repeatPassword"
+                            className="data_input"
+                            type={this.state.isPasswordVisibility ? "text" : "password"}
+                            placeholder="Введите пароль повторно"
+                            value={this.state.data.repeatPassword}
+                            onChange={event => this.change(event)}
+                        />
+                    </div>
+                    <input type="checkbox"
+                           id="check"
+                           className="check_recovery"
+                           onChange={() => this.changeVisibility()}
+                    />
+                    <label htmlFor="check">Посмотреть пароли</label>
+                    {this.state.errors.newPassword && (
+                        <div className="error_text_2">
+                            {this.state.errors.newPassword}
+                        </div>
+                    )}
+                    <button className="btn_rec" onClick={() => this.changePassword()}>Изменить</button>
                 </div>
-                {this.state.isModalOpen && (
+                {this.state.isStart && (
                     <React.Fragment>
                         {
                             <div className="modal_rm">
@@ -298,7 +295,7 @@ class ChangePasswordPage extends React.Component {
                                     </h3>
                                     <button
                                         className="btn_rm"
-                                        onClick={() => this.handleCloseButtonClick()}
+                                        onClick={() => this.close()}
                                     >
                                         OK
                                     </button>

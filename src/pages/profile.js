@@ -17,7 +17,7 @@ import {
     goTeacherProfilePage, goAdminRegisterStudentsPage
 } from "../redirect";
 import '../styles/modal.css';
-import '../styles/admin.css';
+import '../styles/main.css';
 
 class ProfilePage extends React.Component {
 
