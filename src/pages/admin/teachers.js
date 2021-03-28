@@ -49,24 +49,22 @@ class AdminTeachersPage extends React.Component {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
-        })
-            .then(response => {
-                if (response.data.length !== 0) {
-                    this.setState({
-                        values: {
-                            CId: response.data[0]["id"]
-                        },
-                        cathedras: response.data
-                    });
-                }
-            })
-            .catch(error => {
-                if (error.response.status === 500) {
-                    goServerErrorPage(this.props);
-                } else if (error.response.status === 401) {
-                    goLoginPage(this.props);
-                }
-            });
+        }).then(response => {
+            if (response.data.length !== 0) {
+                this.setState({
+                    values: {
+                        CId: response.data[0]["id"]
+                    },
+                    cathedras: response.data
+                });
+            }
+        }).catch(error => {
+            if (error.response.status === 500) {
+                goServerErrorPage(this.props);
+            } else if (error.response.status === 401) {
+                goLoginPage(this.props);
+            }
+        });
     }
 
     getTeachers() {
@@ -74,19 +72,17 @@ class AdminTeachersPage extends React.Component {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
-        })
-            .then(response => {
-                this.setState({
-                    teachers: response.data
-                });
-            })
-            .catch(error => {
-                if (error.response.status === 500) {
-                    goServerErrorPage(this.props);
-                } else if (error.response.status === 401) {
-                    goLoginPage(this.props);
-                }
+        }).then(response => {
+            this.setState({
+                teachers: response.data
             });
+        }).catch(error => {
+            if (error.response.status === 500) {
+                goServerErrorPage(this.props);
+            } else if (error.response.status === 401) {
+                goLoginPage(this.props);
+            }
+        });
     }
 
     getSubjects(subjectId) {
@@ -94,19 +90,17 @@ class AdminTeachersPage extends React.Component {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
-        })
-            .then(response => {
-                this.setState({
-                    subjects: response.data
-                });
-            })
-            .catch(error => {
-                if (error.response.status === 500) {
-                    goServerErrorPage(this.props);
-                } else if (error.response.status === 401) {
-                    goLoginPage(this.props);
-                }
+        }).then(response => {
+            this.setState({
+                subjects: response.data
             });
+        }).catch(error => {
+            if (error.response.status === 500) {
+                goServerErrorPage(this.props);
+            } else if (error.response.status === 401) {
+                goLoginPage(this.props);
+            }
+        });
     }
 
     getPosts() {
@@ -114,23 +108,21 @@ class AdminTeachersPage extends React.Component {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
-        })
-            .then(response => {
-                this.setState({
-                    values: {
-                        ...this.state.values,
-                        TPId: response.data[0]["id"]
-                    },
-                    posts: response.data
-                });
-            })
-            .catch(error => {
-                if (error.response.status === 500) {
-                    goServerErrorPage(this.props);
-                } else if (error.response.status === 401) {
-                    goLoginPage(this.props);
-                }
+        }).then(response => {
+            this.setState({
+                values: {
+                    ...this.state.values,
+                    TPId: response.data[0]["id"]
+                },
+                posts: response.data
             });
+        }).catch(error => {
+            if (error.response.status === 500) {
+                goServerErrorPage(this.props);
+            } else if (error.response.status === 401) {
+                goLoginPage(this.props);
+            }
+        });
     }
 
     deleteTeacher() {

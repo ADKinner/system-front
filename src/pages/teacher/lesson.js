@@ -293,7 +293,6 @@ class TeacherLessonPage extends React.Component {
                                                 </select>
                                             </td>
                                             <td>
-
                                                 <select
                                                     id={index}
                                                     className="select_mark"

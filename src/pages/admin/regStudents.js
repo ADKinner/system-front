@@ -61,21 +61,19 @@ class AdminRegisterStudentsPage extends React.Component {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
-        })
-            .then(response => {
-                if (response.data.length !== 0) {
-                    this.setState({
-                        details: response.data
-                    });
-                }
-            })
-            .catch(error => {
-                if (error.response.status === 500) {
-                    goServerErrorPage(this.props);
-                } else if (error.response.status === 401) {
-                    goLoginPage(this.props);
-                }
-            });
+        }).then(response => {
+            if (response.data.length !== 0) {
+                this.setState({
+                    details: response.data
+                });
+            }
+        }).catch(error => {
+            if (error.response.status === 500) {
+                goServerErrorPage(this.props);
+            } else if (error.response.status === 401) {
+                goLoginPage(this.props);
+            }
+        });
     }
 
     createRegStudentDetails() {
@@ -125,23 +123,21 @@ class AdminRegisterStudentsPage extends React.Component {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
-        })
-            .then(response => {
-                this.setState({
-                    detail: {
-                        ...this.state.detail,
-                        GId: response.data[0]["id"]
-                    },
-                    groups: response.data
-                });
-            })
-            .catch(error => {
-                if (error.response.status === 500) {
-                    goServerErrorPage(this.props);
-                } else if (error.response.status === 401) {
-                    goLoginPage(this.props);
-                }
+        }).then(response => {
+            this.setState({
+                detail: {
+                    ...this.state.detail,
+                    GId: response.data[0]["id"]
+                },
+                groups: response.data
             });
+        }).catch(error => {
+            if (error.response.status === 500) {
+                goServerErrorPage(this.props);
+            } else if (error.response.status === 401) {
+                goLoginPage(this.props);
+            }
+        });
     }
 
     regStudentsBar() {

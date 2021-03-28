@@ -41,19 +41,17 @@ class StudentGroupPage extends React.Component {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
-        })
-            .then(response => {
-                this.setState({
-                    students: response.data
-                });
-            })
-            .catch((error) => {
-                if (error.response.status === 500) {
-                    goServerErrorPage(this.props);
-                } else if (error.response.status === 401) {
-                    goLoginPage(this.props);
-                }
+        }).then(response => {
+            this.setState({
+                students: response.data
             });
+        }).catch((error) => {
+            if (error.response.status === 500) {
+                goServerErrorPage(this.props);
+            } else if (error.response.status === 401) {
+                goLoginPage(this.props);
+            }
+        });
     }
 
     render() {

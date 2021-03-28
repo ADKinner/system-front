@@ -52,19 +52,17 @@ class StudentRecordBookPage extends React.Component {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
-        })
-            .then(response => {
-                this.setState({
-                    terms: response.data
-                });
-            })
-            .catch((error) => {
-                if (error.response.status === 500) {
-                    goServerErrorPage(this.props);
-                } else if (error.response.status === 401) {
-                    goLoginPage(this.props);
-                }
+        }).then(response => {
+            this.setState({
+                terms: response.data
             });
+        }).catch((error) => {
+            if (error.response.status === 500) {
+                goServerErrorPage(this.props);
+            } else if (error.response.status === 401) {
+                goLoginPage(this.props);
+            }
+        });
     }
 
     getSubjects(termsId) {
@@ -72,19 +70,17 @@ class StudentRecordBookPage extends React.Component {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
-        })
-            .then(response => {
-                this.setState({
-                    subjects: response.data
-                });
-            })
-            .catch((error) => {
-                if (error.response.status === 500) {
-                    goServerErrorPage(this.props);
-                } else if (error.response.status === 401) {
-                    goLoginPage(this.props);
-                }
+        }).then(response => {
+            this.setState({
+                subjects: response.data
             });
+        }).catch((error) => {
+            if (error.response.status === 500) {
+                goServerErrorPage(this.props);
+            } else if (error.response.status === 401) {
+                goLoginPage(this.props);
+            }
+        });
     }
 
     getGrades(subjectId, studentId) {
@@ -92,19 +88,17 @@ class StudentRecordBookPage extends React.Component {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
-        })
-            .then(response => {
-                this.setState({
-                    examGrades: response.data
-                });
-            })
-            .catch((error) => {
-                if (error.response.status === 500) {
-                    goServerErrorPage(this.props);
-                } else if (error.response.status === 401) {
-                    goLoginPage(this.props);
-                }
+        }).then(response => {
+            this.setState({
+                examGrades: response.data
             });
+        }).catch((error) => {
+            if (error.response.status === 500) {
+                goServerErrorPage(this.props);
+            } else if (error.response.status === 401) {
+                goLoginPage(this.props);
+            }
+        });
     }
 
     async view(termId) {

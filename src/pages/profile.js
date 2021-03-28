@@ -14,7 +14,7 @@ import {
     goTeacherInfoPage,
     goTeacherLessonPage,
     goTeacherMainPage,
-    goTeacherProfilePage
+    goTeacherProfilePage, goAdminRegisterStudentsPage
 } from "../redirect";
 import '../styles/modal.css';
 import '../styles/admin.css';
@@ -252,6 +252,7 @@ class ProfilePage extends React.Component {
                     <a onClick={() => goAdminsPage(this.props)}>Администраторы</a>
                     <a onClick={() => goAdminTeachersPage(this.props)}>Учителя</a>
                     <a onClick={() => goAdminGroupsPage(this.props)}>Группы</a>
+                    <a onClick={() => goAdminRegisterStudentsPage(this.props)}>Регистрация студентов</a>
                     <a onClick={() => goAdminStudentsPage(this.props)}>Студенты</a>
                     <a onClick={() => goAdminSubjectsPage(this.props)}>Предметы</a>
                 </div>

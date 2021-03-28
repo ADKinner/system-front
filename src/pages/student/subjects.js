@@ -47,19 +47,17 @@ class StudentSubjectsPage extends React.Component {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
-        })
-            .then(response => {
-                this.setState({
-                    subjects: response.data
-                });
-            })
-            .catch((error) => {
-                if (error.response.status === 500) {
-                    goServerErrorPage(this.props);
-                } else if (error.response.status === 401) {
-                    goLoginPage(this.props);
-                }
+        }).then(response => {
+            this.setState({
+                subjects: response.data
             });
+        }).catch((error) => {
+            if (error.response.status === 500) {
+                goServerErrorPage(this.props);
+            } else if (error.response.status === 401) {
+                goLoginPage(this.props);
+            }
+        });
     }
 
     getSubjectTypes(subjectId) {
@@ -67,19 +65,17 @@ class StudentSubjectsPage extends React.Component {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
-        })
-            .then(response => {
-                this.setState({
-                    subjectTypes: response.data
-                });
-            })
-            .catch((error) => {
-                if (error.response.status === 500) {
-                    goServerErrorPage(this.props);
-                } else if (error.response.status === 401) {
-                    goLoginPage(this.props);
-                }
+        }).then(response => {
+            this.setState({
+                subjectTypes: response.data
             });
+        }).catch((error) => {
+            if (error.response.status === 500) {
+                goServerErrorPage(this.props);
+            } else if (error.response.status === 401) {
+                goLoginPage(this.props);
+            }
+        });
     }
 
     getSubjectInfo(subjectId, typeId) {
@@ -88,19 +84,17 @@ class StudentSubjectsPage extends React.Component {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
-        })
-            .then(response => {
-                this.setState({
-                    subjectInfo: response.data
-                });
-            })
-            .catch((error) => {
-                if (error.response.status === 500) {
-                    goServerErrorPage(this.props);
-                } else if (error.response.status === 401) {
-                    goLoginPage(this.props);
-                }
+        }).then(response => {
+            this.setState({
+                subjectInfo: response.data
             });
+        }).catch((error) => {
+            if (error.response.status === 500) {
+                goServerErrorPage(this.props);
+            } else if (error.response.status === 401) {
+                goLoginPage(this.props);
+            }
+        });
     }
 
     getGrades(subjectId, studentId) {
@@ -108,20 +102,18 @@ class StudentSubjectsPage extends React.Component {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
-        })
-            .then(response => {
-                this.setState({
-                    grades: response.data,
-                    avGrade: this.average(response.data)
-                });
-            })
-            .catch((error) => {
-                if (error.response.status === 500) {
-                    goServerErrorPage(this.props);
-                } else if (error.response.status === 401) {
-                    goLoginPage(this.props);
-                }
+        }).then(response => {
+            this.setState({
+                grades: response.data,
+                avGrade: this.average(response.data)
             });
+        }).catch((error) => {
+            if (error.response.status === 500) {
+                goServerErrorPage(this.props);
+            } else if (error.response.status === 401) {
+                goLoginPage(this.props);
+            }
+        });
     }
 
     getSkip(subjectId, studentId) {
@@ -129,19 +121,17 @@ class StudentSubjectsPage extends React.Component {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
-        })
-            .then(response => {
-                this.setState({
-                    skip: response.data
-                });
-            })
-            .catch((error) => {
-                if (error.response.status === 500) {
-                    goServerErrorPage(this.props);
-                } else if (error.response.status === 401) {
-                    goLoginPage(this.props);
-                }
+        }).then(response => {
+            this.setState({
+                skip: response.data
             });
+        }).catch((error) => {
+            if (error.response.status === 500) {
+                goServerErrorPage(this.props);
+            } else if (error.response.status === 401) {
+                goLoginPage(this.props);
+            }
+        });
     }
 
     getGroupInfo(subjectId, groupId) {
@@ -149,19 +139,17 @@ class StudentSubjectsPage extends React.Component {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
-        })
-            .then(response => {
-                this.setState({
-                    groupInfo: response.data
-                });
-            })
-            .catch((error) => {
-                if (error.response.status === 500) {
-                    goServerErrorPage(this.props);
-                } else if (error.response.status === 401) {
-                    goLoginPage(this.props);
-                }
+        }).then(response => {
+            this.setState({
+                groupInfo: response.data
             });
+        }).catch((error) => {
+            if (error.response.status === 500) {
+                goServerErrorPage(this.props);
+            } else if (error.response.status === 401) {
+                goLoginPage(this.props);
+            }
+        });
     }
 
     average(grades) {
@@ -226,19 +214,19 @@ class StudentSubjectsPage extends React.Component {
                         <div className="data_panel">
                             {
                                 this.state.subjects.map(subject => {
-                                const {id, name} = subject
-                                return (
-                                    <div>
-                                        <button
-                                            className="btn_data"
-                                            value={id}
-                                            onClick={event => this.view(event.target.value)}
-                                        >
-                                            {name}
-                                        </button>
-                                    </div>
-                                )
-                            })}
+                                    const {id, name} = subject
+                                    return (
+                                        <div>
+                                            <button
+                                                className="btn_data"
+                                                value={id}
+                                                onClick={event => this.view(event.target.value)}
+                                            >
+                                                {name}
+                                            </button>
+                                        </div>
+                                    )
+                                })}
                         </div>
                     )}
                     {this.state.part === 1 && (

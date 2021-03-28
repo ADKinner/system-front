@@ -51,19 +51,17 @@ class AdminsPage extends React.Component {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
-        })
-            .then(response => {
-                this.setState({
-                    admins: response.data
-                });
-            })
-            .catch(error => {
-                if (error.response.status === 500) {
-                    goServerErrorPage(this.props);
-                } else if (error.response.status === 401) {
-                    goLoginPage(this.props);
-                }
+        }).then(response => {
+            this.setState({
+                admins: response.data
             });
+        }).catch(error => {
+            if (error.response.status === 500) {
+                goServerErrorPage(this.props);
+            } else if (error.response.status === 401) {
+                goLoginPage(this.props);
+            }
+        });
     }
 
     getPosts() {
@@ -71,23 +69,21 @@ class AdminsPage extends React.Component {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
-        })
-            .then(response => {
-                this.setState({
-                    values: {
-                        ...this.state.values,
-                        PId: response.data[0]["id"]
-                    },
-                    posts: response.data
-                });
-            })
-            .catch(error => {
-                if (error.response.status === 500) {
-                    goServerErrorPage(this.props);
-                } else if (error.response.status === 401) {
-                    goLoginPage(this.props);
-                }
+        }).then(response => {
+            this.setState({
+                values: {
+                    ...this.state.values,
+                    PId: response.data[0]["id"]
+                },
+                posts: response.data
             });
+        }).catch(error => {
+            if (error.response.status === 500) {
+                goServerErrorPage(this.props);
+            } else if (error.response.status === 401) {
+                goLoginPage(this.props);
+            }
+        });
     }
 
     deleteAdmin() {

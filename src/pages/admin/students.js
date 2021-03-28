@@ -57,21 +57,19 @@ class AdminStudentsPage extends React.Component {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
-        })
-            .then(response => {
-                if (response.data.length !== 0) {
-                    this.setState({
-                        students: response.data
-                    });
-                }
-            })
-            .catch(error => {
-                if (error.response.status === 500) {
-                    goServerErrorPage(this.props);
-                } else if (error.response.status === 401) {
-                    goLoginPage(this.props);
-                }
-            });
+        }).then(response => {
+            if (response.data.length !== 0) {
+                this.setState({
+                    students: response.data
+                });
+            }
+        }).catch(error => {
+            if (error.response.status === 500) {
+                goServerErrorPage(this.props);
+            } else if (error.response.status === 401) {
+                goLoginPage(this.props);
+            }
+        });
     }
 
     getStudentsById() {
@@ -79,21 +77,19 @@ class AdminStudentsPage extends React.Component {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
-        })
-            .then(response => {
-                if (response.data.length !== 0) {
-                    this.setState({
-                        students: response.data
-                    });
-                }
-            })
-            .catch(error => {
-                if (error.response.status === 500) {
-                    goServerErrorPage(this.props);
-                } else if (error.response.status === 401) {
-                    goLoginPage(this.props);
-                }
-            });
+        }).then(response => {
+            if (response.data.length !== 0) {
+                this.setState({
+                    students: response.data
+                });
+            }
+        }).catch(error => {
+            if (error.response.status === 500) {
+                goServerErrorPage(this.props);
+            } else if (error.response.status === 401) {
+                goLoginPage(this.props);
+            }
+        });
     }
 
     getStudent(id) {
@@ -101,22 +97,20 @@ class AdminStudentsPage extends React.Component {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
-        })
-            .then(response => {
-                if (response.data.length !== 0) {
-                    this.setState({
-                        student: response.data,
-                        GId: response.data.group.id
-                    });
-                }
-            })
-            .catch(error => {
-                if (error.response.status === 500) {
-                    goServerErrorPage(this.props);
-                } else if (error.response.status === 401) {
-                    goLoginPage(this.props);
-                }
-            });
+        }).then(response => {
+            if (response.data.length !== 0) {
+                this.setState({
+                    student: response.data,
+                    GId: response.data.group.id
+                });
+            }
+        }).catch(error => {
+            if (error.response.status === 500) {
+                goServerErrorPage(this.props);
+            } else if (error.response.status === 401) {
+                goLoginPage(this.props);
+            }
+        });
     }
 
     deleteStudent() {
@@ -141,20 +135,18 @@ class AdminStudentsPage extends React.Component {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
-        })
-            .then(response => {
-                this.setState({
-                    student: response.data,
-                    GId: response.data.group.id
-                });
-            })
-            .catch(error => {
-                if (error.response.status === 500) {
-                    goServerErrorPage(this.props);
-                } else if (error.response.status === 401) {
-                    goLoginPage(this.props);
-                }
+        }).then(response => {
+            this.setState({
+                student: response.data,
+                GId: response.data.group.id
             });
+        }).catch(error => {
+            if (error.response.status === 500) {
+                goServerErrorPage(this.props);
+            } else if (error.response.status === 401) {
+                goLoginPage(this.props);
+            }
+        });
     }
 
     getGroups() {
@@ -162,19 +154,17 @@ class AdminStudentsPage extends React.Component {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
-        })
-            .then(response => {
-                this.setState({
-                    groups: response.data
-                });
-            })
-            .catch(error => {
-                if (error.response.status === 500) {
-                    goServerErrorPage(this.props);
-                } else if (error.response.status === 401) {
-                    goLoginPage(this.props);
-                }
+        }).then(response => {
+            this.setState({
+                groups: response.data
             });
+        }).catch(error => {
+            if (error.response.status === 500) {
+                goServerErrorPage(this.props);
+            } else if (error.response.status === 401) {
+                goLoginPage(this.props);
+            }
+        });
     }
 
     studentsBar() {

@@ -53,25 +53,23 @@ class AdminGroupsPage extends React.Component {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
-        })
-            .then(response => {
-                if (response.data.length !== 0) {
-                    this.setState({
-                        values: {
-                            ...this.state.values,
-                            FId: response.data[0]["id"]
-                        },
-                        faculties: response.data
-                    });
-                }
-            })
-            .catch(error => {
-                if (error.response.status === 500) {
-                    goServerErrorPage(this.props);
-                } else if (error.response.status === 401) {
-                    goLoginPage(this.props);
-                }
-            });
+        }).then(response => {
+            if (response.data.length !== 0) {
+                this.setState({
+                    values: {
+                        ...this.state.values,
+                        FId: response.data[0]["id"]
+                    },
+                    faculties: response.data
+                });
+            }
+        }).catch(error => {
+            if (error.response.status === 500) {
+                goServerErrorPage(this.props);
+            } else if (error.response.status === 401) {
+                goLoginPage(this.props);
+            }
+        });
     }
 
     getCathedras() {
@@ -79,25 +77,23 @@ class AdminGroupsPage extends React.Component {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
-        })
-            .then(response => {
-                if (response.data.length !== 0) {
-                    this.setState({
-                        values: {
-                            ...this.state.values,
-                            CId: response.data[0]["id"]
-                        },
-                        cathedras: response.data
-                    });
-                }
-            })
-            .catch(error => {
-                if (error.response.status === 500) {
-                    goServerErrorPage(this.props);
-                } else if (error.response.status === 401) {
-                    goLoginPage(this.props);
-                }
-            });
+        }).then(response => {
+            if (response.data.length !== 0) {
+                this.setState({
+                    values: {
+                        ...this.state.values,
+                        CId: response.data[0]["id"]
+                    },
+                    cathedras: response.data
+                });
+            }
+        }).catch(error => {
+            if (error.response.status === 500) {
+                goServerErrorPage(this.props);
+            } else if (error.response.status === 401) {
+                goLoginPage(this.props);
+            }
+        });
     }
 
     getSpecialities() {
@@ -105,25 +101,23 @@ class AdminGroupsPage extends React.Component {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
-        })
-            .then(response => {
-                if (response.data.length !== 0) {
-                    this.setState({
-                        values: {
-                            ...this.state.values,
-                            SId: response.data[0]["id"]
-                        },
-                        specialities: response.data
-                    });
-                }
-            })
-            .catch(error => {
-                if (error.response.status === 500) {
-                    goServerErrorPage(this.props);
-                } else if (error.response.status === 401) {
-                    goLoginPage(this.props);
-                }
-            });
+        }).then(response => {
+            if (response.data.length !== 0) {
+                this.setState({
+                    values: {
+                        ...this.state.values,
+                        SId: response.data[0]["id"]
+                    },
+                    specialities: response.data
+                });
+            }
+        }).catch(error => {
+            if (error.response.status === 500) {
+                goServerErrorPage(this.props);
+            } else if (error.response.status === 401) {
+                goLoginPage(this.props);
+            }
+        });
     }
 
     getTerms() {
@@ -131,25 +125,23 @@ class AdminGroupsPage extends React.Component {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
-        })
-            .then(response => {
-                if (response.data.length !== 0) {
-                    this.setState({
-                        values: {
-                            ...this.state.values,
-                            TId: response.data[0]["id"]
-                        },
-                        terms: response.data
-                    });
-                }
-            })
-            .catch(error => {
-                if (error.response.status === 500) {
-                    goServerErrorPage(this.props);
-                } else if (error.response.status === 401) {
-                    goLoginPage(this.props);
-                }
-            });
+        }).then(response => {
+            if (response.data.length !== 0) {
+                this.setState({
+                    values: {
+                        ...this.state.values,
+                        TId: response.data[0]["id"]
+                    },
+                    terms: response.data
+                });
+            }
+        }).catch(error => {
+            if (error.response.status === 500) {
+                goServerErrorPage(this.props);
+            } else if (error.response.status === 401) {
+                goLoginPage(this.props);
+            }
+        });
     }
 
     getGroups() {
@@ -157,19 +149,17 @@ class AdminGroupsPage extends React.Component {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
-        })
-            .then(response => {
-                this.setState({
-                    groups: response.data
-                });
-            })
-            .catch(error => {
-                if (error.response.status === 500) {
-                    goServerErrorPage(this.props);
-                } else if (error.response.status === 401) {
-                    goLoginPage(this.props);
-                }
+        }).then(response => {
+            this.setState({
+                groups: response.data
             });
+        }).catch(error => {
+            if (error.response.status === 500) {
+                goServerErrorPage(this.props);
+            } else if (error.response.status === 401) {
+                goLoginPage(this.props);
+            }
+        });
     }
 
     createGroup() {
@@ -214,21 +204,19 @@ class AdminGroupsPage extends React.Component {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
-        })
-            .then(response => {
-                if (response.data.length !== 0) {
-                    this.setState({
-                        students: response.data
-                    });
-                }
-            })
-            .catch(error => {
-                if (error.response.status === 500) {
-                    goServerErrorPage(this.props);
-                } else if (error.response.status === 401) {
-                    goLoginPage(this.props);
-                }
-            });
+        }).then(response => {
+            if (response.data.length !== 0) {
+                this.setState({
+                    students: response.data
+                });
+            }
+        }).catch(error => {
+            if (error.response.status === 500) {
+                goServerErrorPage(this.props);
+            } else if (error.response.status === 401) {
+                goLoginPage(this.props);
+            }
+        });
     }
 
     change(event) {
