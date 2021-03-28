@@ -447,7 +447,7 @@ class AdminsPage extends React.Component {
                         />
                         <label htmlFor="check">Посмотреть пароли</label>
                         {this.state.errors.password && (
-                            <div className="error_panel">
+                            <div className="error_panel_add">
                                 {this.state.errors.password}
                             </div>
                         )}

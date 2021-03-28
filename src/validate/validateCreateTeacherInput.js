@@ -4,6 +4,8 @@ export default function validateCreateTeacherInput(id, name, surname, patronymic
 
     if (id == "" || id < 1) {
         errors.id = "ID не может быть пустым или < 0";
+    } else if (!/[0-9]{2,25}/.test(id)) {
+        errors.id = "Неправильный формат ID";
     }
 
     if (!/[A-Za-z]{2,32}/.test(name)) {
