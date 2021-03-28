@@ -9,6 +9,7 @@ import TeacherLessonPage from "./pages/teacher/lesson";
 import TeacherInfoPage from "./pages/teacher/info";
 import AdminsPage from "./pages/admin/admins";
 import AdminStudentsPage from "./pages/admin/students";
+import AdminRegisterStudentsPage from "./pages/admin/regStudents";
 import AdminSubjectsPage from "./pages/admin/subjects";
 import AdminGroupsPage from "./pages/admin/groups";
 import AdminTeachersPage from "./pages/admin/teachers";
@@ -31,6 +32,7 @@ class App extends Component {
                 <Route exact path="/teacher/info" component={TeacherInfoPage}/>
                 <Route exact path="/admins" component={AdminsPage}/>
                 <Route exact path="/admin/students" component={AdminStudentsPage}/>
+                <Route exact path="/admin/register/students" component={AdminRegisterStudentsPage}/>
                 <Route exact path="/admin/teachers" component={AdminTeachersPage}/>
                 <Route exact path="/admin/groups" component={AdminGroupsPage}/>
                 <Route exact path="/admin/subjects" component={AdminSubjectsPage}/>

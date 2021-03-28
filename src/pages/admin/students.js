@@ -2,7 +2,7 @@ import React from "react";
 import '../../styles/admin.css';
 import {
     goAdminGroupsPage,
-    goAdminProfilePage, goAdminsPage,
+    goAdminProfilePage, goAdminRegisterStudentsPage, goAdminsPage,
     goAdminSubjectsPage,
     goAdminTeachersPage,
     goLoginPage
@@ -32,6 +32,26 @@ class AdminStudentsPage extends React.Component {
         }
     }
 
+    getStudentsByNSP() {
+
+    }
+
+    getStudentsById() {
+
+    }
+
+    getRegStudentDetails() {
+
+    }
+
+    createRegStudentDetails() {
+
+    }
+
+    deleteStudent() {
+
+    }
+
     handleStudentsClick() {
 
     }
@@ -47,6 +67,7 @@ class AdminStudentsPage extends React.Component {
                     <a onClick={() => goAdminsPage(this.props)}>Администраторы</a>
                     <a onClick={() => goAdminTeachersPage(this.props)}>Учителя</a>
                     <a onClick={() => goAdminGroupsPage(this.props)}>Группы</a>
+                    <a onClick={() => goAdminRegisterStudentsPage(this.props)}>Регистрация студентов</a>
                     <a className="active" onClick={() => this.handleStudentsClick()}>Студенты</a>
                     <a onClick={() => goAdminSubjectsPage(this.props)}>Предметы</a>
                 </div>

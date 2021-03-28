@@ -2,7 +2,7 @@ import React from "react";
 import '../../styles/admin.css';
 import {
     goAdminGroupsPage,
-    goAdminProfilePage, goAdminsPage,
+    goAdminProfilePage, goAdminRegisterStudentsPage, goAdminsPage,
     goAdminStudentsPage,
     goAdminTeachersPage,
     goLoginPage
@@ -47,6 +47,7 @@ class AdminSubjectsPage extends React.Component {
                     <a onClick={() => goAdminsPage(this.props)}>Администраторы</a>
                     <a onClick={() => goAdminTeachersPage(this.props)}>Учителя</a>
                     <a onClick={() => goAdminGroupsPage(this.props)}>Группы</a>
+                    <a onClick={() => goAdminRegisterStudentsPage(this.props)}>Регистрация студентов</a>
                     <a onClick={() => goAdminStudentsPage(this.props)}>Студенты</a>
                     <a className="active" onClick={() => this.handleSubjectsClick()}>Предметы</a>
                 </div>

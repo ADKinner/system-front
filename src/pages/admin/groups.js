@@ -1,7 +1,7 @@
 import React from "react";
 import '../../styles/admin.css';
 import {
-    goAdminProfilePage,
+    goAdminProfilePage, goAdminRegisterStudentsPage,
     goAdminsPage,
     goAdminStudentsPage,
     goAdminSubjectsPage,
@@ -423,6 +423,7 @@ class AdminGroupsPage extends React.Component {
                     <a onClick={() => goAdminsPage(this.props)}>Администраторы</a>
                     <a onClick={() => goAdminTeachersPage(this.props)}>Учителя</a>
                     <a className="active" onClick={() => this.groupsBar()}>Группы</a>
+                    <a onClick={() => goAdminRegisterStudentsPage(this.props)}>Регистрация студентов</a>
                     <a onClick={() => goAdminStudentsPage(this.props)}>Студенты</a>
                     <a onClick={() => goAdminSubjectsPage(this.props)}>Предметы</a>
                 </div>
@@ -532,7 +533,7 @@ class AdminGroupsPage extends React.Component {
                                     <tbody>
                                     <tr>
                                         <th>№</th>
-                                        <th>Id</th>
+                                        <th>ID</th>
                                         <th/>
                                         <th/>
                                     </tr>
@@ -540,7 +541,7 @@ class AdminGroupsPage extends React.Component {
                                         const {id} = group
                                         return (
                                             <tr key={id}>
-                                                <td>{index}</td>
+                                                <td>{index + 1}</td>
                                                 <td>{id}</td>
                                                 <td>
                                                     <button

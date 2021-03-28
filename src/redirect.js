@@ -43,6 +43,10 @@ export function goAdminStudentsPage(props) {
     props.history.push('/admin/students');
 }
 
+export function goAdminRegisterStudentsPage(props) {
+    props.history.push('/admin/register/students');
+}
+
 export function goAdminSubjectsPage(props) {
     props.history.push('/admin/subjects');
 }

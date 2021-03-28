@@ -3,7 +3,7 @@ import '../../styles/admin.css';
 import {
     goAdminGroupsPage,
     goAdminProfilePage, goAdminRegisterStudentsPage,
-    goAdminStudentsPage,
+    goAdminsPage, goAdminStudentsPage,
     goAdminSubjectsPage,
     goAdminTeachersPage,
     goLoginPage,
@@ -11,22 +11,18 @@ import {
 } from "../../redirect";
 import axios from "axios";
 import * as constants from "../../constants";
-import validateCreateAdminInput from "../../validate/validateCreateAdminInput";
+import validateCreateRegStudentInput from "../../validate/validateCreateRegStudentInput";
 
-class AdminsPage extends React.Component {
+class AdminRegisterStudentsPage extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
             part: 0,
-            admins: [],
-            posts: [],
-            errors: {},
-            values: {},
-            defPID: 0,
-            isPasswordVisibility: false,
-            isDeleteAdminModal: false,
-            isCreateAdmin: false
+            details: [],
+            groups: [],
+            detail: {},
+            errors: {}
         }
     }
 
@@ -37,7 +33,7 @@ class AdminsPage extends React.Component {
         } else {
             switch (role) {
                 case "ROLE_ADMIN":
-                    this.getAdmins();
+                    this.getRegStudentDetails();
                     break;
                 default:
                     goLoginPage(this.props);
@@ -46,73 +42,51 @@ class AdminsPage extends React.Component {
         }
     }
 
-    getAdmins() {
-        axios.get(constants.DEFAULT_URL + constants.ADMINS_URL, {
-            headers: {
-                Authorization: localStorage.getItem("token")
-            }
-        })
-            .then(response => {
-                this.setState({
-                    admins: response.data
-                });
-            })
-            .catch(error => {
-                if (error.response.status === 500) {
-                    goServerErrorPage(this.props);
-                } else if (error.response.status === 401) {
-                    goLoginPage(this.props);
-                }
-            });
-    }
-
-    getPosts() {
-        axios.get(constants.DEFAULT_URL + constants.POSTS_URL, {
-            headers: {
-                Authorization: localStorage.getItem("token")
-            }
-        })
-            .then(response => {
-                this.setState({
-                    values: {
-                        ...this.state.values,
-                        PId: response.data[0]["id"]
-                    },
-                    posts: response.data
-                });
-            })
-            .catch(error => {
-                if (error.response.status === 500) {
-                    goServerErrorPage(this.props);
-                } else if (error.response.status === 401) {
-                    goLoginPage(this.props);
-                }
-            });
-    }
-
-    deleteAdmin() {
-        axios.delete(constants.DEFAULT_URL + constants.ADMINS_URL + constants.SLASH + this.state.values.AId, {
-            headers: {
-                Authorization: localStorage.getItem("token")
-            }
-        }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
+    defaultDetail() {
+        this.setState({
+            detail: {
+                ...this.state.detail,
+                id: '',
+                name: '',
+                surname: '',
+                patronymic: '',
+                email: '',
+                password: ''
             }
         });
     }
 
-    createAdmin() {
-        axios.post(constants.DEFAULT_URL + constants.ADMINS_URL, {
-            id: this.state.values.ANId,
-            name: this.state.values.AName,
-            surname: this.state.values.ASurname,
-            patronymic: this.state.values.APatronymic,
-            password: this.state.values.APassword,
-            email: this.state.values.AEmail,
-            postId: this.state.values.PId
+    getRegStudentDetails() {
+        axios.get(constants.DEFAULT_URL + "/registration-details/", {
+            headers: {
+                Authorization: localStorage.getItem("token")
+            }
+        })
+            .then(response => {
+                if (response.data.length !== 0) {
+                    this.setState({
+                        details: response.data
+                    });
+                }
+            })
+            .catch(error => {
+                if (error.response.status === 500) {
+                    goServerErrorPage(this.props);
+                } else if (error.response.status === 401) {
+                    goLoginPage(this.props);
+                }
+            });
+    }
+
+    createRegStudentDetails() {
+        axios.post(constants.DEFAULT_URL + "/registration-details", {
+            id: this.state.detail.id,
+            name: this.state.detail.name,
+            surname: this.state.detail.surname,
+            patronymic: this.state.detail.patronymic,
+            email: this.state.detail.email,
+            password: this.state.detail.password,
+            groupId: this.state.detail.GId,
         }, {
             headers: {
                 Authorization: localStorage.getItem("token")
@@ -132,25 +106,58 @@ class AdminsPage extends React.Component {
         });
     }
 
-    timeout(delay) {
-        return new Promise(res => setTimeout(res, delay));
+    deleteRegStudentDetails() {
+        axios.delete(constants.DEFAULT_URL + "/registration-details/" + this.state.SRDId, {
+            headers: {
+                Authorization: localStorage.getItem("token")
+            }
+        }).catch(error => {
+            if (error.response.status === 500) {
+                goServerErrorPage(this.props);
+            } else if (error.response.status === 401) {
+                goLoginPage(this.props);
+            }
+        });
     }
 
-    adminsBar() {
+    getGroups() {
+        axios.get(constants.DEFAULT_URL + constants.GROUPS_URL, {
+            headers: {
+                Authorization: localStorage.getItem("token")
+            }
+        })
+            .then(response => {
+                this.setState({
+                    detail: {
+                        ...this.state.detail,
+                        GId: response.data[0]["id"]
+                    },
+                    groups: response.data
+                });
+            })
+            .catch(error => {
+                if (error.response.status === 500) {
+                    goServerErrorPage(this.props);
+                } else if (error.response.status === 401) {
+                    goLoginPage(this.props);
+                }
+            });
+    }
+
+    regStudentsBar() {
         if (this.state.part > 0) {
-            this.setState((state) => ({
-                part: state.part - 1
-            }));
+            this.setState({
+                part: this.state.part - 1
+            });
         }
     }
 
-    delete(event) {
+    async modalDelete() {
+        this.deleteRegStudentDetails()
+        await this.timeout(500);
+        this.getRegStudentDetails();
         this.setState({
-            values: {
-                ...this.state.values,
-                AId: event.target.value
-            },
-            part: 2
+            part: 0
         });
     }
 
@@ -160,57 +167,39 @@ class AdminsPage extends React.Component {
         });
     }
 
-    async modalDelete() {
-        this.deleteAdmin();
-        await this.timeout(1000);
-        this.getAdmins();
-        this.setState({
-            part: 0
-        });
-    }
-
-    defaultCreateValues() {
-        this.setState({
-            values: {
-                ...this.state.values,
-                ANId: '',
-                APassword: '',
-                ACPassword: '',
-                AName: '',
-                ASurname: '',
-                APatronymic: '',
-                AEmail: ''
-            }
-        });
-    }
-
-    add() {
-        this.getPosts();
-        this.defaultCreateValues();
-        this.setState({
-            part: 1
-        });
+    timeout(delay) {
+        return new Promise(res => setTimeout(res, delay));
     }
 
     change(event) {
         this.setState({
-            values: {
-                ...this.state.values,
+            detail: {
+                ...this.state.detail,
                 [event.target.name]: event.target.value
             }
         });
     }
 
-    changeVisibility() {
-        this.setState((state) => ({
-            isPasswordVisibility: !state.isPasswordVisibility
-        }));
+    delete(event) {
+        this.setState({
+            SRDId: event.target.value,
+            part: 2
+        });
+    }
+
+    async add() {
+        this.getGroups();
+        this.defaultDetail();
+        await this.timeout(500);
+        this.setState({
+            part: 1
+        });
     }
 
     async create() {
-        const errors = validateCreateAdminInput(this.state.values.ANId, this.state.values.AName,
-            this.state.values.ASurname, this.state.values.APatronymic, this.state.values.AEmail,
-            this.state.values.APassword, this.state.values.ACPassword);
+        const errors = validateCreateRegStudentInput(this.state.detail.id, this.state.detail.name,
+            this.state.detail.surname, this.state.detail.patronymic, this.state.detail.email,
+            this.state.detail.password);
         if (Object.keys(errors).length !== 0) {
             this.setState({
                 errors: errors
@@ -219,9 +208,9 @@ class AdminsPage extends React.Component {
             this.setState({
                 errors: {}
             });
-            this.createAdmin();
+            this.createRegStudentDetails();
             await this.timeout(500);
-            this.getAdmins();
+            this.getRegStudentDetails();
             await this.timeout(500);
             if (Object.keys(this.state.errors).length === 0) {
                 this.setState({
@@ -229,6 +218,12 @@ class AdminsPage extends React.Component {
                 });
             }
         }
+    }
+
+    changeVisibility() {
+        this.setState((state) => ({
+            isPasswordVisibility: !state.isPasswordVisibility
+        }));
     }
 
     render() {
@@ -239,87 +234,71 @@ class AdminsPage extends React.Component {
                     <div className="sys_name">SYSTEM</div>
                     <a className="logout" onClick={() => goLoginPage(this.props)}>Выйти</a>
                     <a onClick={() => goAdminProfilePage(this.props)}>Профиль</a>
-                    <a className="active" onClick={() => this.adminsBar()}>Администраторы</a>
+                    <a onClick={() => goAdminsPage(this.props)}>Администраторы</a>
                     <a onClick={() => goAdminTeachersPage(this.props)}>Учителя</a>
                     <a onClick={() => goAdminGroupsPage(this.props)}>Группы</a>
-                    <a onClick={() => goAdminRegisterStudentsPage(this.props)}>Регистрация студентов</a>
+                    <a className="active" onClick={() => this.regStudentsBar()}>Регистрация студентов</a>
                     <a onClick={() => goAdminStudentsPage(this.props)}>Студенты</a>
                     <a onClick={() => goAdminSubjectsPage(this.props)}>Предметы</a>
                 </div>
                 {this.state.part === 0 && (
-                    <div className="table_panel">
-                        {this.state.admins.length === 0 && (
-                            <div>
-                                <h2 className="h2_margin">Администраторов нет</h2>
-                            </div>
-                        )}
-                        {this.state.admins.length !== 0 && (
-                            <div>
-                                <h1 id='title'>Администраторы</h1>
-                                <table id='data'>
-                                    <tbody>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Фамилия</th>
-                                        <th>Имя</th>
-                                        <th>Отчество</th>
-                                        <th>Email</th>
-                                        <th>Должность</th>
-                                        <th/>
+                    <div>
+                        <h1 id='title'>Данные студентов для регистрации</h1>
+                        <table id='data'>
+                            <tbody>
+                            <tr>
+                                <th>ID</th>
+                                <th>Фамилия</th>
+                                <th>Имя</th>
+                                <th>Отчество</th>
+                                <th>Email</th>
+                                <th>Группа</th>
+                                <th/>
+                            </tr>
+                            {this.state.details.map(detail => {
+                                const {id, name, surname, patronymic, email, groupId} = detail;
+                                return (
+                                    <tr key={id}>
+                                        <td>{id}</td>
+                                        <td>{name}</td>
+                                        <td>{surname}</td>
+                                        <td>{patronymic}</td>
+                                        <td>{email}</td>
+                                        <td>{groupId}</td>
+                                        <td>
+                                            <button
+                                                className="btn_delete"
+                                                value={id}
+                                                onClick={event => this.delete(event)}
+                                            >
+                                                Удалить
+                                            </button>
+                                        </td>
                                     </tr>
-                                    {this.state.admins.map(admin => {
-                                        const {id, surname, name, patronymic, email} = admin
-                                        const adminId = localStorage.getItem("id");
-                                        return (
-                                            <tr key={id}>
-                                                <td>{id}</td>
-                                                <td>{surname}</td>
-                                                <td>{name}</td>
-                                                <td>{patronymic}</td>
-                                                <td>{email}</td>
-                                                <td>{admin.post.name}</td>
-                                                {id != adminId && (
-                                                    <td>
-                                                        <button
-                                                            className="btn_delete"
-                                                            value={id}
-                                                            onClick={event => this.delete(event)}
-                                                        >
-                                                            Удалить
-                                                        </button>
-                                                    </td>
-                                                )}
-                                                {id == adminId && (
-                                                    <td/>
-                                                )}
-                                            </tr>
-                                        )
-
-                                    })}
-                                    </tbody>
-                                </table>
-                                <button className="btn_add_medium" onClick={() => this.add()}>
-                                    Добавить администратора
-                                </button>
-                            </div>
-                        )}
+                                )
+                            })}
+                            </tbody>
+                        </table>
+                        <button className="btn_add_medium" onClick={() => this.add()}>
+                            Добавить данные студента
+                        </button>
                     </div>
                 )}
                 {this.state.part === 1 && (
-                    <div className="panel_add big">
+                    <div className="panel_add big_2">
                         <div className="begin_add">
-                            Добавление администратора
+                            Добавление данных студента
                         </div>
                         <div className="part_add">
                             <div className="description_add">
                                 ID
                             </div>
                             <input
-                                name="ANId"
+                                name="id"
                                 className="in_data_add"
                                 type="text"
-                                placeholder="Введите ID администратора"
-                                value={this.state.values.ANId}
+                                placeholder="Введите ID студента"
+                                value={this.state.detail.id}
                                 onChange={event => this.change(event)}
                             />
                         </div>
@@ -333,11 +312,11 @@ class AdminsPage extends React.Component {
                                 Фамилия
                             </div>
                             <input
-                                name="ASurname"
+                                name="surname"
                                 type="text"
                                 className="in_data_add"
-                                placeholder="Введите фамилию администратора"
-                                value={this.state.values.ASurname}
+                                placeholder="Введите фамилию студента"
+                                value={this.state.detail.surname}
                                 onChange={event => this.change(event)}
                             />
                         </div>
@@ -351,11 +330,11 @@ class AdminsPage extends React.Component {
                                 Имя
                             </div>
                             <input
-                                name="AName"
+                                name="name"
                                 type="text"
                                 className="in_data_add"
-                                placeholder="Введите имя администратора"
-                                value={this.state.values.AName}
+                                placeholder="Введите имя студента"
+                                value={this.state.detail.name}
                                 onChange={event => this.change(event)}
                             />
                         </div>
@@ -369,11 +348,11 @@ class AdminsPage extends React.Component {
                                 Отчество
                             </div>
                             <input
-                                name="APatronymic"
+                                name="patronymic"
                                 type="text"
                                 className="in_data_add"
-                                placeholder="Введите отчество администратора"
-                                value={this.state.values.APatronymic}
+                                placeholder="Введите отчество студента"
+                                value={this.state.detail.patronymic}
                                 onChange={event => this.change(event)}
                             />
                         </div>
@@ -387,11 +366,11 @@ class AdminsPage extends React.Component {
                                 Email
                             </div>
                             <input
-                                name="AEmail"
+                                name="email"
                                 type="email"
                                 className="in_data_add"
-                                placeholder="Введите почту администратора"
-                                value={this.state.values.AEmail}
+                                placeholder="Введите почту студента"
+                                value={this.state.detail.email}
                                 onChange={event => this.change(event)}
                             />
                         </div>
@@ -402,42 +381,33 @@ class AdminsPage extends React.Component {
                         )}
                         <div className="part_add">
                             <div className="description_add">
-                                Должность
+                                Группа
                             </div>
                             <select
-                                name="PId"
+                                name="GId"
                                 className="select_data"
-                                value={this.state.values.PId}
+                                value={this.state.detail.GId}
                                 onChange={event => this.change(event)}
                             >
-                                {this.state.posts.map(post => {
-                                    const {id, name} = post;
+                                {this.state.groups.map(group => {
+                                    const {id} = group;
                                     return (
-                                        <option value={id}>{name}</option>
+                                        <option value={id}>{id}</option>
                                     )
                                 })}
                             </select>
                         </div>
-                        <div className="part_password_add">
+                        <div className="part_add">
                             <div className="description_add">
                                 Пароль
                             </div>
                             <input
-                                name="APassword"
+                                name="password"
                                 className="in_data_add"
                                 type={this.state.isPasswordVisibility ? "text" : "password"}
                                 placeholder="Введите пароль"
-                                title="≥ одной цифры, ≥ одной буквы в верхнем и нижнем регистре and ≥ восьми знаков"
-                                value={this.state.values.APassword}
-                                onChange={event => this.change(event)}
-                            />
-                            <div className="small_indent"/>
-                            <input
-                                name="ACPassword"
-                                className="in_data_add"
-                                type={this.state.isPasswordVisibility ? "text" : "password"}
-                                placeholder="Повторно введите пароль"
-                                value={this.state.values.ACPassword}
+                                title="не менее 8 знаков"
+                                value={this.state.detail.password}
                                 onChange={event => this.change(event)}
                             />
                         </div>
@@ -446,18 +416,13 @@ class AdminsPage extends React.Component {
                                className="check_recovery"
                                onChange={() => this.changeVisibility()}
                         />
-                        <label htmlFor="check">Посмотреть пароли</label>
+                        <label htmlFor="check">Посмотреть пароль</label>
                         {this.state.errors.password && (
                             <div className="error_panel_add">
                                 {this.state.errors.password}
                             </div>
                         )}
-                        <button
-                            className="btn_add"
-                            onClick={() => this.create()}
-                        >
-                            Подтвердить
-                        </button>
+                        <button className="btn_add" onClick={() => this.create()}>Подтвердить</button>
                     </div>
                 )}
                 {this.state.part === 2 && (
@@ -466,7 +431,7 @@ class AdminsPage extends React.Component {
                             <div className="modal_rm">
                                 <div className="modal_body_rm">
                                     <h1>УДАЛЕНИЕ</h1>
-                                    <h3>Вы действительно хотите удалить администратора?</h3>
+                                    <h3>Вы действительно хотите удалить данные студента для регистрации?</h3>
                                     <button
                                         className="btn_rm"
                                         onClick={() => this.modalDelete()}
@@ -490,4 +455,5 @@ class AdminsPage extends React.Component {
     }
 }
 
-export default AdminsPage;
+export default AdminRegisterStudentsPage;
+

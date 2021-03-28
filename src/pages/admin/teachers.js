@@ -2,7 +2,7 @@ import React from "react";
 import '../../styles/admin.css';
 import {
     goAdminGroupsPage,
-    goAdminProfilePage,
+    goAdminProfilePage, goAdminRegisterStudentsPage,
     goAdminsPage,
     goAdminStudentsPage,
     goAdminSubjectsPage,
@@ -260,7 +260,6 @@ class AdminTeachersPage extends React.Component {
     }
 
     change(event) {
-        console.log(this.state);
         this.setState({
             values: {
                 ...this.state.values,
@@ -304,6 +303,7 @@ class AdminTeachersPage extends React.Component {
                     <a onClick={() => goAdminsPage(this.props)}>Администраторы</a>
                     <a className="active" onClick={() => this.teachersBar()}>Учителя</a>
                     <a onClick={() => goAdminGroupsPage(this.props)}>Группы</a>
+                    <a onClick={() => goAdminRegisterStudentsPage(this.props)}>Регистрация студентов</a>
                     <a onClick={() => goAdminStudentsPage(this.props)}>Студенты</a>
                     <a onClick={() => goAdminSubjectsPage(this.props)}>Предметы</a>
                 </div>

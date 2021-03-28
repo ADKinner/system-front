@@ -1,9 +1,11 @@
-export default function validateCreateAdminInput(id, name, surname, patronymic, email, password, confirmPassword) {
+export default function validateCreateRegStudentInput(id, name, surname, patronymic, email, password) {
 
     let errors = {}
 
     if (id == "" || id < 1) {
         errors.id = "ID не может быть пустым";
+    } else if (!/[0-9]{2,25}/.test(id)) {
+        errors.id = "Неправильный формат ID";
     }
 
     if (!/[A-Za-z]{2,32}/.test(name)) {
@@ -22,14 +24,10 @@ export default function validateCreateAdminInput(id, name, surname, patronymic, 
         errors.email = "Введите почту правильно";
     }
 
-    if (!password && !confirmPassword) {
-        errors.password = "Требуются пароли";
-    } else if (!password || !confirmPassword) {
+    if (!password) {
         errors.password = "Требуется пароль";
-    } else if (!/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/.test(password)) {
-        errors.password = "Неправльный формат пароля"
-    } else if (password !== confirmPassword) {
-        errors.password = "Пароли не совпадают";
+    } else if (password.length < 8) {
+        errors.password = "Пароль слишком короткий";
     }
 
     return errors;
