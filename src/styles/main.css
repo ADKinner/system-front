@@ -252,6 +252,11 @@ h2 {
     height: auto;
 }
 
+.big_3 {
+    margin-top: 250px;
+    height: auto;
+}
+
 .panel_add_medium {
     margin-top: 250px;
     height: auto;
@@ -582,6 +587,10 @@ h2 {
     background-color: saddlebrown;
 }
 
+.subject_data {
+    margin-top: 150px;
+}
+
 .subject_detail {
     margin-top: 25px;
     height: 45px;
@@ -598,7 +607,7 @@ h2 {
 .subject_detail_name {
     text-align: left;
     margin-top: 10px;
-    width: 250px;
+    width: 450px;
     color: white;
 }
 
