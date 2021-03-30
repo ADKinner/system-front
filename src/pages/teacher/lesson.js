@@ -17,7 +17,7 @@ class TeacherLessonPage extends React.Component {
         this.state = {
             part: 0,
             subjectInfos: [],
-            groups: [],
+            groupInfos: [],
             students: [],
             SIId: '',
             GId: ''
@@ -60,15 +60,15 @@ class TeacherLessonPage extends React.Component {
         });
     }
 
-    getGroups(id) {
-        axios.get(constants.DEFAULT_URL + "/groups?termId=" + id, {
+    getGroupInfos(id) {
+        axios.get(constants.DEFAULT_URL + "/groups/infos?subjectInfoId=" + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
         }).then(response => {
             if (response.data.length !== 0) {
                 this.setState({
-                    groups: response.data
+                    groupInfos: response.data
                 });
             }
         }).catch(error => {
@@ -113,16 +113,12 @@ class TeacherLessonPage extends React.Component {
         axios.post(constants.DEFAULT_URL + constants.LESSON_ULR, {
             groupId: this.state.GId,
             subjectId: this.state.SIId,
+            isExam: false,
             data: data
         }, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
-        }).then(() => {
-            this.setState({
-                isSubjects: true,
-                isLesson: false
-            });
         }).catch((error) => {
             if (error.response.status === 500) {
                 goServerErrorPage(this.props);
@@ -132,21 +128,23 @@ class TeacherLessonPage extends React.Component {
         });
     }
 
-    async groups(data) {
-        this.getGroups(data[2]);
+    async groupInfos(id) {
+        this.getGroupInfos(id);
         await this.timeout(300);
         this.setState({
             part: 1,
-            SIId: data[0]
+            SIId: id
         });
     }
 
     async students(id) {
         this.getStudents(id);
+        this.setState({
+            GId: id
+        });
         await this.timeout(300);
         this.setState({
-            part: 2,
-            GId: id
+            part: 2
         });
     }
 
@@ -197,7 +195,7 @@ class TeacherLessonPage extends React.Component {
                     <div className="sys_name">SYSTEM</div>
                     <a className="logout" onClick={() => goLoginPage(this.props)}>Выйти</a>
                     <a onClick={() => goTeacherProfilePage(this.props)}>Профиль</a>
-                    <a onClick={() => goTeacherExamPage(this.props)}>Информация</a>
+                    <a onClick={() => goTeacherExamPage(this.props)}>Зачёт/экзамен</a>
                     <a onClick={() => this.lessonBar()} className="active">Занятие</a>
                     <a onClick={() => goTeacherMainPage(this.props)}>Главная</a>
                 </div>
@@ -217,26 +215,28 @@ class TeacherLessonPage extends React.Component {
                                         <th>№</th>
                                         <th>Предмет</th>
                                         <th>Тип занятия</th>
-                                        <th>Количество занятий</th>
+                                        <th>Семестр</th>
+                                        <th>Специальность</th>
                                         <th/>
                                     </tr>
                                     {this.state.subjectInfos.map((subjectInfo, index) => {
-                                        const {id, count, subject, subjectType} = subjectInfo;
+                                        const {id, subject, subjectType} = subjectInfo;
                                         const SName = subject.name;
                                         const TName = subjectType.name;
-                                        const termId = subject.term.id;
-                                        const data = [id, termId];
+                                        const termNumber = subject.term.number;
+                                        const specialityName = subject.term.speciality.name;
                                         return (
                                             <tr>
                                                 <td>{index + 1}</td>
                                                 <td>{SName}</td>
                                                 <td>{TName}</td>
-                                                <td>{count}</td>
+                                                <td>{termNumber}</td>
+                                                <td>{specialityName}</td>
                                                 <td>
                                                     <button
                                                         className="btn_view"
-                                                        value={data}
-                                                        onClick={event => this.groups(event.target.value)}
+                                                        value={id}
+                                                        onClick={event => this.groupInfos(event.target.value)}
                                                     >
                                                         Группы
                                                     </button>
@@ -252,25 +252,31 @@ class TeacherLessonPage extends React.Component {
                 )}
                 {this.state.part === 1 && (
                     <div className="table_panel">
-                        {this.state.groups.length === 0 && (
+                        {this.state.groupInfos.length === 0 && (
                             <div>
                                 <h2 className="h2_margin">Групп на потоке нет</h2>
                             </div>
                         )}
-                        {this.state.groups.length !== 0 && (
+                        {this.state.groupInfos.length !== 0 && (
                             <div>
                                 <h1 id='title'>Группы</h1>
-                                <table id='small_data'>
+                                <table id='medium_data'>
                                     <tbody>
                                     <tr>
                                         <th>Группа</th>
+                                        <th>Количество проведённых занятий</th>
+                                        <th>Количество запланированных занятий</th>
                                         <th/>
                                     </tr>
-                                    {this.state.groups.map(group => {
-                                        const {id} = group;
+                                    {this.state.groupInfos.map(groupInfo => {
+                                        const {group, pastLessonsCount} = groupInfo;
+                                        const id = group.id;
+                                        const planLessonsCount = this.state.subjectInfos.find(s => s.id == this.state.SIId).count;
                                         return (
                                             <tr>
                                                 <td>{id}</td>
+                                                <td>{pastLessonsCount}</td>
+                                                <td>{planLessonsCount}</td>
                                                 <td>
                                                     <button
                                                         className="btn_view"
@@ -291,7 +297,7 @@ class TeacherLessonPage extends React.Component {
                 )}
                 {this.state.part === 2 && (
                     <div className="table_panel">
-                        <h1 id='title'>Занятие</h1>
+                        <h1 id='title'>Занятие - {this.state.groupInfos.find(g => g.group.id == this.state.GId).group.id}</h1>
                         <table id='data'>
                             <tbody>
                             <tr>

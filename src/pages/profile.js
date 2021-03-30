@@ -237,7 +237,7 @@ class ProfilePage extends React.Component {
                     <div className="sys_name">SYSTEM</div>
                     <a className="logout" onClick={() => goLoginPage(this.props)}>Выйти</a>
                     <a className="active" onClick={() => goTeacherProfilePage(this.props)}>Профиль</a>
-                    <a onClick={() => goTeacherExamPage(this.props)}>Информация</a>
+                    <a onClick={() => goTeacherExamPage(this.props)}>Зачёт/экзамен</a>
                     <a onClick={() => goTeacherLessonPage(this.props)}>Занятие</a>
                     <a onClick={() => goTeacherMainPage(this.props)}>Главная</a>
                 </div>

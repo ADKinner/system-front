@@ -450,7 +450,7 @@ class MainTeacherPage extends React.Component {
                     <div className="sys_name">SYSTEM</div>
                     <a className="logout" onClick={() => goLoginPage(this.props)}>Выйти</a>
                     <a onClick={() => goTeacherProfilePage(this.props)}>Профиль</a>
-                    <a onClick={() => goTeacherExamPage(this.props)}>Информация</a>
+                    <a onClick={() => goTeacherExamPage(this.props)}>Зачёт/экзамен</a>
                     <a onClick={() => goTeacherLessonPage(this.props)}>Занятие</a>
                     <a onClick={() => this.mainBar()} className="active">Главная</a>
                 </div>
