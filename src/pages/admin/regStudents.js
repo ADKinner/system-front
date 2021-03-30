@@ -2,8 +2,9 @@ import React from "react";
 import '../../styles/main.css';
 import {
     goAdminGroupsPage,
-    goAdminProfilePage, goAdminRegisterStudentsPage,
-    goAdminsPage, goAdminStudentsPage,
+    goAdminProfilePage,
+    goAdminsPage,
+    goAdminStudentsPage,
     goAdminSubjectsPage,
     goAdminTeachersPage,
     goLoginPage,
@@ -19,9 +20,10 @@ class AdminRegisterStudentsPage extends React.Component {
         super(props);
         this.state = {
             part: 0,
-            details: [],
+            findId: '',
+            answer: '',
             groups: [],
-            detail: {},
+            values: {},
             errors: {}
         }
     }
@@ -33,7 +35,6 @@ class AdminRegisterStudentsPage extends React.Component {
         } else {
             switch (role) {
                 case "ROLE_ADMIN":
-                    this.getRegStudentDetails();
                     break;
                 default:
                     goLoginPage(this.props);
@@ -44,8 +45,8 @@ class AdminRegisterStudentsPage extends React.Component {
 
     defaultDetail() {
         this.setState({
-            detail: {
-                ...this.state.detail,
+            values: {
+                ...this.state.values,
                 id: '',
                 name: '',
                 surname: '',
@@ -56,17 +57,15 @@ class AdminRegisterStudentsPage extends React.Component {
         });
     }
 
-    getRegStudentDetails() {
-        axios.get(constants.DEFAULT_URL + "/registration-details/", {
+    studentExists(id) {
+        axios.get(constants.DEFAULT_URL + "/students/" + id + "/exists", {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
         }).then(response => {
-            if (response.data.length !== 0) {
-                this.setState({
-                    details: response.data
-                });
-            }
+            this.setState({
+                isExists: response.data
+            });
         }).catch(error => {
             if (error.response.status === 500) {
                 goServerErrorPage(this.props);
@@ -76,15 +75,15 @@ class AdminRegisterStudentsPage extends React.Component {
         });
     }
 
-    createRegStudentDetails() {
-        axios.post(constants.DEFAULT_URL + "/registration-details", {
-            id: this.state.detail.id,
-            name: this.state.detail.name,
-            surname: this.state.detail.surname,
-            patronymic: this.state.detail.patronymic,
-            email: this.state.detail.email,
-            password: this.state.detail.password,
-            groupId: this.state.detail.GId,
+    createStudent() {
+        axios.post(constants.DEFAULT_URL + "/students", {
+            id: this.state.values.id,
+            name: this.state.values.name,
+            surname: this.state.values.surname,
+            patronymic: this.state.values.patronymic,
+            email: this.state.values.email,
+            password: this.state.values.password,
+            groupId: this.state.values.GId,
         }, {
             headers: {
                 Authorization: localStorage.getItem("token")
@@ -104,20 +103,6 @@ class AdminRegisterStudentsPage extends React.Component {
         });
     }
 
-    deleteRegStudentDetails() {
-        axios.delete(constants.DEFAULT_URL + "/registration-details/" + this.state.SRDId, {
-            headers: {
-                Authorization: localStorage.getItem("token")
-            }
-        }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
-        });
-    }
-
     getGroups() {
         axios.get(constants.DEFAULT_URL + constants.GROUPS_URL, {
             headers: {
@@ -125,8 +110,8 @@ class AdminRegisterStudentsPage extends React.Component {
             }
         }).then(response => {
             this.setState({
-                detail: {
-                    ...this.state.detail,
+                values: {
+                    ...this.state.values,
                     GId: response.data[0]["id"]
                 },
                 groups: response.data
@@ -143,24 +128,10 @@ class AdminRegisterStudentsPage extends React.Component {
     regStudentsBar() {
         if (this.state.part > 0) {
             this.setState({
-                part: this.state.part - 1
+                part: this.state.part - 1,
+                answer: ''
             });
         }
-    }
-
-    async modalDelete() {
-        this.deleteRegStudentDetails()
-        await this.timeout(500);
-        this.getRegStudentDetails();
-        this.setState({
-            part: 0
-        });
-    }
-
-    modalClose() {
-        this.setState({
-            part: 0
-        });
     }
 
     timeout(delay) {
@@ -169,18 +140,33 @@ class AdminRegisterStudentsPage extends React.Component {
 
     change(event) {
         this.setState({
-            detail: {
-                ...this.state.detail,
+            values: {
+                ...this.state.values,
                 [event.target.name]: event.target.value
             }
         });
     }
 
-    delete(event) {
+    changeFindId(id) {
         this.setState({
-            SRDId: event.target.value,
-            part: 2
+            findId: id
         });
+    }
+
+    async search() {
+        if (this.state.findId !== '') {
+            this.studentExists(this.state.findId);
+            await this.timeout(300);
+            if (this.state.isExists) {
+                this.setState({
+                    answer: 'ID занят'
+                });
+            } else {
+                this.setState({
+                    answer: 'ID не занят'
+                });
+            }
+        }
     }
 
     async add() {
@@ -193,9 +179,9 @@ class AdminRegisterStudentsPage extends React.Component {
     }
 
     async create() {
-        const errors = validateCreateRegStudentInput(this.state.detail.id, this.state.detail.name,
-            this.state.detail.surname, this.state.detail.patronymic, this.state.detail.email,
-            this.state.detail.password);
+        const errors = validateCreateRegStudentInput(this.state.values.id, this.state.values.name,
+            this.state.values.surname, this.state.values.patronymic, this.state.values.email,
+            this.state.values.password);
         if (Object.keys(errors).length !== 0) {
             this.setState({
                 errors: errors
@@ -204,9 +190,9 @@ class AdminRegisterStudentsPage extends React.Component {
             this.setState({
                 errors: {}
             });
-            this.createRegStudentDetails();
+            this.createStudent();
             await this.timeout(500);
-            this.getRegStudentDetails();
+            this.studentExists();
             await this.timeout(500);
             if (Object.keys(this.state.errors).length === 0) {
                 this.setState({
@@ -238,45 +224,33 @@ class AdminRegisterStudentsPage extends React.Component {
                     <a onClick={() => goAdminSubjectsPage(this.props)}>Предметы</a>
                 </div>
                 {this.state.part === 0 && (
-                    <div>
-                        <h1 id='title'>Данные студентов для регистрации</h1>
-                        <table id='data'>
-                            <tbody>
-                            <tr>
-                                <th>ID</th>
-                                <th>Фамилия</th>
-                                <th>Имя</th>
-                                <th>Отчество</th>
-                                <th>Email</th>
-                                <th>Группа</th>
-                                <th/>
-                            </tr>
-                            {this.state.details.map(detail => {
-                                const {id, name, surname, patronymic, email, groupId} = detail;
-                                return (
-                                    <tr key={id}>
-                                        <td>{id}</td>
-                                        <td>{name}</td>
-                                        <td>{surname}</td>
-                                        <td>{patronymic}</td>
-                                        <td>{email}</td>
-                                        <td>{groupId}</td>
-                                        <td>
-                                            <button
-                                                className="btn_delete"
-                                                value={id}
-                                                onClick={event => this.delete(event)}
-                                            >
-                                                Удалить
-                                            </button>
-                                        </td>
-                                    </tr>
-                                )
-                            })}
-                            </tbody>
-                        </table>
-                        <button className="btn_add_medium" onClick={() => this.add()}>
-                            Добавить данные студента
+                    <div className="panel_add big_3">
+                        <div className="begin_add">
+                            Поиск аккаунта студента
+                        </div>
+                        <div className="part_add">
+                            <div className="description_add">
+                                ID
+                            </div>
+                            <input
+                                name="id"
+                                type="text"
+                                placeholder="Введите ID студента"
+                                className="in_data_add"
+                                value={this.state.findId}
+                                onChange={event => this.changeFindId(event.target.value)}
+                            />
+                        </div>
+                        {this.state.answer.length !== 0 && (
+                            <div className="search_info">
+                                {this.state.answer}
+                            </div>
+                        )}
+                        <button className="btn_add" onClick={() => this.search()}>
+                            Проверить ID
+                        </button>
+                        <button className="btn_add" onClick={() => this.add()}>
+                            Добавить студента
                         </button>
                     </div>
                 )}
@@ -294,7 +268,7 @@ class AdminRegisterStudentsPage extends React.Component {
                                 className="in_data_add"
                                 type="text"
                                 placeholder="Введите ID студента"
-                                value={this.state.detail.id}
+                                value={this.state.values.id}
                                 onChange={event => this.change(event)}
                             />
                         </div>
@@ -312,7 +286,7 @@ class AdminRegisterStudentsPage extends React.Component {
                                 type="text"
                                 className="in_data_add"
                                 placeholder="Введите фамилию студента"
-                                value={this.state.detail.surname}
+                                value={this.state.values.surname}
                                 onChange={event => this.change(event)}
                             />
                         </div>
@@ -330,7 +304,7 @@ class AdminRegisterStudentsPage extends React.Component {
                                 type="text"
                                 className="in_data_add"
                                 placeholder="Введите имя студента"
-                                value={this.state.detail.name}
+                                value={this.state.values.name}
                                 onChange={event => this.change(event)}
                             />
                         </div>
@@ -348,7 +322,7 @@ class AdminRegisterStudentsPage extends React.Component {
                                 type="text"
                                 className="in_data_add"
                                 placeholder="Введите отчество студента"
-                                value={this.state.detail.patronymic}
+                                value={this.state.values.patronymic}
                                 onChange={event => this.change(event)}
                             />
                         </div>
@@ -366,7 +340,7 @@ class AdminRegisterStudentsPage extends React.Component {
                                 type="email"
                                 className="in_data_add"
                                 placeholder="Введите почту студента"
-                                value={this.state.detail.email}
+                                value={this.state.values.email}
                                 onChange={event => this.change(event)}
                             />
                         </div>
@@ -382,7 +356,7 @@ class AdminRegisterStudentsPage extends React.Component {
                             <select
                                 name="GId"
                                 className="select_data"
-                                value={this.state.detail.GId}
+                                value={this.state.values.GId}
                                 onChange={event => this.change(event)}
                             >
                                 {this.state.groups.map(group => {
@@ -403,7 +377,7 @@ class AdminRegisterStudentsPage extends React.Component {
                                 type={this.state.isPasswordVisibility ? "text" : "password"}
                                 placeholder="Введите пароль"
                                 title="не менее 8 знаков"
-                                value={this.state.detail.password}
+                                value={this.state.values.password}
                                 onChange={event => this.change(event)}
                             />
                         </div>
@@ -420,31 +394,6 @@ class AdminRegisterStudentsPage extends React.Component {
                         )}
                         <button className="btn_add" onClick={() => this.create()}>Подтвердить</button>
                     </div>
-                )}
-                {this.state.part === 2 && (
-                    <React.Fragment>
-                        {
-                            <div className="modal_rm">
-                                <div className="modal_body_rm">
-                                    <h1>УДАЛЕНИЕ</h1>
-                                    <h3>Вы действительно хотите удалить данные студента для регистрации?</h3>
-                                    <button
-                                        className="btn_rm"
-                                        onClick={() => this.modalDelete()}
-                                    >
-                                        Удалить
-                                    </button>
-                                    <div/>
-                                    <button
-                                        className="btn_close"
-                                        onClick={() => this.modalClose()}
-                                    >
-                                        Закрыть
-                                    </button>
-                                </div>
-                            </div>
-                        }
-                    </React.Fragment>
                 )}
             </div>
         )

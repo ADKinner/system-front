@@ -26,8 +26,8 @@ export default function validateCreateRegStudentInput(id, name, surname, patrony
 
     if (!password) {
         errors.password = "Требуется пароль";
-    } else if (password.length < 8) {
-        errors.password = "Пароль слишком короткий";
+    } else if (!/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/.test(password)) {
+        errors.password = "Неправльный формат пароля";
     }
 
     return errors;

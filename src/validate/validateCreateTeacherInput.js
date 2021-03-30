@@ -29,7 +29,7 @@ export default function validateCreateTeacherInput(id, name, surname, patronymic
     } else if (!password || !confirmPassword) {
         errors.password = "Требуется пароль";
     } else if (!/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/.test(password)) {
-        errors.password = "Неправльный формат пароля"
+        errors.password = "Неправльный формат пароля";
     } else if (password !== confirmPassword) {
         errors.password = "Пароли не совпадают";
     }

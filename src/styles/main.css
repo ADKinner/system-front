@@ -357,6 +357,15 @@ h2 {
     font-size: 15px;
 }
 
+.search_info {
+    margin-top: 2px;
+    margin-left: 35px;
+    height: 11px;
+    font-style: italic;
+    color: green;
+    font-size: 15px;
+}
+
 .error_panel_add_2 {
     margin-left: 35px;
     margin-right: 25px;
