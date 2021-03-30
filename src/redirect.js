@@ -32,11 +32,11 @@ export function goTeacherMainPage(props) {
 }
 
 export function goTeacherLessonPage(props) {
-    props.history.push("/teacher/lessons");
+    props.history.push("/teacher/lesson");
 }
 
-export function goTeacherInfoPage(props) {
-    props.history.push("/teacher/info")
+export function goTeacherExamPage(props) {
+    props.history.push("/teacher/exam")
 }
 
 export function goAdminStudentsPage(props) {

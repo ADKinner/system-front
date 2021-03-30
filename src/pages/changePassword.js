@@ -14,7 +14,7 @@ import {
     goStudentProfilePage,
     goStudentRecordBookPage,
     goStudentSubjectsPage,
-    goTeacherInfoPage,
+    goTeacherExamPage,
     goTeacherLessonPage,
     goTeacherMainPage,
     goTeacherProfilePage
@@ -194,7 +194,7 @@ class ChangePasswordPage extends React.Component {
                     <div className="sys_name">SYSTEM</div>
                     <a className="logout" onClick={() => goLoginPage(this.props)}>Выйти</a>
                     <a onClick={() => goTeacherProfilePage(this.props)}>Профиль</a>
-                    <a onClick={() => goTeacherInfoPage(this.props)}>Информация</a>
+                    <a onClick={() => goTeacherExamPage(this.props)}>Информация</a>
                     <a onClick={() => goTeacherLessonPage(this.props)}>Занятие</a>
                     <a onClick={() => goTeacherMainPage(this.props)}>Главная</a>
                 </div>
