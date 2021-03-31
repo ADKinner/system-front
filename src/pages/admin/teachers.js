@@ -2,16 +2,28 @@ import React from "react";
 import '../../styles/main.css';
 import {
     goAdminGroupsPage,
-    goAdminProfilePage, goAdminRegisterStudentsPage,
+    goAdminProfilePage,
+    goAdminRegisterStudentsPage,
     goAdminsPage,
     goAdminStudentsPage,
     goAdminSubjectsPage,
-    goLoginPage,
-    goServerErrorPage
+    goLoginPage
 } from "../../redirect";
 import axios from "axios";
-import * as constants from "../../constants";
+import {
+    CATHEDRA_ID_PARAM,
+    CATHEDRAS_URL,
+    DEFAULT_URL,
+    POSTS_URL,
+    Q_PARAM,
+    S_PARAM,
+    SUBJECTS_URL,
+    TEACHER_ID_PARAM,
+    TEACHERS_URL
+} from "../../constants";
 import validateCreateTeacherInput from "../../validate/validateCreateTeacherInput";
+import handleDefaultError from "../../handle/handleDefaultReuqestError";
+import handleAdminMount from "../../handle/handleAdminMount";
 
 class AdminTeachersPage extends React.Component {
 
@@ -29,23 +41,12 @@ class AdminTeachersPage extends React.Component {
     }
 
     componentDidMount() {
-        const role = localStorage.getItem("role");
-        if (localStorage.length === 0 || role === null) {
-            goLoginPage(this.props);
-        } else {
-            switch (role) {
-                case "ROLE_ADMIN":
-                    this.getCathedras();
-                    break;
-                default:
-                    goLoginPage(this.props);
-                    break;
-            }
-        }
+        handleAdminMount(localStorage);
+        this.getCathedras();
     }
 
     getCathedras() {
-        axios.get(constants.DEFAULT_URL + constants.CATHEDRAS_URL, {
+        axios.get(DEFAULT_URL + CATHEDRAS_URL, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -59,16 +60,12 @@ class AdminTeachersPage extends React.Component {
                 });
             }
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
     getTeachers() {
-        axios.get(constants.DEFAULT_URL + constants.TEACHERS_URL + "/cathedras/" + this.state.values.CId, {
+        axios.get(DEFAULT_URL + TEACHERS_URL + Q_PARAM + CATHEDRA_ID_PARAM + this.state.values.CId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -77,16 +74,12 @@ class AdminTeachersPage extends React.Component {
                 teachers: response.data
             });
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
-    getSubjects(subjectId) {
-        axios.get(constants.DEFAULT_URL + constants.SUBJECTS_URL + "/teachers/" + subjectId, {
+    getSubjects(id) {
+        axios.get(DEFAULT_URL + SUBJECTS_URL + Q_PARAM + TEACHER_ID_PARAM + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -95,16 +88,12 @@ class AdminTeachersPage extends React.Component {
                 subjects: response.data
             });
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
     getPosts() {
-        axios.get(constants.DEFAULT_URL + constants.POSTS_URL, {
+        axios.get(DEFAULT_URL + POSTS_URL, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -117,30 +106,22 @@ class AdminTeachersPage extends React.Component {
                 posts: response.data
             });
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
     deleteTeacher() {
-        axios.delete(constants.DEFAULT_URL + constants.TEACHERS_URL + constants.SLASH + this.state.values.TId, {
+        axios.delete(DEFAULT_URL + TEACHERS_URL + S_PARAM + this.state.values.TId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
     createTeacher() {
-        axios.post(constants.DEFAULT_URL + constants.TEACHERS_URL, {
+        axios.post(DEFAULT_URL + TEACHERS_URL, {
             id: this.state.values.TNId,
             name: this.state.values.TName,
             surname: this.state.values.TSurname,
@@ -154,11 +135,8 @@ class AdminTeachersPage extends React.Component {
                 Authorization: localStorage.getItem("token")
             }
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            } else if (error.response.status === 400) {
+            handleDefaultError(this.props, error.response.status);
+            if (error.response.status === 400) {
                 this.setState({
                     errors: {
                         id: "ID занят"

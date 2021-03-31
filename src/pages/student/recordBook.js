@@ -1,14 +1,22 @@
 import React from "react";
-import {
-    goLoginPage,
-    goStudentGroupPage,
-    goStudentSubjectsPage,
-    goStudentProfilePage,
-    goServerErrorPage
-} from "../../redirect";
+import {goLoginPage, goStudentGroupPage, goStudentProfilePage, goStudentSubjectsPage} from "../../redirect";
 import '../../styles/main.css';
 import axios from "axios";
-import * as constants from "../../constants";
+import {
+    AND_PARAM,
+    DEFAULT_URL,
+    EXAM_URL,
+    GRADES_URL,
+    GROUP_ID_PARAM,
+    Q_PARAM,
+    STUDENT_ID_PARAM,
+    SUBJECT_ID_PARAM,
+    SUBJECTS_URL,
+    TERM_ID_PARAM,
+    TERMS_URL
+} from "../../constants";
+import handleDefaultError from "../../handle/handleDefaultReuqestError";
+import handleStudentMount from "../../handle/handleStudentMount";
 
 class StudentRecordBookPage extends React.Component {
 
@@ -23,19 +31,8 @@ class StudentRecordBookPage extends React.Component {
     }
 
     componentDidMount() {
-        const role = localStorage.getItem("role");
-        if (localStorage.length === 0 || role === null) {
-            goLoginPage(this.props);
-        } else {
-            switch (role) {
-                case "ROLE_STUDENT":
-                    this.getTerms(localStorage.getItem("groupId"));
-                    break;
-                default:
-                    goLoginPage(this.props);
-                    break;
-            }
-        }
+        handleStudentMount(localStorage);
+        this.getTerms(localStorage.getItem("groupId"));
     }
 
     recordBookBar() {
@@ -47,8 +44,8 @@ class StudentRecordBookPage extends React.Component {
         }
     }
 
-    getTerms(groupId) {
-        axios.get(constants.DEFAULT_URL + "/terms/groups/" + groupId, {
+    getTerms(id) {
+        axios.get(DEFAULT_URL + TERMS_URL + Q_PARAM + GROUP_ID_PARAM + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -57,16 +54,12 @@ class StudentRecordBookPage extends React.Component {
                 terms: response.data
             });
         }).catch((error) => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
-    getSubjects(termsId) {
-        axios.get(constants.DEFAULT_URL + "/subjects/terms/" + termsId, {
+    getSubjects(id) {
+        axios.get(DEFAULT_URL + SUBJECTS_URL + Q_PARAM + TERM_ID_PARAM + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -75,16 +68,13 @@ class StudentRecordBookPage extends React.Component {
                 subjects: response.data
             });
         }).catch((error) => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
     getGrades(subjectId, studentId) {
-        axios.get(constants.DEFAULT_URL + "/grades/exam/subjects/" + subjectId + "/students/" + studentId, {
+        axios.get(DEFAULT_URL + GRADES_URL + EXAM_URL + Q_PARAM + SUBJECT_ID_PARAM + subjectId + AND_PARAM
+            + STUDENT_ID_PARAM + studentId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -93,11 +83,7 @@ class StudentRecordBookPage extends React.Component {
                 examGrades: response.data
             });
         }).catch((error) => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 

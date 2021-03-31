@@ -1,14 +1,28 @@
 import React from "react";
 import '../../styles/teacher.css';
-import {
-    goLoginPage,
-    goServerErrorPage,
-    goTeacherExamPage,
-    goTeacherLessonPage,
-    goTeacherProfilePage
-} from "../../redirect";
+import {goLoginPage, goTeacherExamPage, goTeacherLessonPage, goTeacherProfilePage} from "../../redirect";
 import axios from "axios";
-import * as constants from "../../constants";
+import {
+    AND_PARAM,
+    DEFAULT_URL,
+    EXAM_URL,
+    GRADES_URL,
+    GROUP_ID_PARAM,
+    GROUP_INFOS_URL,
+    GROUPS_URL,
+    Q_PARAM,
+    SKIPS_URL,
+    STUDENT_ID_PARAM,
+    STUDENTS_URL,
+    SUBJECT_ID_PARAM,
+    SUBJECT_INFO_ID_PARAM,
+    SUBJECT_INFOS_URL,
+    SUBJECTS_URL,
+    TEACHER_ID_PARAM,
+    TERM_ID_PARAM
+} from "../../constants";
+import handleDefaultError from "../../handle/handleDefaultReuqestError";
+import handleTeacherMount from "../../handle/handleTeacherMount";
 
 class MainTeacherPage extends React.Component {
 
@@ -29,22 +43,11 @@ class MainTeacherPage extends React.Component {
     }
 
     componentDidMount() {
-        const role = localStorage.getItem("role");
-        if (localStorage.length === 0 || role === null) {
-            goLoginPage(this.props);
-        } else {
-            switch (role) {
-                case "ROLE_TEACHER":
-                    break;
-                default:
-                    goLoginPage(this.props);
-                    break;
-            }
-        }
+        handleTeacherMount(localStorage);
     }
 
     getSubjects() {
-        axios.get(constants.DEFAULT_URL + "/subjects?teacherId=" + localStorage.getItem("id"), {
+        axios.get(DEFAULT_URL + SUBJECTS_URL + Q_PARAM + TEACHER_ID_PARAM + localStorage.getItem("id"), {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -55,16 +58,12 @@ class MainTeacherPage extends React.Component {
                 });
             }
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
     getSubjectInfos() {
-        axios.get(constants.DEFAULT_URL + "/subjects/infos?teacherId=" + localStorage.getItem("id"), {
+        axios.get(DEFAULT_URL + SUBJECT_INFOS_URL + TEACHER_ID_PARAM + localStorage.getItem("id"), {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -75,16 +74,12 @@ class MainTeacherPage extends React.Component {
                 });
             }
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
     getGroups(id) {
-        axios.get(constants.DEFAULT_URL + "/groups?termId=" + id, {
+        axios.get(DEFAULT_URL + GROUPS_URL + TERM_ID_PARAM + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -95,16 +90,12 @@ class MainTeacherPage extends React.Component {
                 });
             }
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
     getStudents(id) {
-        axios.get(constants.DEFAULT_URL + "/students?groupId=" + id, {
+        axios.get(DEFAULT_URL + STUDENTS_URL + GROUP_ID_PARAM + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -115,16 +106,12 @@ class MainTeacherPage extends React.Component {
                 });
             }
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
     getGroupInfos(id) {
-        axios.get(constants.DEFAULT_URL + "/groups/infos?subjectInfoId=" + id, {
+        axios.get(DEFAULT_URL + GROUP_INFOS_URL + SUBJECT_INFO_ID_PARAM + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -136,16 +123,12 @@ class MainTeacherPage extends React.Component {
                 });
             }
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
     getSubjectInfo(id) {
-        axios.get(constants.DEFAULT_URL + "/subjects/infos/" + id, {
+        axios.get(DEFAULT_URL + SUBJECT_INFOS_URL + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -156,16 +139,12 @@ class MainTeacherPage extends React.Component {
                 });
             }
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
     getAllGrades(id) {
-        axios.get(constants.DEFAULT_URL + "/grades?subjectInfoId=" + id, {
+        axios.get(DEFAULT_URL + GRADES_URL + Q_PARAM + SUBJECT_INFO_ID_PARAM + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -177,16 +156,12 @@ class MainTeacherPage extends React.Component {
                 });
             }
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
     getAllSkips(id) {
-        axios.get(constants.DEFAULT_URL + "/skips?subjectInfoId=" + id, {
+        axios.get(DEFAULT_URL + SKIPS_URL + Q_PARAM + SUBJECT_INFO_ID_PARAM + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -198,16 +173,13 @@ class MainTeacherPage extends React.Component {
                 });
             }
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
     getGroupInfo(id) {
-        axios.get(constants.DEFAULT_URL + "/groups/" + id + "/infos/?subjectInfoId=" + this.state.SIId, {
+        axios.get(DEFAULT_URL + GROUP_INFOS_URL + Q_PARAM + GROUP_ID_PARAM + id + AND_PARAM
+            + SUBJECT_INFO_ID_PARAM + this.state.SIId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -218,16 +190,13 @@ class MainTeacherPage extends React.Component {
                 });
             }
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
     getGroupGrades(id) {
-        axios.get(constants.DEFAULT_URL + "/grades?subjectInfoId=" + this.state.SIId + "&groupId=" + id, {
+        axios.get(DEFAULT_URL + GRADES_URL + Q_PARAM + SUBJECT_INFO_ID_PARAM + this.state.SIId + AND_PARAM
+            + GROUP_ID_PARAM + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -239,16 +208,13 @@ class MainTeacherPage extends React.Component {
                 });
             }
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
     getGroupSkips(id) {
-        axios.get(constants.DEFAULT_URL + "/skips?subjectInfoId=" + this.state.SIId + "&groupId=" + id, {
+        axios.get(DEFAULT_URL + SKIPS_URL + Q_PARAM + SUBJECT_INFO_ID_PARAM + this.state.SIId + AND_PARAM
+            + GROUP_ID_PARAM + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -260,16 +226,13 @@ class MainTeacherPage extends React.Component {
                 });
             }
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
     getStudentGrades(id) {
-        axios.get(constants.DEFAULT_URL + "/grades?subjectInfoId=" + this.state.SIId + "&studentId=" + id, {
+        axios.get(DEFAULT_URL + GRADES_URL + Q_PARAM + SUBJECT_INFO_ID_PARAM + this.state.SIId + AND_PARAM
+            + STUDENT_ID_PARAM + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -281,16 +244,13 @@ class MainTeacherPage extends React.Component {
                 });
             }
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
     getStudentExamGrade(id) {
-        axios.get(constants.DEFAULT_URL + "/grades?subjectId=" + this.state.SId + "&studentId=" + id, {
+        axios.get(DEFAULT_URL + GRADES_URL + EXAM_URL + Q_PARAM + SUBJECT_ID_PARAM + this.state.SId + AND_PARAM
+            + STUDENT_ID_PARAM + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -301,16 +261,13 @@ class MainTeacherPage extends React.Component {
                 });
             }
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
     getStudentSkip(id) {
-        axios.get(constants.DEFAULT_URL + "/skips?subjectInfoId=" + this.state.SIId + "&studentId=" + id, {
+        axios.get(DEFAULT_URL + SKIPS_URL + Q_PARAM + SUBJECT_INFO_ID_PARAM + this.state.SIId + AND_PARAM
+            + STUDENT_ID_PARAM + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -321,11 +278,7 @@ class MainTeacherPage extends React.Component {
                 });
             }
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 

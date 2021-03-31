@@ -1,5 +1,4 @@
 import React from "react";
-import {Link} from "react-router-dom";
 import axios from "axios";
 import {
     goAdminSubjectsPage,
@@ -8,7 +7,16 @@ import {
     goStudentSubjectsPage,
     goTeacherMainPage
 } from "../redirect";
-import * as constants from '../constants';
+import {
+    ADMIN_ROLE,
+    AUTHENTICATION_URL,
+    DEFAULT_URL,
+    GROUPS_URL,
+    Q_PARAM,
+    STUDENT_ID_PARAM,
+    STUDENT_ROLE,
+    TEACHER_ROLE
+} from '../constants';
 import '../styles/main.css';
 
 class LoginPage extends React.Component {
@@ -45,53 +53,50 @@ class LoginPage extends React.Component {
     }
 
     authenticate() {
-        axios.post(constants.DEFAULT_URL + constants.AUTHENTICATION_URL, {
+        axios.post(DEFAULT_URL + AUTHENTICATION_URL, {
             id: this.state.values.id,
             password: this.state.values.password
-        })
-            .then(response => {
-                localStorage.clear();
-                const role = response.data["role"];
-                const token = response.data["jwtToken"];
-                const id = this.state.values.id;
-                localStorage.setItem("role", role);
-                localStorage.setItem("token", token);
-                localStorage.setItem("id", id);
-                this.go(role, id);
-            })
-            .catch((error) => {
-                if (error.response.status === 500) {
-                    goServerErrorPage(this.props);
-                } else if (error.response.status === 400) {
-                    this.setState({
-                        isError: true
-                    })
-                }
-            });
+        }).then(response => {
+            localStorage.clear();
+            const role = response.data["role"];
+            const token = response.data["jwtToken"];
+            const id = this.state.values.id;
+            localStorage.setItem("role", role);
+            localStorage.setItem("token", token);
+            localStorage.setItem("id", id);
+            this.go(role, id);
+        }).catch((error) => {
+            if (error.response.status === 500) {
+                goServerErrorPage(this.props);
+            } else if (error.response.status === 400) {
+                this.setState({
+                    isError: true
+                })
+            }
+        });
     }
 
     getGroup(id) {
-        axios.get(constants.DEFAULT_URL + "/groups/students/" + id)
+        axios.get(DEFAULT_URL + GROUPS_URL + Q_PARAM + STUDENT_ID_PARAM + id)
             .then(response => {
                 localStorage.setItem("groupId", response.data.id);
-            })
-            .catch((error) => {
-                if (error.response.status === 500) {
-                    goServerErrorPage(this.props);
-                } else if (error.response.status === 401) {
-                    goLoginPage(this.props);
-                }
-            });
+            }).catch((error) => {
+            if (error.response.status === 500) {
+                goServerErrorPage(this.props);
+            } else if (error.response.status === 401) {
+                goLoginPage(this.props);
+            }
+        });
     }
 
     async go(role, id) {
-        if (role === constants.STUDENT_ROLE) {
+        if (role === STUDENT_ROLE) {
             this.getGroup(id);
             await this.timeout(150);
             goStudentSubjectsPage(this.props);
-        } else if (role === constants.TEACHER_ROLE) {
+        } else if (role === TEACHER_ROLE) {
             goTeacherMainPage(this.props);
-        } else if (role === constants.ADMIN_ROLE) {
+        } else if (role === ADMIN_ROLE) {
             goAdminSubjectsPage(this.props);
         }
     }

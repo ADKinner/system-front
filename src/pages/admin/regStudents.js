@@ -7,12 +7,13 @@ import {
     goAdminStudentsPage,
     goAdminSubjectsPage,
     goAdminTeachersPage,
-    goLoginPage,
-    goServerErrorPage
+    goLoginPage
 } from "../../redirect";
 import axios from "axios";
-import * as constants from "../../constants";
+import {DEFAULT_URL, EXISTS_URL, GROUPS_URL, S_PARAM, STUDENTS_URL} from "../../constants";
 import validateCreateRegStudentInput from "../../validate/validateCreateRegStudentInput";
+import handleDefaultError from "../../handle/handleDefaultReuqestError";
+import handleAdminMount from "../../handle/handleAdminMount";
 
 class AdminRegisterStudentsPage extends React.Component {
 
@@ -29,18 +30,7 @@ class AdminRegisterStudentsPage extends React.Component {
     }
 
     componentDidMount() {
-        const role = localStorage.getItem("role");
-        if (localStorage.length === 0 || role === null) {
-            goLoginPage(this.props);
-        } else {
-            switch (role) {
-                case "ROLE_ADMIN":
-                    break;
-                default:
-                    goLoginPage(this.props);
-                    break;
-            }
-        }
+        handleAdminMount(localStorage);
     }
 
     defaultDetail() {
@@ -58,7 +48,7 @@ class AdminRegisterStudentsPage extends React.Component {
     }
 
     studentExists(id) {
-        axios.get(constants.DEFAULT_URL + "/students/" + id + "/exists", {
+        axios.get(DEFAULT_URL + STUDENTS_URL + S_PARAM + id + EXISTS_URL, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -67,16 +57,12 @@ class AdminRegisterStudentsPage extends React.Component {
                 isExists: response.data
             });
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
     createStudent() {
-        axios.post(constants.DEFAULT_URL + "/students", {
+        axios.post(DEFAULT_URL + STUDENTS_URL, {
             id: this.state.values.id,
             name: this.state.values.name,
             surname: this.state.values.surname,
@@ -89,11 +75,8 @@ class AdminRegisterStudentsPage extends React.Component {
                 Authorization: localStorage.getItem("token")
             }
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            } else if (error.response.status === 400) {
+            handleDefaultError(this.props, error.response.status);
+            if (error.response.status === 400) {
                 this.setState({
                     errors: {
                         id: "ID занят"
@@ -104,7 +87,7 @@ class AdminRegisterStudentsPage extends React.Component {
     }
 
     getGroups() {
-        axios.get(constants.DEFAULT_URL + constants.GROUPS_URL, {
+        axios.get(DEFAULT_URL + GROUPS_URL, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -117,11 +100,7 @@ class AdminRegisterStudentsPage extends React.Component {
                 groups: response.data
             });
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 

@@ -2,14 +2,15 @@ import React from "react";
 import axios from "axios";
 import {
     goLoginPage,
-    goServerErrorPage,
     goStudentGroupPage,
-    goStudentSubjectsPage,
     goStudentProfilePage,
-    goStudentRecordBookPage
+    goStudentRecordBookPage,
+    goStudentSubjectsPage
 } from "../../redirect";
-import * as constants from "../../constants";
+import {DEFAULT_URL, GROUP_ID_PARAM, Q_PARAM, STUDENTS_URL} from "../../constants";
 import '../../styles/main.css';
+import handleDefaultError from "../../handle/handleDefaultReuqestError";
+import handleStudentMount from "../../handle/handleStudentMount";
 
 class StudentGroupPage extends React.Component {
 
@@ -21,23 +22,12 @@ class StudentGroupPage extends React.Component {
     }
 
     componentDidMount() {
-        const role = localStorage.getItem("role");
-        if (localStorage.length === 0 || role === null) {
-            goLoginPage(this.props);
-        } else {
-            switch (role) {
-                case "ROLE_STUDENT":
-                    this.getStudents(localStorage.getItem("groupId"));
-                    break;
-                default:
-                    goLoginPage(this.props);
-                    break;
-            }
-        }
+        handleStudentMount(localStorage);
+        this.getStudents(localStorage.getItem("groupId"));
     }
 
     getStudents(id) {
-        axios.get(constants.DEFAULT_URL + constants.STUDENTS_URL + "/groups/" + id, {
+        axios.get(DEFAULT_URL + STUDENTS_URL + Q_PARAM + GROUP_ID_PARAM + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -46,11 +36,7 @@ class StudentGroupPage extends React.Component {
                 students: response.data
             });
         }).catch((error) => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 

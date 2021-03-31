@@ -1,17 +1,34 @@
 import React from "react";
 import '../../styles/main.css';
 import {
-    goAdminProfilePage, goAdminRegisterStudentsPage,
+    goAdminProfilePage,
+    goAdminRegisterStudentsPage,
     goAdminsPage,
     goAdminStudentsPage,
     goAdminSubjectsPage,
     goAdminTeachersPage,
-    goLoginPage,
-    goServerErrorPage
+    goLoginPage
 } from "../../redirect";
 import axios from "axios";
-import * as constants from "../../constants";
+import {
+    CATHEDRA_ID_PARAM,
+    CATHEDRAS_URL,
+    DEFAULT_URL,
+    FACULTIES_URL,
+    FACULTY_ID_PARAM,
+    GROUP_ID_PARAM,
+    GROUPS_URL,
+    Q_PARAM,
+    S_PARAM,
+    SPECIALITIES_URL,
+    SPECIALITY_ID_PARAM,
+    STUDENTS_URL,
+    TERM_ID_PARAM,
+    TERMS_URL
+} from "../../constants";
 import validateCreateGroupInput from "../../validate/validateCreateGroupInput";
+import handleDefaultError from "../../handle/handleDefaultReuqestError";
+import handleAdminMount from "../../handle/handleAdminMount";
 
 class AdminGroupsPage extends React.Component {
 
@@ -32,24 +49,13 @@ class AdminGroupsPage extends React.Component {
     }
 
     componentDidMount() {
-        const role = localStorage.getItem("role");
-        if (localStorage.length === 0 || role === null) {
-            goLoginPage(this.props);
-        } else {
-            switch (role) {
-                case "ROLE_ADMIN":
-                    this.defaultFindValues();
-                    this.getFaculties();
-                    break;
-                default:
-                    goLoginPage(this.props);
-                    break;
-            }
-        }
+        handleAdminMount(localStorage);
+        this.defaultFindValues();
+        this.getFaculties();
     }
 
     getFaculties() {
-        axios.get(constants.DEFAULT_URL + constants.FACULTIES_URL, {
+        axios.get(DEFAULT_URL + FACULTIES_URL, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -64,16 +70,12 @@ class AdminGroupsPage extends React.Component {
                 });
             }
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
     getCathedras() {
-        axios.get(constants.DEFAULT_URL + constants.CATHEDRAS_URL + "/faculties/" + this.state.values.FId, {
+        axios.get(DEFAULT_URL + CATHEDRAS_URL + Q_PARAM + FACULTY_ID_PARAM + this.state.values.FId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -88,16 +90,12 @@ class AdminGroupsPage extends React.Component {
                 });
             }
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
     getSpecialities() {
-        axios.get(constants.DEFAULT_URL + constants.SPECIALITIES_URL + "/cathedras/" + this.state.values.CId, {
+        axios.get(DEFAULT_URL + SPECIALITIES_URL + Q_PARAM + CATHEDRA_ID_PARAM + this.state.values.CId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -112,16 +110,12 @@ class AdminGroupsPage extends React.Component {
                 });
             }
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
     getTerms() {
-        axios.get(constants.DEFAULT_URL + constants.TERMS_URL + "/specialities/" + this.state.values.SId, {
+        axios.get(DEFAULT_URL + TERMS_URL + Q_PARAM + SPECIALITY_ID_PARAM + this.state.values.SId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -136,16 +130,12 @@ class AdminGroupsPage extends React.Component {
                 });
             }
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
     getGroups() {
-        axios.get(constants.DEFAULT_URL + constants.GROUPS_URL + "/terms/" + this.state.values.TId, {
+        axios.get(DEFAULT_URL + GROUPS_URL + Q_PARAM + TERM_ID_PARAM + this.state.values.TId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -154,16 +144,12 @@ class AdminGroupsPage extends React.Component {
                 groups: response.data
             });
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
     createGroup() {
-        axios.post(constants.DEFAULT_URL + constants.GROUPS_URL, {
+        axios.post(DEFAULT_URL + GROUPS_URL, {
             id: this.state.values.NGId,
             termId: this.state.values.TId
         }, {
@@ -171,11 +157,8 @@ class AdminGroupsPage extends React.Component {
                 Authorization: localStorage.getItem("token")
             }
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            } else if (error.response.status === 400) {
+            handleDefaultError(this.props, error.response.status);
+            if (error.response.status === 400) {
                 this.setState({
                     errors: {
                         id: "ID занят"
@@ -186,21 +169,17 @@ class AdminGroupsPage extends React.Component {
     }
 
     deleteGroup() {
-        axios.delete(constants.DEFAULT_URL + constants.GROUPS_URL + constants.SLASH + this.state.values.GId, {
+        axios.delete(DEFAULT_URL + GROUPS_URL + S_PARAM + this.state.values.GId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
     getStudents(groupId) {
-        axios.get(constants.DEFAULT_URL + constants.STUDENTS_URL + "/groups/" + groupId, {
+        axios.get(DEFAULT_URL + STUDENTS_URL + Q_PARAM + GROUP_ID_PARAM + groupId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -211,11 +190,7 @@ class AdminGroupsPage extends React.Component {
                 });
             }
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 

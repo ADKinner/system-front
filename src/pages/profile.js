@@ -1,23 +1,37 @@
 import React from "react";
 import axios from "axios";
-import * as constants from "../constants";
+import {
+    ADMIN_ROLE,
+    ADMINS_URL,
+    DEFAULT_URL,
+    S_PARAM,
+    STUDENT_ROLE,
+    STUDENTS_URL,
+    TEACHER_ROLE,
+    TEACHERS_URL
+} from "../constants";
 import {
     goAdminGroupsPage,
-    goAdminProfilePage, goAdminsPage, goAdminStudentsPage, goAdminSubjectsPage, goAdminTeachersPage,
+    goAdminProfilePage,
+    goAdminRegisterStudentsPage,
+    goAdminsPage,
+    goAdminStudentsPage,
+    goAdminSubjectsPage,
+    goAdminTeachersPage,
     goChangePasswordPage,
     goLoginPage,
-    goServerErrorPage,
     goStudentGroupPage,
-    goStudentSubjectsPage,
     goStudentProfilePage,
     goStudentRecordBookPage,
+    goStudentSubjectsPage,
     goTeacherExamPage,
     goTeacherLessonPage,
     goTeacherMainPage,
-    goTeacherProfilePage, goAdminRegisterStudentsPage
+    goTeacherProfilePage
 } from "../redirect";
 import '../styles/modal.css';
 import '../styles/main.css';
+import handleProfileDefaultError from "../handle/handleProfileRequestError";
 
 class ProfilePage extends React.Component {
 
@@ -55,40 +69,33 @@ class ProfilePage extends React.Component {
     }
 
     getStudent(id) {
-        axios.get(constants.DEFAULT_URL + constants.STUDENTS_URL + constants.SLASH + id, {
+        axios.get(DEFAULT_URL + STUDENTS_URL + S_PARAM + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
-        })
-            .then(response => {
-                this.setState({
-                    user: {
-                        id: response.data["id"],
-                        name: response.data["name"],
-                        surname: response.data["surname"],
-                        patronymic: response.data["patronymic"],
-                        email: response.data["email"],
-                    },
-                    student: {
-                        group: response.data["group"]["id"],
-                        term: response.data["group"]["term"]["number"],
-                        speciality: response.data["group"]["term"]["speciality"]["name"],
-                        faculty: response.data["group"]["term"]["speciality"]["cathedra"]["faculty"]["name"]
-                    }
-                })
-            })
-            .catch((error) => {
-                console.log(error);
-                if (error.response.status === 500) {
-                    goServerErrorPage(this.props);
-                } else if (error.response.status === 401 || error.response.status === 404) {
-                    goLoginPage(this.props);
+        }).then(response => {
+            this.setState({
+                user: {
+                    id: response.data["id"],
+                    name: response.data["name"],
+                    surname: response.data["surname"],
+                    patronymic: response.data["patronymic"],
+                    email: response.data["email"],
+                },
+                student: {
+                    group: response.data["group"]["id"],
+                    term: response.data["group"]["term"]["number"],
+                    speciality: response.data["group"]["term"]["speciality"]["name"],
+                    faculty: response.data["group"]["term"]["speciality"]["cathedra"]["faculty"]["name"]
                 }
-            });
+            })
+        }).catch((error) => {
+            handleProfileDefaultError(this.props, error.response.status);
+        });
     }
 
     getTeacher(id) {
-        axios.get(constants.DEFAULT_URL + constants.TEACHERS_URL + constants.SLASH + id, {
+        axios.get(DEFAULT_URL + TEACHERS_URL + S_PARAM + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -107,49 +114,37 @@ class ProfilePage extends React.Component {
                         post: response.data["post"]["name"]
                     }
                 })
-            })
-            .catch((error) => {
-                console.log(error);
-                if (error.response.status === 500) {
-                    goServerErrorPage(this.props);
-                } else if (error.response.status === 401 || error.response.status === 404) {
-                    goLoginPage(this.props);
-                }
-            });
+            }).catch((error) => {
+            handleProfileDefaultError(this.props, error.response.status);
+        });
     }
 
     getAdmin(id) {
-        axios.get(constants.DEFAULT_URL + constants.ADMINS_URL + constants.SLASH + id, {
+        axios.get(DEFAULT_URL + ADMINS_URL + S_PARAM + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
-        })
-            .then(response => {
-                this.setState({
-                    user: {
-                        id: response.data["id"],
-                        name: response.data["name"],
-                        surname: response.data["surname"],
-                        patronymic: response.data["patronymic"],
-                        email: response.data["email"],
-                    },
-                    admin: {
-                        post: response.data["post"]["name"]
-                    }
-                })
-            })
-            .catch((error) => {
-                if (error.response.status === 500) {
-                    goServerErrorPage(this.props);
-                } else if (error.response.status === 401 || error.response.status === 404) {
-                    goLoginPage(this.props);
+        }).then(response => {
+            this.setState({
+                user: {
+                    id: response.data["id"],
+                    name: response.data["name"],
+                    surname: response.data["surname"],
+                    patronymic: response.data["patronymic"],
+                    email: response.data["email"],
+                },
+                admin: {
+                    post: response.data["post"]["name"]
                 }
-            });
+            })
+        }).catch((error) => {
+            handleProfileDefaultError(this.props, error.response.status);
+        });
     }
 
     renderAdditionalData() {
         const role = localStorage.getItem("role");
-        if (role === constants.STUDENT_ROLE) {
+        if (role === STUDENT_ROLE) {
             return (
                 <div>
                     <div className="user_detail">
@@ -173,7 +168,7 @@ class ProfilePage extends React.Component {
                     </div>
                 </div>
             );
-        } else if (role === constants.TEACHER_ROLE) {
+        } else if (role === TEACHER_ROLE) {
             return (
                 <div className="add_data">
                     <div className="user_detail">
@@ -187,7 +182,7 @@ class ProfilePage extends React.Component {
                     </div>
                 </div>
             );
-        } else if (role === constants.ADMIN_ROLE) {
+        } else if (role === ADMIN_ROLE) {
             return (
                 <div className="add_data">
                     <div className="user_detail">
@@ -201,15 +196,15 @@ class ProfilePage extends React.Component {
 
     renderProfileImage() {
         const role = localStorage.getItem("role");
-        if (role === constants.STUDENT_ROLE) {
+        if (role === STUDENT_ROLE) {
             return (
                 <div className="user_image user_image_st"/>
             );
-        } else if (role === constants.TEACHER_ROLE) {
+        } else if (role === TEACHER_ROLE) {
             return (
                 <div className="user_image user_image_t"/>
             );
-        } else if (role === constants.ADMIN_ROLE) {
+        } else if (role === ADMIN_ROLE) {
             return (
                 <div className="user_image user_image_a"/>
             );
@@ -218,7 +213,7 @@ class ProfilePage extends React.Component {
 
     renderBarButtons() {
         const role = localStorage.getItem("role");
-        if (role === constants.STUDENT_ROLE) {
+        if (role === STUDENT_ROLE) {
             return (
                 <div className="bar">
                     <div className="sys_image"/>
@@ -230,7 +225,7 @@ class ProfilePage extends React.Component {
                     <a onClick={() => goStudentSubjectsPage(this.props)}>Предметы</a>
                 </div>
             );
-        } else if (role === constants.TEACHER_ROLE) {
+        } else if (role === TEACHER_ROLE) {
             return (
                 <div className="bar">
                     <div className="sys_image"/>
@@ -242,7 +237,7 @@ class ProfilePage extends React.Component {
                     <a onClick={() => goTeacherMainPage(this.props)}>Главная</a>
                 </div>
             );
-        } else if (role === constants.ADMIN_ROLE) {
+        } else if (role === ADMIN_ROLE) {
             return (
                 <div className="bar">
                     <div className="sys_image"/>

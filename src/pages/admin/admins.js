@@ -2,16 +2,18 @@ import React from "react";
 import '../../styles/main.css';
 import {
     goAdminGroupsPage,
-    goAdminProfilePage, goAdminRegisterStudentsPage,
+    goAdminProfilePage,
+    goAdminRegisterStudentsPage,
     goAdminStudentsPage,
     goAdminSubjectsPage,
     goAdminTeachersPage,
-    goLoginPage,
-    goServerErrorPage
+    goLoginPage
 } from "../../redirect";
 import axios from "axios";
-import * as constants from "../../constants";
+import {ADMINS_URL, DEFAULT_URL, POSTS_URL, S_PARAM} from "../../constants";
 import validateCreateAdminInput from "../../validate/validateCreateAdminInput";
+import handleDefaultError from "../../handle/handleDefaultReuqestError";
+import handleAdminMount from "../../handle/handleAdminMount";
 
 class AdminsPage extends React.Component {
 
@@ -31,23 +33,12 @@ class AdminsPage extends React.Component {
     }
 
     componentDidMount() {
-        const role = localStorage.getItem("role");
-        if (localStorage.length === 0 || role === null) {
-            goLoginPage(this.props);
-        } else {
-            switch (role) {
-                case "ROLE_ADMIN":
-                    this.getAdmins();
-                    break;
-                default:
-                    goLoginPage(this.props);
-                    break;
-            }
-        }
+        handleAdminMount(localStorage);
+        this.getAdmins();
     }
 
     getAdmins() {
-        axios.get(constants.DEFAULT_URL + constants.ADMINS_URL, {
+        axios.get(DEFAULT_URL + ADMINS_URL, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -56,16 +47,12 @@ class AdminsPage extends React.Component {
                 admins: response.data
             });
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
     getPosts() {
-        axios.get(constants.DEFAULT_URL + constants.POSTS_URL, {
+        axios.get(DEFAULT_URL + POSTS_URL, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -78,30 +65,22 @@ class AdminsPage extends React.Component {
                 posts: response.data
             });
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
     deleteAdmin() {
-        axios.delete(constants.DEFAULT_URL + constants.ADMINS_URL + constants.SLASH + this.state.values.AId, {
+        axios.delete(DEFAULT_URL + ADMINS_URL + S_PARAM + this.state.values.AId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
     createAdmin() {
-        axios.post(constants.DEFAULT_URL + constants.ADMINS_URL, {
+        axios.post(DEFAULT_URL + ADMINS_URL, {
             id: this.state.values.ANId,
             name: this.state.values.AName,
             surname: this.state.values.ASurname,
@@ -114,11 +93,8 @@ class AdminsPage extends React.Component {
                 Authorization: localStorage.getItem("token")
             }
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            } else if (error.response.status === 400) {
+            handleDefaultError(this.props, error.response.status);
+            if (error.response.status === 400) {
                 this.setState({
                     errors: {
                         id: "ID занят"

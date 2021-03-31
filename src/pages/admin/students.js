@@ -7,11 +7,24 @@ import {
     goAdminsPage,
     goAdminSubjectsPage,
     goAdminTeachersPage,
-    goLoginPage,
-    goServerErrorPage
+    goLoginPage
 } from "../../redirect";
 import axios from "axios";
 import * as constants from "../../constants";
+import {
+    AND_PARAM,
+    DEFAULT_URL,
+    GROUP_URL,
+    ID_PARAM,
+    NAME_PARAM,
+    PATRONYMIC_PARAM,
+    Q_PARAM,
+    S_PARAM,
+    STUDENTS_URL,
+    SURNAME_PARAM
+} from "../../constants";
+import handleDefaultError from "../../handle/handleDefaultReuqestError";
+import handleAdminMount from "../../handle/handleAdminMount";
 
 class AdminStudentsPage extends React.Component {
 
@@ -37,23 +50,13 @@ class AdminStudentsPage extends React.Component {
     }
 
     componentDidMount() {
-        const role = localStorage.getItem("role");
-        if (localStorage.length === 0 || role === null) {
-            goLoginPage(this.props);
-        } else {
-            switch (role) {
-                case "ROLE_ADMIN":
-                    break;
-                default:
-                    goLoginPage(this.props);
-                    break;
-            }
-        }
+        handleAdminMount(localStorage);
     }
 
     getStudentsByNSP() {
-        axios.get(constants.DEFAULT_URL + "/students?name=" + this.state.search.name + "&surname="
-            + this.state.search.surname + "&patronymic=" + this.state.search.patronymic, {
+        axios.get(DEFAULT_URL + STUDENTS_URL + Q_PARAM + NAME_PARAM + this.state.search.name + AND_PARAM
+            + SURNAME_PARAM + this.state.search.surname + AND_PARAM
+            + PATRONYMIC_PARAM + this.state.search.patronymic, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -64,16 +67,12 @@ class AdminStudentsPage extends React.Component {
                 });
             }
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
     getStudentsById() {
-        axios.get(constants.DEFAULT_URL + "/students?id=" + this.state.search.id, {
+        axios.get(DEFAULT_URL + STUDENTS_URL + Q_PARAM + ID_PARAM + this.state.search.id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -84,16 +83,12 @@ class AdminStudentsPage extends React.Component {
                 });
             }
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
     getStudent(id) {
-        axios.get(constants.DEFAULT_URL + "/students/" + id, {
+        axios.get(DEFAULT_URL + STUDENTS_URL + S_PARAM + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -105,30 +100,22 @@ class AdminStudentsPage extends React.Component {
                 });
             }
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
     deleteStudent() {
-        axios.delete(constants.DEFAULT_URL + "/students/" + this.state.SId, {
+        axios.delete(DEFAULT_URL + STUDENTS_URL + S_PARAM + this.state.SId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
     updateStudent() {
-        axios.put(constants.DEFAULT_URL + "/students/group", {
+        axios.put(constants.DEFAULT_URL + STUDENTS_URL + GROUP_URL, {
             studentId: this.state.SId,
             groupId: this.state.GId
         }, {
@@ -141,11 +128,7 @@ class AdminStudentsPage extends React.Component {
                 GId: response.data.group.id
             });
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
@@ -159,11 +142,7 @@ class AdminStudentsPage extends React.Component {
                 groups: response.data
             });
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 

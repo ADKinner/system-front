@@ -1,14 +1,24 @@
 import React from "react";
 import '../../styles/main.css';
-import {
-    goLoginPage,
-    goServerErrorPage,
-    goStudentGroupPage,
-    goStudentProfilePage,
-    goStudentRecordBookPage
-} from "../../redirect";
+import {goLoginPage, goStudentGroupPage, goStudentProfilePage, goStudentRecordBookPage} from "../../redirect";
 import axios from "axios";
-import * as constants from "../../constants";
+import {
+    AND_PARAM,
+    DEFAULT_URL,
+    GRADES_URL,
+    GROUP_ID_PARAM,
+    GROUP_INFOS_URL,
+    Q_PARAM,
+    SKIPS_URL,
+    STUDENT_ID_PARAM,
+    SUBJECT_ID_PARAM,
+    SUBJECT_INFOS_URL,
+    SUBJECT_TYPE_ID_PARAM,
+    SUBJECT_TYPES_URL,
+    SUBJECTS_URL
+} from "../../constants";
+import handleDefaultError from "../../handle/handleDefaultReuqestError";
+import handleStudentMount from "../../handle/handleStudentMount";
 
 class StudentSubjectsPage extends React.Component {
 
@@ -26,24 +36,12 @@ class StudentSubjectsPage extends React.Component {
     }
 
     componentDidMount() {
-        const role = localStorage.getItem("role");
-        if (localStorage.length === 0 || role === null) {
-            goLoginPage(this.props);
-        } else {
-            switch (role) {
-                case "ROLE_STUDENT":
-                    console.log(localStorage.getItem("groupId"));
-                    this.getSubjects(localStorage.getItem("groupId"));
-                    break;
-                default:
-                    goLoginPage(this.props);
-                    break;
-            }
-        }
+        handleStudentMount(localStorage);
+        this.getSubjects(localStorage.getItem("groupId"));
     }
 
-    getSubjects(groupId) {
-        axios.get(constants.DEFAULT_URL + constants.SUBJECTS_URL + "/groups/" + groupId, {
+    getSubjects(id) {
+        axios.get(DEFAULT_URL + SUBJECTS_URL + Q_PARAM + GROUP_ID_PARAM + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -52,16 +50,12 @@ class StudentSubjectsPage extends React.Component {
                 subjects: response.data
             });
         }).catch((error) => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
-    getSubjectTypes(subjectId) {
-        axios.get(constants.DEFAULT_URL + constants.SUBJECTS_URL + constants.SLASH + subjectId + "/types", {
+    getSubjectTypes(id) {
+        axios.get(DEFAULT_URL + SUBJECT_TYPES_URL + Q_PARAM + SUBJECT_ID_PARAM + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -70,17 +64,13 @@ class StudentSubjectsPage extends React.Component {
                 subjectTypes: response.data
             });
         }).catch((error) => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
     getSubjectInfo(subjectId, typeId) {
-        axios.get(constants.DEFAULT_URL + constants.SUBJECTS_URL + constants.SLASH + subjectId + "/types/"
-            + typeId + "/info", {
+        axios.get(DEFAULT_URL + SUBJECT_INFOS_URL + Q_PARAM + SUBJECT_ID_PARAM + subjectId + AND_PARAM
+            + SUBJECT_TYPE_ID_PARAM + typeId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -89,16 +79,13 @@ class StudentSubjectsPage extends React.Component {
                 subjectInfo: response.data
             });
         }).catch((error) => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
     getGrades(subjectId, studentId) {
-        axios.get(constants.DEFAULT_URL + "/grades/subjects/" + subjectId + "/students/" + studentId, {
+        axios.get(DEFAULT_URL + GRADES_URL + Q_PARAM + SUBJECT_ID_PARAM + subjectId + AND_PARAM
+            + STUDENT_ID_PARAM + studentId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -108,16 +95,13 @@ class StudentSubjectsPage extends React.Component {
                 avGrade: this.average(response.data)
             });
         }).catch((error) => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
     getSkip(subjectId, studentId) {
-        axios.get(constants.DEFAULT_URL + "/skips/subjects/" + subjectId + "/students/" + studentId, {
+        axios.get(DEFAULT_URL + SKIPS_URL + Q_PARAM + SUBJECT_ID_PARAM + subjectId + AND_PARAM
+            + STUDENT_ID_PARAM + studentId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -126,16 +110,13 @@ class StudentSubjectsPage extends React.Component {
                 skip: response.data
             });
         }).catch((error) => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
     getGroupInfo(subjectId, groupId) {
-        axios.get(constants.DEFAULT_URL + "/groups/" + groupId + "/info/subjects/" + subjectId, {
+        axios.get(DEFAULT_URL + GROUP_INFOS_URL + Q_PARAM + GROUP_ID_PARAM + groupId + AND_PARAM
+            + SUBJECT_ID_PARAM + subjectId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -144,11 +125,7 @@ class StudentSubjectsPage extends React.Component {
                 groupInfo: response.data
             });
         }).catch((error) => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 

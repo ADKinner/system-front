@@ -9,7 +9,6 @@ import {
     goAdminSubjectsPage,
     goAdminTeachersPage,
     goLoginPage,
-    goServerErrorPage,
     goStudentGroupPage,
     goStudentProfilePage,
     goStudentRecordBookPage,
@@ -20,9 +19,18 @@ import {
     goTeacherProfilePage
 } from "../redirect";
 import validateRecPasswordsInput from "../validate/validateRecPasswordsInput";
-import * as constants from '../constants';
+import {
+    ADMIN_ROLE,
+    CONFIRMATION_URL,
+    DEFAULT_URL,
+    EMAIL_URL_PARAM,
+    PASSWORD_CHANGE_URL,
+    STUDENT_ROLE,
+    TEACHER_ROLE
+} from '../constants';
 import '../styles/recovery.css';
 import '../styles/modal.css';
+import handleDefaultError from "../handle/handleDefaultReuqestError";
 
 class ChangePasswordPage extends React.Component {
 
@@ -44,17 +52,17 @@ class ChangePasswordPage extends React.Component {
             switch (role) {
                 case "ROLE_STUDENT":
                     this.setState({
-                        url: constants.DEFAULT_URL + "/students/password"
+                        url: DEFAULT_URL + "/students/password"
                     });
                     break;
                 case "ROLE_TEACHER":
                     this.setState({
-                        url: constants.DEFAULT_URL + "/teachers/password"
+                        url: DEFAULT_URL + "/teachers/password"
                     });
                     break;
                 case "ROLE_ADMIN":
                     this.setState({
-                        url: constants.DEFAULT_URL + "/admins/password"
+                        url: DEFAULT_URL + "/admins/password"
                     });
                     break;
                 default:
@@ -118,26 +126,19 @@ class ChangePasswordPage extends React.Component {
     }
 
     getConfirmPassword(email) {
-        axios.get(constants.DEFAULT_URL + constants.CONFIRMATION_URL + constants.PASSWORD_CHANGE_URL
-            + constants.EMAIL_URL_PARAM + email, {
+        axios.get(DEFAULT_URL + CONFIRMATION_URL + PASSWORD_CHANGE_URL + EMAIL_URL_PARAM + email, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
-        })
-            .then((response) => {
-                this.setState({
-                    data: {
-                        emailConfirmPassword: response.data["password"]
-                    }
-                });
-            })
-            .catch((error) => {
-                if (error.response.status === 500) {
-                    goServerErrorPage(this.props);
-                } else if (error.response.status === 401) {
-                    goLoginPage(this.props);
+        }).then((response) => {
+            this.setState({
+                data: {
+                    emailConfirmPassword: response.data["password"]
                 }
             });
+        }).catch((error) => {
+            handleDefaultError(this.props, error.response.status);
+        });
     }
 
     changePasswordOnAccount() {
@@ -148,34 +149,30 @@ class ChangePasswordPage extends React.Component {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
-        })
-            .then(() => {
-                this.setState({
-                    isSuccess: true
-                })
+        }).then(() => {
+            this.setState({
+                isSuccess: true
             })
-            .catch((error) => {
-                if (error.response.status === 500) {
-                    goServerErrorPage(this.props);
-                }
-            })
+        }).catch((error) => {
+            handleDefaultError(this.props, error.response.status);
+        });
     }
 
     goToProfilePage() {
         localStorage.removeItem("email");
         const role = localStorage.getItem("role");
-        if (role === constants.STUDENT_ROLE) {
+        if (role === STUDENT_ROLE) {
             goStudentProfilePage(this.props);
-        } else if (role === constants.TEACHER_ROLE) {
+        } else if (role === TEACHER_ROLE) {
             goTeacherProfilePage(this.props);
-        } else if (role === constants.ADMIN_ROLE) {
+        } else if (role === ADMIN_ROLE) {
             goAdminProfilePage(this.props);
         }
     }
 
     renderBarButtons() {
         const role = localStorage.getItem("role");
-        if (role === constants.STUDENT_ROLE) {
+        if (role === STUDENT_ROLE) {
             return (
                 <div className="bar">
                     <div className="sys_image"/>
@@ -187,7 +184,7 @@ class ChangePasswordPage extends React.Component {
                     <a onClick={() => goStudentSubjectsPage(this.props)}>Предметы</a>
                 </div>
             );
-        } else if (role === constants.TEACHER_ROLE) {
+        } else if (role === TEACHER_ROLE) {
             return (
                 <div className="bar">
                     <div className="sys_image"/>
@@ -199,7 +196,7 @@ class ChangePasswordPage extends React.Component {
                     <a onClick={() => goTeacherMainPage(this.props)}>Главная</a>
                 </div>
             );
-        } else if (role === constants.ADMIN_ROLE) {
+        } else if (role === ADMIN_ROLE) {
             return (
                 <div className="bar">
                     <div className="sys_image"/>

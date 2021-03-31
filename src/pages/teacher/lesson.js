@@ -1,14 +1,19 @@
 import React from "react";
 import '../../styles/teacher.css';
-import {
-    goLoginPage,
-    goServerErrorPage,
-    goTeacherExamPage,
-    goTeacherMainPage,
-    goTeacherProfilePage
-} from "../../redirect";
+import {goLoginPage, goTeacherExamPage, goTeacherMainPage, goTeacherProfilePage} from "../../redirect";
 import axios from "axios";
-import * as constants from "../../constants";
+import {
+    DEFAULT_URL,
+    GROUP_ID_PARAM,
+    GROUP_INFOS_URL,
+    LESSON_ULR,
+    Q_PARAM,
+    STUDENTS_URL,
+    SUBJECT_INFO_ID_PARAM,
+    TEACHER_ID_PARAM
+} from "../../constants";
+import handleDefaultError from "../../handle/handleDefaultReuqestError";
+import handleTeacherMount from "../../handle/handleTeacherMount";
 
 class TeacherLessonPage extends React.Component {
 
@@ -25,23 +30,12 @@ class TeacherLessonPage extends React.Component {
     }
 
     componentDidMount() {
-        const role = localStorage.getItem("role");
-        if (localStorage.length === 0 || role === null) {
-            goLoginPage(this.props);
-        } else {
-            switch (role) {
-                case "ROLE_TEACHER":
-                    this.getSubjectInfos();
-                    break;
-                default:
-                    goLoginPage(this.props);
-                    break;
-            }
-        }
+        handleTeacherMount(localStorage);
+        this.getSubjectInfos();
     }
 
     getSubjectInfos() {
-        axios.get(constants.DEFAULT_URL + "/subjects/infos?teacherId=" + localStorage.getItem("id"), {
+        axios.get(DEFAULT_URL + GROUP_INFOS_URL + Q_PARAM + TEACHER_ID_PARAM + localStorage.getItem("id"), {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -52,16 +46,12 @@ class TeacherLessonPage extends React.Component {
                 });
             }
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
     getGroupInfos(id) {
-        axios.get(constants.DEFAULT_URL + "/groups/infos?subjectInfoId=" + id, {
+        axios.get(DEFAULT_URL + GROUP_INFOS_URL + Q_PARAM + SUBJECT_INFO_ID_PARAM + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -72,16 +62,12 @@ class TeacherLessonPage extends React.Component {
                 });
             }
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
     getStudents(id) {
-        axios.get(constants.DEFAULT_URL + "/students?groupId=" + id, {
+        axios.get(DEFAULT_URL + STUDENTS_URL + Q_PARAM + GROUP_ID_PARAM + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -92,11 +78,7 @@ class TeacherLessonPage extends React.Component {
                 });
             }
         }).catch(error => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
@@ -110,7 +92,7 @@ class TeacherLessonPage extends React.Component {
             };
             data.push(info);
         });
-        axios.post(constants.DEFAULT_URL + constants.LESSON_ULR, {
+        axios.post(DEFAULT_URL + LESSON_ULR, {
             groupId: this.state.GId,
             subjectId: this.state.SIId,
             isExam: false,
@@ -120,11 +102,7 @@ class TeacherLessonPage extends React.Component {
                 Authorization: localStorage.getItem("token")
             }
         }).catch((error) => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
+            handleDefaultError(this.props, error.response.status);
         });
     }
 
@@ -152,7 +130,7 @@ class TeacherLessonPage extends React.Component {
         this.saveLessonInfo();
         await this.timeout(300);
         this.setState({
-           part: 1
+            part: 1
         });
     }
 
@@ -297,7 +275,8 @@ class TeacherLessonPage extends React.Component {
                 )}
                 {this.state.part === 2 && (
                     <div className="table_panel">
-                        <h1 id='title'>Занятие - {this.state.groupInfos.find(g => g.group.id == this.state.GId).group.id}</h1>
+                        <h1 id='title'>Занятие
+                            - {this.state.groupInfos.find(g => g.group.id == this.state.GId).group.id}</h1>
                         <table id='data'>
                             <tbody>
                             <tr>
