@@ -1,15 +1,8 @@
 import React from "react";
 import axios from "axios";
-import {
-    goAdminsPage,
-    goAdminSubjectsPage,
-    goServerErrorPage,
-    goStudentSubjectsPage,
-    goTeacherMainPage
-} from "../redirect";
+import {goAdminSubjectsPage, goServerErrorPage, goStudentSubjectsPage, goTeacherMainPage} from "../redirect";
 import {ADMIN_ROLE, AUTHENTICATION_URL, DEFAULT_URL, STUDENT_ROLE, TEACHER_ROLE} from '../constants';
 import '../styles/main.css';
-import timeout from "../handle/timeout";
 
 class LoginPage extends React.Component {
 
