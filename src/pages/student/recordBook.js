@@ -5,18 +5,16 @@ import axios from "axios";
 import {
     AND_PARAM,
     DEFAULT_URL,
-    EXAM_URL,
-    GRADES_URL,
+    EXAM_GRADE_URL,
     GROUP_ID_PARAM,
     Q_PARAM,
     STUDENT_ID_PARAM,
-    SUBJECT_ID_PARAM,
-    SUBJECTS_URL,
     TERM_ID_PARAM,
     TERMS_URL
 } from "../../constants";
 import handleDefaultError from "../../handle/handleDefaultReuqestError";
 import handleStudentMount from "../../handle/handleStudentMount";
+import timeout from "../../handle/timeout";
 
 class StudentRecordBookPage extends React.Component {
 
@@ -25,14 +23,13 @@ class StudentRecordBookPage extends React.Component {
         this.state = {
             part: 0,
             terms: [],
-            subjects: [],
             examGrades: []
         }
     }
 
     componentDidMount() {
         handleStudentMount(localStorage);
-        this.getTerms(localStorage.getItem("groupId"));
+        this.getTerms();
     }
 
     recordBookBar() {
@@ -44,8 +41,9 @@ class StudentRecordBookPage extends React.Component {
         }
     }
 
-    getTerms(id) {
-        axios.get(DEFAULT_URL + TERMS_URL + Q_PARAM + GROUP_ID_PARAM + id, {
+    getTerms() {
+        const groupId = localStorage.getItem("groupId");
+        axios.get(DEFAULT_URL + TERMS_URL + Q_PARAM + GROUP_ID_PARAM + groupId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -58,23 +56,10 @@ class StudentRecordBookPage extends React.Component {
         });
     }
 
-    getSubjects(id) {
-        axios.get(DEFAULT_URL + SUBJECTS_URL + Q_PARAM + TERM_ID_PARAM + id, {
-            headers: {
-                Authorization: localStorage.getItem("token")
-            }
-        }).then(response => {
-            this.setState({
-                subjects: response.data
-            });
-        }).catch((error) => {
-            handleDefaultError(this.props, error.response.status);
-        });
-    }
-
-    getGrades(subjectId, studentId) {
-        axios.get(DEFAULT_URL + GRADES_URL + EXAM_URL + Q_PARAM + SUBJECT_ID_PARAM + subjectId + AND_PARAM
-            + STUDENT_ID_PARAM + studentId, {
+    getGrades(termId) {
+        const studentId = localStorage.getItem("id");
+        axios.get(DEFAULT_URL + EXAM_GRADE_URL + Q_PARAM + STUDENT_ID_PARAM + studentId + AND_PARAM +
+            TERM_ID_PARAM + termId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -88,32 +73,11 @@ class StudentRecordBookPage extends React.Component {
     }
 
     async view(termId) {
-        const studentId = localStorage.getItem("id");
-        this.setState({
-            TId: termId
-        });
-        this.getSubjects(termId);
-        await this.timeout(150);
-        this.state.subjects.forEach(s => {
-            this.getGrades(s.id, studentId)
-        });
-        await this.timeout(150);
+        this.getGrades(termId);
+        await timeout(150);
         this.setState({
             part: 1
         });
-    }
-
-    getMark(subjectId) {
-        const grade = this.state.examGrades.find(g => g.id === subjectId);
-        if (grade === undefined) {
-            return 0;
-        } else {
-            return grade.value;
-        }
-    }
-
-    timeout(delay) {
-        return new Promise(res => setTimeout(res, delay));
     }
 
     render() {
@@ -132,15 +96,15 @@ class StudentRecordBookPage extends React.Component {
                     <div className="main_data">
                         <div className="data_panel">
                             {this.state.terms.map(term => {
-                                const {id, number} = term
+                                const {termId, termNumber} = term
                                 return (
                                     <div>
                                         <button
                                             className="btn_data"
-                                            value={id}
+                                            value={termId}
                                             onClick={event => this.view(event.target.value)}
                                         >
-                                            {number}
+                                            {termNumber}
                                         </button>
                                     </div>
                                 )
@@ -163,18 +127,20 @@ class StudentRecordBookPage extends React.Component {
                                     <th>Отчество преподавателя</th>
                                     <th>Оценка</th>
                                 </tr>
-                                {this.state.subjects.map((subject, index) => {
-                                    const {id, name, examinationTeacher, examinationType} = subject;
-                                    const mark = this.getMark(id);
+                                {this.state.examGrades.map((grade, index) => {
+                                    const {
+                                        value, subjectName, examinationFormName, examinationTeacherName,
+                                        examinationTeacherSurname, examinationTeacherPatronymic
+                                    } = grade;
                                     return (
-                                        <tr key={id}>
+                                        <tr>
                                             <td>{index + 1}</td>
-                                            <td>{name}</td>
-                                            <td>{examinationType.name}</td>
-                                            <td>{examinationTeacher.surname}</td>
-                                            <td>{examinationTeacher.name}</td>
-                                            <td>{examinationTeacher.patronymic}</td>
-                                            <td>{mark}</td>
+                                            <td>{subjectName}</td>
+                                            <td>{examinationFormName}</td>
+                                            <td>{examinationTeacherSurname}</td>
+                                            <td>{examinationTeacherName}</td>
+                                            <td>{examinationTeacherPatronymic}</td>
+                                            <td>{value}</td>
                                         </tr>
                                     )
                                 })}

@@ -50,16 +50,15 @@ class ProfilePage extends React.Component {
         if (localStorage.length === 0 || role === null) {
             goLoginPage(this.props);
         } else {
-            const id = localStorage.getItem("id");
             switch (role) {
                 case "ROLE_STUDENT":
-                    this.getStudent(id);
+                    this.getStudent();
                     break;
                 case "ROLE_TEACHER":
-                    this.getTeacher(id);
+                    this.getTeacher();
                     break;
                 case "ROLE_ADMIN":
-                    this.getAdmin(id);
+                    this.getAdmin();
                     break;
                 default:
                     goLoginPage(this.props);
@@ -68,25 +67,26 @@ class ProfilePage extends React.Component {
         }
     }
 
-    getStudent(id) {
-        axios.get(DEFAULT_URL + STUDENTS_URL + S_PARAM + id, {
+    getStudent() {
+        const studentId = localStorage.getItem("id");
+        axios.get(DEFAULT_URL + STUDENTS_URL + S_PARAM + studentId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
         }).then(response => {
             this.setState({
                 user: {
-                    id: response.data["id"],
+                    id: response.data["studentId"],
                     name: response.data["name"],
                     surname: response.data["surname"],
                     patronymic: response.data["patronymic"],
                     email: response.data["email"],
                 },
                 student: {
-                    group: response.data["group"]["id"],
-                    term: response.data["group"]["term"]["number"],
-                    speciality: response.data["group"]["term"]["speciality"]["name"],
-                    faculty: response.data["group"]["term"]["speciality"]["cathedra"]["faculty"]["name"]
+                    group: response.data["groupId"],
+                    term: response.data["termNumber"],
+                    speciality: response.data["specialityTitle"],
+                    faculty: response.data["facultyTitle"]
                 }
             })
         }).catch((error) => {
@@ -94,8 +94,9 @@ class ProfilePage extends React.Component {
         });
     }
 
-    getTeacher(id) {
-        axios.get(DEFAULT_URL + TEACHERS_URL + S_PARAM + id, {
+    getTeacher() {
+        const teacherId = localStorage.getItem("id");
+        axios.get(DEFAULT_URL + TEACHERS_URL + S_PARAM + teacherId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -119,8 +120,9 @@ class ProfilePage extends React.Component {
         });
     }
 
-    getAdmin(id) {
-        axios.get(DEFAULT_URL + ADMINS_URL + S_PARAM + id, {
+    getAdmin() {
+        const adminId = localStorage.getItem("id");
+        axios.get(DEFAULT_URL + ADMINS_URL + S_PARAM + adminId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
