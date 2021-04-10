@@ -23,11 +23,12 @@ class StudentGroupPage extends React.Component {
 
     componentDidMount() {
         handleStudentMount(localStorage);
-        this.getStudents(localStorage.getItem("groupId"));
+        this.getStudents();
     }
 
-    getStudents(id) {
-        axios.get(DEFAULT_URL + STUDENTS_URL + Q_PARAM + GROUP_ID_PARAM + id, {
+    getStudents() {
+        const groupId = localStorage.getItem("groupId");
+        axios.get(DEFAULT_URL + STUDENTS_URL + Q_PARAM + GROUP_ID_PARAM + groupId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
