@@ -1,23 +1,15 @@
 import React from "react";
 import axios from "axios";
 import {
+    goAdminsPage,
     goAdminSubjectsPage,
-    goLoginPage,
     goServerErrorPage,
     goStudentSubjectsPage,
     goTeacherMainPage
 } from "../redirect";
-import {
-    ADMIN_ROLE,
-    AUTHENTICATION_URL,
-    DEFAULT_URL,
-    GROUPS_URL,
-    Q_PARAM,
-    STUDENT_ID_PARAM,
-    STUDENT_ROLE,
-    TEACHER_ROLE
-} from '../constants';
+import {ADMIN_ROLE, AUTHENTICATION_URL, DEFAULT_URL, STUDENT_ROLE, TEACHER_ROLE} from '../constants';
 import '../styles/main.css';
+import timeout from "../handle/timeout";
 
 class LoginPage extends React.Component {
 
@@ -33,10 +25,6 @@ class LoginPage extends React.Component {
         }
     }
 
-    login() {
-        this.authenticate();
-    }
-
     change(event) {
         this.setState({
             values: {
@@ -44,6 +32,18 @@ class LoginPage extends React.Component {
                 [event.target.name]: event.target.value
             }
         });
+    }
+
+    saveDetails(data, role, id) {
+        localStorage.clear();
+        localStorage.setItem("token", data["jwtToken"]);
+        localStorage.setItem("role", role);
+        localStorage.setItem("id", id);
+        if (role === STUDENT_ROLE) {
+            localStorage.setItem("groupId", data["studentGroupId"]);
+            localStorage.setItem("termId", data["studentTermId"]);
+            localStorage.setItem("educationForm", data["studentEducationForm"]);
+        }
     }
 
     changeVisibility() {
@@ -54,17 +54,13 @@ class LoginPage extends React.Component {
 
     authenticate() {
         axios.post(DEFAULT_URL + AUTHENTICATION_URL, {
-            id: this.state.values.id,
-            password: this.state.values.password
+            userId: this.state.values.id,
+            userPassword: this.state.values.password
         }).then(response => {
-            localStorage.clear();
             const role = response.data["role"];
-            const token = response.data["jwtToken"];
             const id = this.state.values.id;
-            localStorage.setItem("role", role);
-            localStorage.setItem("token", token);
-            localStorage.setItem("id", id);
-            this.go(role, id);
+            this.saveDetails(response.data, role, id);
+            this.redirect(role);
         }).catch((error) => {
             if (error.response.status === 500) {
                 goServerErrorPage(this.props);
@@ -76,33 +72,27 @@ class LoginPage extends React.Component {
         });
     }
 
-    getGroup(id) {
-        axios.get(DEFAULT_URL + GROUPS_URL + Q_PARAM + STUDENT_ID_PARAM + id)
-            .then(response => {
-                localStorage.setItem("groupId", response.data.id);
-            }).catch((error) => {
-            if (error.response.status === 500) {
-                goServerErrorPage(this.props);
-            } else if (error.response.status === 401) {
-                goLoginPage(this.props);
-            }
-        });
-    }
-
-    async go(role, id) {
-        if (role === STUDENT_ROLE) {
-            this.getGroup(id);
-            await this.timeout(150);
-            goStudentSubjectsPage(this.props);
-        } else if (role === TEACHER_ROLE) {
-            goTeacherMainPage(this.props);
-        } else if (role === ADMIN_ROLE) {
-            goAdminSubjectsPage(this.props);
+    async redirect(role) {
+        switch (role) {
+            case STUDENT_ROLE:
+                goStudentSubjectsPage(this.props);
+                break;
+            case TEACHER_ROLE:
+                goTeacherMainPage(this.props);
+                break;
+            case ADMIN_ROLE:
+                goAdminSubjectsPage(this.props);
+                break
+            default:
+                break;
         }
-    }
-
-    timeout(delay) {
-        return new Promise(res => setTimeout(res, delay));
+        // if (role === STUDENT_ROLE) {
+        //     goStudentSubjectsPage(this.props);
+        // } else if (role === TEACHER_ROLE) {
+        //     goTeacherMainPage(this.props);
+        // } else if (role === ADMIN_ROLE) {
+        //     goAdminSubjectsPage(this.props);
+        // }
     }
 
     render() {
@@ -154,7 +144,7 @@ class LoginPage extends React.Component {
                     )}
                     <button
                         className="btn_add"
-                        onClick={() => this.login()}
+                        onClick={() => this.authenticate()}
                     >
                         Войти
                     </button>
