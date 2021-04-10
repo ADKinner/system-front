@@ -86,13 +86,6 @@ class LoginPage extends React.Component {
             default:
                 break;
         }
-        // if (role === STUDENT_ROLE) {
-        //     goStudentSubjectsPage(this.props);
-        // } else if (role === TEACHER_ROLE) {
-        //     goTeacherMainPage(this.props);
-        // } else if (role === ADMIN_ROLE) {
-        //     goAdminSubjectsPage(this.props);
-        // }
     }
 
     render() {
