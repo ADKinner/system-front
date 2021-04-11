@@ -9,7 +9,7 @@ import {
     LESSON_ULR,
     Q_PARAM,
     STUDENTS_URL,
-    SUBJECT_INFO_ID_PARAM,
+    SUB_SUBJECT_ID_PARAM,
     TEACHER_ID_PARAM
 } from "../../constants";
 import handleDefaultError from "../../handle/handleDefaultReuqestError";
@@ -51,7 +51,7 @@ class TeacherLessonPage extends React.Component {
     }
 
     getGroupInfos(id) {
-        axios.get(DEFAULT_URL + GROUP_INFOS_URL + Q_PARAM + SUBJECT_INFO_ID_PARAM + id, {
+        axios.get(DEFAULT_URL + GROUP_INFOS_URL + Q_PARAM + SUB_SUBJECT_ID_PARAM + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }

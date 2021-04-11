@@ -10,7 +10,7 @@ import {
     GROUP_INFOS_URL,
     Q_PARAM,
     SKIPS_URL,
-    STUDENT_ID_PARAM,
+    STUDENT_ID_PARAM, SUB_SUBJECT_ID_PARAM,
     SUB_SUBJECT_URL,
     SUBJECT_FORMS_URL,
     SUBJECT_ID_PARAM,
@@ -83,8 +83,8 @@ class StudentSubjectsPage extends React.Component {
         });
     }
 
-    getGrades(subjectId, studentId) {
-        axios.get(DEFAULT_URL + GRADES_URL + Q_PARAM + SUBJECT_ID_PARAM + subjectId + AND_PARAM
+    getGrades(subSubjectId, studentId) {
+        axios.get(DEFAULT_URL + GRADES_URL + Q_PARAM + SUB_SUBJECT_ID_PARAM + subSubjectId + AND_PARAM
             + STUDENT_ID_PARAM + studentId, {
             headers: {
                 Authorization: localStorage.getItem("token")
@@ -99,8 +99,8 @@ class StudentSubjectsPage extends React.Component {
         });
     }
 
-    getSkip(subjectId, studentId) {
-        axios.get(DEFAULT_URL + SKIPS_URL + Q_PARAM + SUBJECT_ID_PARAM + subjectId + AND_PARAM
+    getSkip(subSubjectId, studentId) {
+        axios.get(DEFAULT_URL + SKIPS_URL + Q_PARAM + SUB_SUBJECT_ID_PARAM + subSubjectId + AND_PARAM
             + STUDENT_ID_PARAM + studentId, {
             headers: {
                 Authorization: localStorage.getItem("token")
@@ -114,9 +114,9 @@ class StudentSubjectsPage extends React.Component {
         });
     }
 
-    getGroupInfo(subjectId, groupId) {
+    getGroupInfo(subSubjectId, groupId) {
         axios.get(DEFAULT_URL + GROUP_INFOS_URL + Q_PARAM + GROUP_ID_PARAM + groupId + AND_PARAM
-            + SUBJECT_ID_PARAM + subjectId, {
+            + SUB_SUBJECT_ID_PARAM + subSubjectId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -155,9 +155,11 @@ class StudentSubjectsPage extends React.Component {
         const groupId = localStorage.getItem("groupId");
         this.getSubjectInfo(this.state.SId, typeId);
         await this.timeout(150);
-        this.getGrades(this.state.subjectInfo.id, studentId);
-        this.getSkip(this.state.subjectInfo.id, studentId);
-        this.getGroupInfo(this.state.subjectInfo.id, groupId);
+        console.log(this.state.subjectInfo)
+        const subSubjectId = this.state.subjectInfo["id"];
+        this.getGrades(subSubjectId, studentId);
+        this.getSkip(subSubjectId, studentId);
+        this.getGroupInfo(subSubjectId, groupId);
         await this.timeout(150);
         this.setState({
             part: 2,
@@ -227,7 +229,7 @@ class StudentSubjectsPage extends React.Component {
                     {this.state.part === 2 && (
                         <div className="data_panel_student">
                             <h1>Предмет: {this.state.subjectInfo.subject.name}</h1>
-                            <h1>Тип занятия: {this.state.subjectInfo.subjectType.name}</h1>
+                            <h1>Тип занятия: {this.state.subjectInfo.subjectForm.name}</h1>
                             <div className="subject_detail">
                                 <div className="subject_detail_name">Преподаватель:</div>
                                 <div className="subject_detail_value">

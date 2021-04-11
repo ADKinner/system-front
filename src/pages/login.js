@@ -87,6 +87,7 @@ class LoginPage extends React.Component {
             }
         }).then(response => {
             localStorage.setItem("groupId", response.data["id"]);
+            console.log(response.data["id"]);
         }).catch((error) => {
             if (error.response.status === 500) {
                 goServerErrorPage(this.props);

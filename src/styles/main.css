@@ -580,7 +580,7 @@ h2 {
 }
 
 .main_data {
-    padding: 150px 100px;
+    padding: 130px 100px;
 }
 
 .data_admin {
@@ -588,7 +588,7 @@ h2 {
 }
 
 .data_panel_student {
-    padding-top: 25px;
+    margin-top: 15px;
     margin-left: 600px;
     padding-bottom: 20px;
     width: 800px;

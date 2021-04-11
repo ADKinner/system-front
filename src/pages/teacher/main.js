@@ -15,7 +15,7 @@ import {
     STUDENT_ID_PARAM,
     STUDENTS_URL,
     SUBJECT_ID_PARAM,
-    SUBJECT_INFO_ID_PARAM,
+    SUB_SUBJECT_ID_PARAM,
     SUB_SUBJECT_URL,
     SUBJECTS_URL,
     TEACHER_ID_PARAM,
@@ -111,7 +111,7 @@ class MainTeacherPage extends React.Component {
     }
 
     getGroupInfos(id) {
-        axios.get(DEFAULT_URL + GROUP_INFOS_URL + SUBJECT_INFO_ID_PARAM + id, {
+        axios.get(DEFAULT_URL + GROUP_INFOS_URL + SUB_SUBJECT_ID_PARAM + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -144,7 +144,7 @@ class MainTeacherPage extends React.Component {
     }
 
     getAllGrades(id) {
-        axios.get(DEFAULT_URL + GRADES_URL + Q_PARAM + SUBJECT_INFO_ID_PARAM + id, {
+        axios.get(DEFAULT_URL + GRADES_URL + Q_PARAM + SUB_SUBJECT_ID_PARAM + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -161,7 +161,7 @@ class MainTeacherPage extends React.Component {
     }
 
     getAllSkips(id) {
-        axios.get(DEFAULT_URL + SKIPS_URL + Q_PARAM + SUBJECT_INFO_ID_PARAM + id, {
+        axios.get(DEFAULT_URL + SKIPS_URL + Q_PARAM + SUB_SUBJECT_ID_PARAM + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -179,7 +179,7 @@ class MainTeacherPage extends React.Component {
 
     getGroupInfo(id) {
         axios.get(DEFAULT_URL + GROUP_INFOS_URL + Q_PARAM + GROUP_ID_PARAM + id + AND_PARAM
-            + SUBJECT_INFO_ID_PARAM + this.state.SIId, {
+            + SUB_SUBJECT_ID_PARAM + this.state.SIId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -195,7 +195,7 @@ class MainTeacherPage extends React.Component {
     }
 
     getGroupGrades(id) {
-        axios.get(DEFAULT_URL + GRADES_URL + Q_PARAM + SUBJECT_INFO_ID_PARAM + this.state.SIId + AND_PARAM
+        axios.get(DEFAULT_URL + GRADES_URL + Q_PARAM + SUB_SUBJECT_ID_PARAM + this.state.SIId + AND_PARAM
             + GROUP_ID_PARAM + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
@@ -213,7 +213,7 @@ class MainTeacherPage extends React.Component {
     }
 
     getGroupSkips(id) {
-        axios.get(DEFAULT_URL + SKIPS_URL + Q_PARAM + SUBJECT_INFO_ID_PARAM + this.state.SIId + AND_PARAM
+        axios.get(DEFAULT_URL + SKIPS_URL + Q_PARAM + SUB_SUBJECT_ID_PARAM + this.state.SIId + AND_PARAM
             + GROUP_ID_PARAM + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
@@ -231,7 +231,7 @@ class MainTeacherPage extends React.Component {
     }
 
     getStudentGrades(id) {
-        axios.get(DEFAULT_URL + GRADES_URL + Q_PARAM + SUBJECT_INFO_ID_PARAM + this.state.SIId + AND_PARAM
+        axios.get(DEFAULT_URL + GRADES_URL + Q_PARAM + SUB_SUBJECT_ID_PARAM + this.state.SIId + AND_PARAM
             + STUDENT_ID_PARAM + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
@@ -266,7 +266,7 @@ class MainTeacherPage extends React.Component {
     }
 
     getStudentSkip(id) {
-        axios.get(DEFAULT_URL + SKIPS_URL + Q_PARAM + SUBJECT_INFO_ID_PARAM + this.state.SIId + AND_PARAM
+        axios.get(DEFAULT_URL + SKIPS_URL + Q_PARAM + SUB_SUBJECT_ID_PARAM + this.state.SIId + AND_PARAM
             + STUDENT_ID_PARAM + id, {
             headers: {
                 Authorization: localStorage.getItem("token")

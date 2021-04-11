@@ -78,16 +78,17 @@ class StudentRecordBookPage extends React.Component {
                 Authorization: localStorage.getItem("token")
             }
         }).then(response => {
-            this.setState({
-                examGrades: response.data
-            });
+            if (response.data !== "") {
+                this.setState({
+                    examGrades: this.state.examGrades.concat(response.data)
+                });
+            }
         }).catch((error) => {
             handleDefaultError(this.props, error.response.status);
         });
     }
 
     async view(termId) {
-        this.getGrades(termId);
         this.setState({
             TId: termId
         });
@@ -104,11 +105,15 @@ class StudentRecordBookPage extends React.Component {
     }
 
     getMark(subjectId) {
-        const grade = this.state.examGrades.find(g => g.id === subjectId);
+        if (this.state.examGrades.length === 0) {
+            return 0;
+        }
+        console.log(this.state.examGrades);
+        const grade = this.state.examGrades.find(g => g.subject.id === subjectId);
         if (grade === undefined) {
             return 0;
         } else {
-            return grade.value;
+            return grade.mark;
         }
     }
 
@@ -128,15 +133,15 @@ class StudentRecordBookPage extends React.Component {
                     <div className="main_data">
                         <div className="data_panel">
                             {this.state.terms.map(term => {
-                                const {termId, termNumber} = term
+                                const {id, number} = term
                                 return (
                                     <div>
                                         <button
                                             className="btn_data"
-                                            value={termId}
+                                            value={id}
                                             onClick={event => this.view(event.target.value)}
                                         >
-                                            {termNumber}
+                                            {number}
                                         </button>
                                     </div>
                                 )
