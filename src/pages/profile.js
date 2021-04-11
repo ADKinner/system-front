@@ -76,17 +76,17 @@ class ProfilePage extends React.Component {
         }).then(response => {
             this.setState({
                 user: {
-                    id: response.data["studentId"],
+                    id: response.data["id"],
                     name: response.data["name"],
                     surname: response.data["surname"],
                     patronymic: response.data["patronymic"],
                     email: response.data["email"],
                 },
                 student: {
-                    group: response.data["groupId"],
-                    term: response.data["termNumber"],
-                    speciality: response.data["specialityTitle"],
-                    faculty: response.data["facultyTitle"]
+                    group: response.data["group"]["id"],
+                    term: response.data["group"]["term"]["number"],
+                    speciality: response.data["group"]["term"]["speciality"]["name"],
+                    faculty: response.data["group"]["term"]["speciality"]["cathedra"]["faculty"]["name"]
                 }
             })
         }).catch((error) => {

@@ -11,7 +11,7 @@ import {
 } from "../../redirect";
 import axios from "axios";
 import {
-    CATHEDRA_ID_PARAM,
+    CATHEDRA_PARAM,
     CATHEDRAS_URL,
     DEFAULT_URL,
     POSTS_URL,
@@ -65,7 +65,7 @@ class AdminTeachersPage extends React.Component {
     }
 
     getTeachers() {
-        axios.get(DEFAULT_URL + TEACHERS_URL + Q_PARAM + CATHEDRA_ID_PARAM + this.state.values.CId, {
+        axios.get(DEFAULT_URL + TEACHERS_URL + Q_PARAM + CATHEDRA_PARAM + this.state.values.CId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }

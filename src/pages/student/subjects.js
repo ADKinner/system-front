@@ -11,10 +11,10 @@ import {
     Q_PARAM,
     SKIPS_URL,
     STUDENT_ID_PARAM,
+    SUB_SUBJECT_URL,
+    SUBJECT_FORMS_URL,
     SUBJECT_ID_PARAM,
-    SUBJECT_INFOS_URL,
     SUBJECT_TYPE_ID_PARAM,
-    SUBJECT_TYPES_URL,
     SUBJECTS_URL
 } from "../../constants";
 import handleDefaultError from "../../handle/handleDefaultReuqestError";
@@ -40,8 +40,8 @@ class StudentSubjectsPage extends React.Component {
         this.getSubjects(localStorage.getItem("groupId"));
     }
 
-    getSubjects(id) {
-        axios.get(DEFAULT_URL + SUBJECTS_URL + Q_PARAM + GROUP_ID_PARAM + id, {
+    getSubjects(groupId) {
+        axios.get(DEFAULT_URL + SUBJECTS_URL + Q_PARAM + GROUP_ID_PARAM + groupId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -55,7 +55,7 @@ class StudentSubjectsPage extends React.Component {
     }
 
     getSubjectTypes(id) {
-        axios.get(DEFAULT_URL + SUBJECT_TYPES_URL + Q_PARAM + SUBJECT_ID_PARAM + id, {
+        axios.get(DEFAULT_URL + SUBJECT_FORMS_URL + Q_PARAM + SUBJECT_ID_PARAM + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -69,7 +69,7 @@ class StudentSubjectsPage extends React.Component {
     }
 
     getSubjectInfo(subjectId, typeId) {
-        axios.get(DEFAULT_URL + SUBJECT_INFOS_URL + Q_PARAM + SUBJECT_ID_PARAM + subjectId + AND_PARAM
+        axios.get(DEFAULT_URL + SUB_SUBJECT_URL + Q_PARAM + SUBJECT_ID_PARAM + subjectId + AND_PARAM
             + SUBJECT_TYPE_ID_PARAM + typeId, {
             headers: {
                 Authorization: localStorage.getItem("token")

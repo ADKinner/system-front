@@ -8,7 +8,7 @@ import {
     EXAM_GRADE_URL,
     GROUP_ID_PARAM,
     Q_PARAM,
-    STUDENT_ID_PARAM,
+    STUDENT_ID_PARAM, SUBJECT_ID_PARAM, SUBJECTS_URL,
     TERM_ID_PARAM,
     TERMS_URL
 } from "../../constants";
@@ -56,10 +56,24 @@ class StudentRecordBookPage extends React.Component {
         });
     }
 
-    getGrades(termId) {
+    getSubjects(termId) {
+        axios.get(DEFAULT_URL + SUBJECTS_URL + Q_PARAM + TERM_ID_PARAM + termId, {
+            headers: {
+                Authorization: localStorage.getItem("token")
+            }
+        }).then(response => {
+            this.setState({
+                subjects: response.data
+            });
+        }).catch((error) => {
+            handleDefaultError(this.props, error.response.status);
+        });
+    }
+
+    getGrades(subjectId) {
         const studentId = localStorage.getItem("id");
-        axios.get(DEFAULT_URL + EXAM_GRADE_URL + Q_PARAM + STUDENT_ID_PARAM + studentId + AND_PARAM +
-            TERM_ID_PARAM + termId, {
+        axios.get(DEFAULT_URL + EXAM_GRADE_URL + Q_PARAM + SUBJECT_ID_PARAM + subjectId + AND_PARAM
+            + STUDENT_ID_PARAM + studentId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -74,10 +88,28 @@ class StudentRecordBookPage extends React.Component {
 
     async view(termId) {
         this.getGrades(termId);
+        this.setState({
+            TId: termId
+        });
+        this.getSubjects(termId);
+        await timeout(150);
+        this.state.subjects.forEach(s => {
+            const subjectId = s.id;
+            this.getGrades(subjectId)
+        });
         await timeout(150);
         this.setState({
             part: 1
         });
+    }
+
+    getMark(subjectId) {
+        const grade = this.state.examGrades.find(g => g.id === subjectId);
+        if (grade === undefined) {
+            return 0;
+        } else {
+            return grade.value;
+        }
     }
 
     render() {
@@ -127,20 +159,18 @@ class StudentRecordBookPage extends React.Component {
                                     <th>Отчество преподавателя</th>
                                     <th>Оценка</th>
                                 </tr>
-                                {this.state.examGrades.map((grade, index) => {
-                                    const {
-                                        value, subjectName, examinationFormName, examinationTeacherName,
-                                        examinationTeacherSurname, examinationTeacherPatronymic
-                                    } = grade;
+                                {this.state.subjects.map((subject, index) => {
+                                    const {id, name, examinationTeacher, examinationType} = subject;
+                                    const mark = this.getMark(id);
                                     return (
                                         <tr>
                                             <td>{index + 1}</td>
-                                            <td>{subjectName}</td>
-                                            <td>{examinationFormName}</td>
-                                            <td>{examinationTeacherSurname}</td>
-                                            <td>{examinationTeacherName}</td>
-                                            <td>{examinationTeacherPatronymic}</td>
-                                            <td>{value}</td>
+                                            <td>{name}</td>
+                                            <td>{examinationType.name}</td>
+                                            <td>{examinationTeacher.surname}</td>
+                                            <td>{examinationTeacher.name}</td>
+                                            <td>{examinationTeacher.patronymic}</td>
+                                            <td>{mark}</td>
                                         </tr>
                                     )
                                 })}

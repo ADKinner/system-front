@@ -11,16 +11,16 @@ import {
 } from "../../redirect";
 import axios from "axios";
 import {
-    CATHEDRA_ID_PARAM,
+    CATHEDRA_PARAM,
     CATHEDRAS_URL,
     DEFAULT_URL,
     FACULTIES_URL,
-    FACULTY_ID_PARAM,
+    FACULTY_PARAM,
     Q_PARAM,
     SPECIALITIES_URL,
-    SPECIALITY_ID_PARAM,
+    SPECIALITY_PARAM,
     SUBJECT_ID_PARAM,
-    SUBJECT_INFOS_URL,
+    SUB_SUBJECT_URL,
     SUBJECTS_URL,
     TEACHERS_URL,
     TERM_ID_PARAM,
@@ -89,7 +89,7 @@ class AdminSubjectsPage extends React.Component {
     }
 
     getCathedras() {
-        axios.get(DEFAULT_URL + CATHEDRAS_URL + Q_PARAM + FACULTY_ID_PARAM + this.state.values.FId, {
+        axios.get(DEFAULT_URL + CATHEDRAS_URL + Q_PARAM + FACULTY_PARAM + this.state.values.FId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -109,7 +109,7 @@ class AdminSubjectsPage extends React.Component {
     }
 
     getSpecialities() {
-        axios.get(DEFAULT_URL + SPECIALITIES_URL + Q_PARAM + CATHEDRA_ID_PARAM + this.state.values.CId, {
+        axios.get(DEFAULT_URL + SPECIALITIES_URL + Q_PARAM + CATHEDRA_PARAM + this.state.values.CId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -129,7 +129,7 @@ class AdminSubjectsPage extends React.Component {
     }
 
     getTerms() {
-        axios.get(DEFAULT_URL + TERMS_URL + Q_PARAM + SPECIALITY_ID_PARAM + this.state.values.SId, {
+        axios.get(DEFAULT_URL + TERMS_URL + Q_PARAM + SPECIALITY_PARAM + this.state.values.SId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -163,7 +163,7 @@ class AdminSubjectsPage extends React.Component {
     }
 
     getSubjectsInfos(id) {
-        axios.get(DEFAULT_URL + SUBJECT_INFOS_URL + Q_PARAM + SUBJECT_ID_PARAM + id, {
+        axios.get(DEFAULT_URL + SUB_SUBJECT_URL + Q_PARAM + SUBJECT_ID_PARAM + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -196,7 +196,7 @@ class AdminSubjectsPage extends React.Component {
     }
 
     updateSubjectInfo(id) {
-        axios.put(DEFAULT_URL + SUBJECT_INFOS_URL, {
+        axios.put(DEFAULT_URL + SUB_SUBJECT_URL, {
             subjectInfoId: id,
             teacherId: this.state.values.NSITId
         }, {

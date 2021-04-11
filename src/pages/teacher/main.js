@@ -5,7 +5,7 @@ import axios from "axios";
 import {
     AND_PARAM,
     DEFAULT_URL,
-    EXAM_URL,
+    EXAM_GRADE_URL,
     GRADES_URL,
     GROUP_ID_PARAM,
     GROUP_INFOS_URL,
@@ -16,7 +16,7 @@ import {
     STUDENTS_URL,
     SUBJECT_ID_PARAM,
     SUBJECT_INFO_ID_PARAM,
-    SUBJECT_INFOS_URL,
+    SUB_SUBJECT_URL,
     SUBJECTS_URL,
     TEACHER_ID_PARAM,
     TERM_ID_PARAM
@@ -63,7 +63,7 @@ class MainTeacherPage extends React.Component {
     }
 
     getSubjectInfos() {
-        axios.get(DEFAULT_URL + SUBJECT_INFOS_URL + TEACHER_ID_PARAM + localStorage.getItem("id"), {
+        axios.get(DEFAULT_URL + SUB_SUBJECT_URL + TEACHER_ID_PARAM + localStorage.getItem("id"), {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -128,7 +128,7 @@ class MainTeacherPage extends React.Component {
     }
 
     getSubjectInfo(id) {
-        axios.get(DEFAULT_URL + SUBJECT_INFOS_URL + id, {
+        axios.get(DEFAULT_URL + SUB_SUBJECT_URL + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -249,7 +249,7 @@ class MainTeacherPage extends React.Component {
     }
 
     getStudentExamGrade(id) {
-        axios.get(DEFAULT_URL + GRADES_URL + EXAM_URL + Q_PARAM + SUBJECT_ID_PARAM + this.state.SId + AND_PARAM
+        axios.get(DEFAULT_URL + GRADES_URL + EXAM_GRADE_URL + Q_PARAM + SUBJECT_ID_PARAM + this.state.SId + AND_PARAM
             + STUDENT_ID_PARAM + id, {
             headers: {
                 Authorization: localStorage.getItem("token")

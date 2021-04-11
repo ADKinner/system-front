@@ -1,8 +1,23 @@
 import React from "react";
 import axios from "axios";
-import {goAdminSubjectsPage, goServerErrorPage, goStudentSubjectsPage, goTeacherMainPage} from "../redirect";
-import {ADMIN_ROLE, AUTHENTICATION_URL, DEFAULT_URL, STUDENT_ROLE, TEACHER_ROLE} from '../constants';
+import {
+    goAdminSubjectsPage,
+    goLoginPage,
+    goServerErrorPage,
+    goStudentSubjectsPage,
+    goTeacherMainPage
+} from "../redirect";
+import {
+    ADMIN_ROLE,
+    AUTHENTICATION_URL,
+    DEFAULT_URL,
+    GROUPS_URL,
+    Q_PARAM, STUDENT_ID_PARAM,
+    STUDENT_ROLE,
+    TEACHER_ROLE
+} from '../constants';
 import '../styles/main.css';
+import timeout from "../handle/timeout";
 
 class LoginPage extends React.Component {
 
@@ -27,15 +42,14 @@ class LoginPage extends React.Component {
         });
     }
 
-    saveDetails(data, role, id) {
+    async saveDetails(role, id, token) {
         localStorage.clear();
-        localStorage.setItem("token", data["jwtToken"]);
+        localStorage.setItem("token", token);
         localStorage.setItem("role", role);
         localStorage.setItem("id", id);
         if (role === STUDENT_ROLE) {
-            localStorage.setItem("groupId", data["studentGroupId"]);
-            localStorage.setItem("termId", data["studentTermId"]);
-            localStorage.setItem("educationForm", data["studentEducationForm"]);
+            this.getGroup(id, token);
+            await timeout(250);
         }
     }
 
@@ -47,12 +61,13 @@ class LoginPage extends React.Component {
 
     authenticate() {
         axios.post(DEFAULT_URL + AUTHENTICATION_URL, {
-            userId: this.state.values.id,
-            userPassword: this.state.values.password
+            id: this.state.values.id,
+            password: this.state.values.password
         }).then(response => {
             const role = response.data["role"];
+            const token = response.data["jwtToken"];
             const id = this.state.values.id;
-            this.saveDetails(response.data, role, id);
+            this.saveDetails(role, id, token);
             this.redirect(role);
         }).catch((error) => {
             if (error.response.status === 500) {
@@ -64,6 +79,23 @@ class LoginPage extends React.Component {
             }
         });
     }
+
+    getGroup(id, token) {
+        axios.get(DEFAULT_URL + GROUPS_URL + Q_PARAM + STUDENT_ID_PARAM + id, {
+            headers: {
+                Authorization: token
+            }
+        }).then(response => {
+            localStorage.setItem("groupId", response.data["id"]);
+        }).catch((error) => {
+            if (error.response.status === 500) {
+                goServerErrorPage(this.props);
+            } else if (error.response.status === 401) {
+                goLoginPage(this.props);
+            }
+        });
+    }
+
 
     async redirect(role) {
         switch (role) {
