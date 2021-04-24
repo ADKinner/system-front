@@ -133,7 +133,7 @@ class StudentSubjectsPage extends React.Component {
         if (grades.length === 0) {
             return 0;
         } else {
-            return (grades.reduce((total, next) => total + next.value, 0) / grades.length).toFixed(1);
+            return (grades.reduce((total, next) => total + next.mark, 0) / grades.length).toFixed(1);
         }
     }
 
@@ -211,7 +211,7 @@ class StudentSubjectsPage extends React.Component {
                     {this.state.part === 1 && (
                         <div className="data_panel small">
                             {this.state.subjectTypes.map(subject => {
-                                const {id, name} = subject
+                                const {id, title} = subject
                                 return (
                                     <div>
                                         <button
@@ -219,7 +219,7 @@ class StudentSubjectsPage extends React.Component {
                                             value={id}
                                             onClick={event => this.get(event.target.value)}
                                         >
-                                            {name}
+                                            {title}
                                         </button>
                                     </div>
                                 )
@@ -228,21 +228,19 @@ class StudentSubjectsPage extends React.Component {
                     )}
                     {this.state.part === 2 && (
                         <div className="data_panel_student">
-                            <h1>Предмет: {this.state.subjectInfo.subject.name}</h1>
-                            <h1>Тип занятия: {this.state.subjectInfo.subjectForm.name}</h1>
+                            <h1>Предмет: {this.state.subjectInfo.subjectName}</h1>
+                            <h1>Тип занятия: {this.state.subjectInfo.subjectForm}</h1>
                             <div className="subject_detail">
                                 <div className="subject_detail_name">Преподаватель:</div>
                                 <div className="subject_detail_value">
-                                    {this.state.subjectInfo.subjectTeacher.surname + " "}
-                                    {this.state.subjectInfo.subjectTeacher.name + " "}
-                                    {this.state.subjectInfo.subjectTeacher.patronymic}
+                                    {this.state.subjectInfo.subjectTeacher}
                                 </div>
                             </div>
                             <div className="subject_detail">
                                 <div className="subject_detail_name">Оценки:</div>
                                 <div className="subject_detail_value">
                                     {this.state.grades.map(grade => {
-                                        return grade.value + " ";
+                                        return grade.mark + " ";
                                     })}
                                 </div>
                             </div>
@@ -256,7 +254,7 @@ class StudentSubjectsPage extends React.Component {
                                 <div className="subject_detail_name">Тип сдачи:</div>
                                 <div
                                     className="subject_detail_value">
-                                    {this.state.subjectInfo.subject.examinationType.name}
+                                    {this.state.subjectInfo.offsetForm}
                                 </div>
                             </div>
                             <div className="subject_detail">
@@ -274,7 +272,7 @@ class StudentSubjectsPage extends React.Component {
                             <div className="subject_detail">
                                 <div className="subject_detail_name">Всего занятий:</div>
                                 <div className="subject_detail_value">
-                                    {this.state.subjectInfo.count}
+                                    {this.state.subjectInfo.lessonsCount}
                                 </div>
                             </div>
                         </div>

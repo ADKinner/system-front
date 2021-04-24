@@ -110,7 +110,7 @@ class StudentRecordBookPage extends React.Component {
         }
         console.log(this.state.examGrades);
         const grade = this.state.examGrades.find(g => g.subject.id === subjectId);
-        if (grade === undefined) {
+        if (grade === undefined || grade.mark == null) {
             return 0;
         } else {
             return grade.mark;
@@ -158,23 +158,21 @@ class StudentRecordBookPage extends React.Component {
                                 <tr>
                                     <th>№</th>
                                     <th>Предмет</th>
+                                    <th>Семестр</th>
                                     <th>Тип сдачи</th>
-                                    <th>Фамилия преподавателя</th>
-                                    <th>Имя преподавателя</th>
-                                    <th>Отчество преподавателя</th>
+                                    <th>Преподаватель</th>
                                     <th>Оценка</th>
                                 </tr>
                                 {this.state.subjects.map((subject, index) => {
-                                    const {id, name, examinationTeacher, examinationType} = subject;
+                                    const {id, name, offsetForm, examTeacher, termId} = subject;
                                     const mark = this.getMark(id);
                                     return (
                                         <tr>
                                             <td>{index + 1}</td>
                                             <td>{name}</td>
-                                            <td>{examinationType.name}</td>
-                                            <td>{examinationTeacher.surname}</td>
-                                            <td>{examinationTeacher.name}</td>
-                                            <td>{examinationTeacher.patronymic}</td>
+                                            <td>{offsetForm}</td>
+                                            <td>{examTeacher}</td>
+                                            <td>{termId}</td>
                                             <td>{mark}</td>
                                         </tr>
                                     )

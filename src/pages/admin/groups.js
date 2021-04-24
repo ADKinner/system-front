@@ -406,9 +406,9 @@ class AdminGroupsPage extends React.Component {
                                 onChange={event => this.change(event)}
                             >
                                 {this.state.faculties.map(faculty => {
-                                    const {id, name} = faculty;
+                                    const {id, title} = faculty;
                                     return (
-                                        <option value={id}>{name}</option>
+                                        <option value={id}>{title}</option>
                                     )
                                 })}
                             </select>
@@ -425,9 +425,9 @@ class AdminGroupsPage extends React.Component {
                                     onChange={event => this.change(event)}
                                 >
                                     {this.state.cathedras.map(cathedra => {
-                                        const {id, name} = cathedra;
+                                        const {id, title} = cathedra;
                                         return (
-                                            <option value={id}>{name}</option>
+                                            <option value={id}>{title}</option>
                                         )
                                     })}
                                 </select>
@@ -445,9 +445,9 @@ class AdminGroupsPage extends React.Component {
                                     onChange={event => this.change(event)}
                                 >
                                     {this.state.specialities.map(speciality => {
-                                        const {id, name} = speciality;
+                                        const {id, title} = speciality;
                                         return (
-                                            <option value={id}>{name}</option>
+                                            <option value={id}>{title}</option>
                                         )
                                     })}
                                 </select>
@@ -465,10 +465,9 @@ class AdminGroupsPage extends React.Component {
                                     onChange={event => this.change(event)}
                                 >
                                     {this.state.terms.map(term => {
-                                        const {id, number} = term;
-                                        const formName = term["educationForm"]["name"];
+                                        const {id, number, educationFormTitle} = term;
                                         return (
-                                            <option value={id}>{number} сем., форма обучения: {formName}</option>
+                                            <option value={id}>{number} сем., форма обучения: {educationFormTitle}</option>
                                         )
                                     })}
                                 </select>

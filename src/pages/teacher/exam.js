@@ -204,19 +204,15 @@ class TeacherExamPage extends React.Component {
                                         <th/>
                                     </tr>
                                     {this.state.subjects.map((subject, index) => {
-                                        const {id, name, term, examinationType} = subject;
-                                        const TNumber = term.number;
-                                        const TId = term.id;
-                                        const SName = term.speciality.name;
-                                        const EName = examinationType.name;
-                                        const data = [id, TId]
+                                        const {id, name, termId, termNumber, offsetForm, speciality} = subject;
+                                        const data = [id, termId]
                                         return (
                                             <tr>
                                                 <td>{index + 1}</td>
                                                 <td>{name}</td>
-                                                <td>{TNumber}</td>
-                                                <td>{SName}</td>
-                                                <td>{EName}</td>
+                                                <td>{termNumber}</td>
+                                                <td>{speciality}</td>
+                                                <td>{offsetForm}</td>
                                                 <td>
                                                     <button
                                                         className="btn_view"

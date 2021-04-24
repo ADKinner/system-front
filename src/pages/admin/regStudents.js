@@ -69,7 +69,7 @@ class AdminRegisterStudentsPage extends React.Component {
             patronymic: this.state.values.patronymic,
             email: this.state.values.email,
             password: this.state.values.password,
-            groupId: this.state.values.GId,
+            group: this.state.values.GId,
         }, {
             headers: {
                 Authorization: localStorage.getItem("token")

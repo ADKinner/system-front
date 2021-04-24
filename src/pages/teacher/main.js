@@ -95,7 +95,7 @@ class MainTeacherPage extends React.Component {
     }
 
     getStudents(id) {
-        axios.get(DEFAULT_URL + STUDENTS_URL + GROUP_ID_PARAM + id, {
+        axios.get(DEFAULT_URL + STUDENTS_URL + GROUP_ID_PARAM + id + AND_PARAM + SUBJECT_ID_PARAM, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -375,7 +375,7 @@ class MainTeacherPage extends React.Component {
         if (grades.length === 0) {
             return 0;
         } else {
-            return (grades.reduce((total, next) => total + next.value, 0) / grades.length).toFixed(1);
+            return (grades.reduce((total, next) => total + next.mark, 0) / grades.length).toFixed(1);
         }
     }
 
@@ -446,17 +446,14 @@ class MainTeacherPage extends React.Component {
                                         <th>Тип сдачи</th>
                                     </tr>
                                     {this.state.subjects.map((subject, index) => {
-                                        const {name, term, examinationType} = subject;
-                                        const TNumber = term.number;
-                                        const SName = term.speciality.name;
-                                        const EName = examinationType.name;
+                                        const {name, termId, offsetForm, speciality} = subject;
                                         return (
                                             <tr>
                                                 <td>{index + 1}</td>
                                                 <td>{name}</td>
-                                                <td>{TNumber}</td>
-                                                <td>{SName}</td>
-                                                <td>{EName}</td>
+                                                <td>{termId}</td>
+                                                <td>{speciality}</td>
+                                                <td>{offsetForm}</td>
                                             </tr>
                                         )
                                     })}
@@ -487,17 +484,13 @@ class MainTeacherPage extends React.Component {
                                         <th/>
                                     </tr>
                                     {this.state.subjectInfos.map((subjectInfo, index) => {
-                                        const {id, count, subject, subjectType} = subjectInfo;
-                                        const SName = subject.name;
-                                        const TName = subjectType.name;
-                                        const termId = subject.term.id;
-                                        const subjectId = subject.id;
+                                        const {id, count, subjectName, subjectForm, termId, subjectId} = subjectInfo;
                                         const data = [id, termId, subjectId];
                                         return (
                                             <tr>
                                                 <td>{index + 1}</td>
-                                                <td>{SName}</td>
-                                                <td>{TName}</td>
+                                                <td>{subjectName}</td>
+                                                <td>{subjectForm}</td>
                                                 <td>{count}</td>
                                                 <td>
                                                     <button
@@ -624,8 +617,8 @@ class MainTeacherPage extends React.Component {
                 )}
                 {this.state.part === 5 && (
                     <div className="data_panel_student subject_data">
-                        <h1>Предмет: {this.state.subjectInfo.subject.name}</h1>
-                        <h1>Тип занятия: {this.state.subjectInfo.subjectType.name}</h1>
+                        <h1>Предмет: {this.state.subjectInfo.subjectName}</h1>
+                        <h1>Тип занятия: {this.state.subjectInfo.subjectForm}</h1>
                         <div className="subject_detail">
                             <div className="subject_detail_name">Средний балл:</div>
                             <div className="subject_detail_value">
@@ -654,8 +647,8 @@ class MainTeacherPage extends React.Component {
                 )}
                 {this.state.part === 6 && (
                     <div className="data_panel_student subject_data">
-                        <h1>Предмет: {this.state.subjectInfo.subject.name}</h1>
-                        <h1>Тип занятия: {this.state.subjectInfo.subjectType.name}</h1>
+                        <h1>Предмет: {this.state.subjectInfo.subjectName}</h1>
+                        <h1>Тип занятия: {this.state.subjectInfo.subjectForm}</h1>
                         <div className="subject_detail">
                             <div className="subject_detail_name">Средний балл:</div>
                             <div className="subject_detail_value">
@@ -677,18 +670,18 @@ class MainTeacherPage extends React.Component {
                         <div className="subject_detail">
                             <div className="subject_detail_name">Всего занятий:</div>
                             <div className="subject_detail_value">
-                                {this.state.subjectInfo.count}
+                                {this.state.subjectInfo.lessonsCount}
                             </div>
                         </div>
                         <div className="subject_detail">
                             <div className="subject_detail_name">Экзамен/зачёт:</div>
                             <div className="subject_detail_value">
-                                {this.state.groupInfo.isExamination && (
+                                {this.state.groupInfo.offsetStatus && (
                                     <div>
                                         Проведён
                                     </div>
                                 )}
-                                {!this.state.groupInfo.isExamination && (
+                                {!this.state.groupInfo.offsetStatus && (
                                     <div>
                                         Не проведён
                                     </div>
@@ -699,21 +692,19 @@ class MainTeacherPage extends React.Component {
                 )}
                 {this.state.part === 7 && (
                     <div className="data_panel_student subject_data">
-                        <h1>Предмет: {this.state.subjectInfo.subject.name}</h1>
-                        <h1>Тип занятия: {this.state.subjectInfo.subjectType.name}</h1>
+                        <h1>Предмет: {this.state.subjectInfo.subjectName}</h1>
+                        <h1>Тип занятия: {this.state.subjectInfo.subjectForm}</h1>
                         <div className="subject_detail">
                             <div className="subject_detail_name">Студент:</div>
                             <div className="subject_detail_value">
-                                {this.state.skip.student.surname + " "}
-                                {this.state.skip.student.name + " "}
-                                {this.state.skip.student.patronymic}
+                                {this.state.skip.student}
                             </div>
                         </div>
                         <div className="subject_detail">
                             <div className="subject_detail_name">Оценки:</div>
                             <div className="subject_detail_value">
                                 {this.state.grades.map(grade => {
-                                    return grade.value + " ";
+                                    return grade.mark + " ";
                                 })}
                             </div>
                         </div>

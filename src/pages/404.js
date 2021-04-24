@@ -1,5 +1,5 @@
 import React from "react";
-import '../styles/404.css'
+import '../styles/error.css'
 
 class NotFoundErrorPage extends React.Component {
 

@@ -373,7 +373,7 @@ class AdminStudentsPage extends React.Component {
                                             <td>{name}</td>
                                             <td>{patronymic}</td>
                                             <td>{email}</td>
-                                            <td>{group.id}</td>
+                                            <td>{group}</td>
                                             <td>
                                                 <button
                                                     className="btn_view"
@@ -407,37 +407,37 @@ class AdminStudentsPage extends React.Component {
                         <div className="subject_detail">
                             <div className="subject_detail_name">Группа:</div>
                             <div className="subject_detail_value">
-                                {this.state.student.group.id}
+                                {this.state.student.group}
                             </div>
                         </div>
                         <div className="subject_detail">
                             <div className="subject_detail_name">Форма обучения:</div>
                             <div className="subject_detail_value">
-                                {this.state.student.group.term.educationForm.name}
+                                {this.state.student.educationForm}
                             </div>
                         </div>
                         <div className="subject_detail">
                             <div className="subject_detail_name">Семестр:</div>
                             <div className="subject_detail_value">
-                                {this.state.student.group.term.number}
+                                {this.state.student.term}
                             </div>
                         </div>
                         <div className="subject_detail">
                             <div className="subject_detail_name">Специальность:</div>
                             <div className="subject_detail_value">
-                                {this.state.student.group.term.speciality.name}
+                                {this.state.student.speciality}
                             </div>
                         </div>
                         <div className="subject_detail">
                             <div className="subject_detail_name">Кафедра:</div>
                             <div className="subject_detail_value">
-                                {this.state.student.group.term.speciality.cathedra.name}
+                                {this.state.student.cathedra}
                             </div>
                         </div>
                         <div className="subject_detail">
                             <div className="subject_detail_name">Факультет:</div>
                             <div className="subject_detail_value">
-                                {this.state.student.group.term.speciality.cathedra.faculty.name}
+                                {this.state.student.faculty}
                             </div>
                         </div>
                         {!this.state.isChangeGroup && (

@@ -418,9 +418,9 @@ class AdminSubjectsPage extends React.Component {
                                 onChange={event => this.change(event)}
                             >
                                 {this.state.faculties.map(faculty => {
-                                    const {id, name} = faculty;
+                                    const {id, title} = faculty;
                                     return (
-                                        <option value={id}>{name}</option>
+                                        <option value={id}>{title}</option>
                                     )
                                 })}
                             </select>
@@ -437,9 +437,9 @@ class AdminSubjectsPage extends React.Component {
                                     onChange={event => this.change(event)}
                                 >
                                     {this.state.cathedras.map(cathedra => {
-                                        const {id, name} = cathedra;
+                                        const {id, title} = cathedra;
                                         return (
-                                            <option value={id}>{name}</option>
+                                            <option value={id}>{title}</option>
                                         )
                                     })}
                                 </select>
@@ -457,9 +457,9 @@ class AdminSubjectsPage extends React.Component {
                                     onChange={event => this.change(event)}
                                 >
                                     {this.state.specialities.map(speciality => {
-                                        const {id, name} = speciality;
+                                        const {id, title} = speciality;
                                         return (
-                                            <option value={id}>{name}</option>
+                                            <option value={id}>{title}</option>
                                         )
                                     })}
                                 </select>
@@ -477,10 +477,9 @@ class AdminSubjectsPage extends React.Component {
                                     onChange={event => this.change(event)}
                                 >
                                     {this.state.terms.map(term => {
-                                        const {id, number} = term;
-                                        const formName = term["educationForm"]["name"];
+                                        const {id, number, educationFormTitle} = term;
                                         return (
-                                            <option value={id}>{number} сем., форма обучения: {formName}</option>
+                                            <option value={id}>{number} сем., форма обучения: {educationFormTitle}</option>
                                         )
                                     })}
                                 </select>
@@ -520,14 +519,12 @@ class AdminSubjectsPage extends React.Component {
                                     </tr>
                                 )}
                                 {!this.state.isChangeSubject && this.state.subjects.map((subject, index) => {
-                                    const {id, name, examinationTeacher} = subject;
-                                    const cred = examinationTeacher.surname + " " + examinationTeacher.name + " "
-                                        + examinationTeacher.patronymic;
+                                    const {id, name, examTeacher} = subject;
                                     return (
                                         <tr key={id}>
                                             <td>{index + 1}</td>
                                             <td>{name}</td>
-                                            <td>{cred}</td>
+                                            <td>{examTeacher}</td>
                                             <td>
                                                 <button
                                                     className="btn_view"
@@ -550,14 +547,12 @@ class AdminSubjectsPage extends React.Component {
                                     )
                                 })}
                                 {this.state.isChangeSubject && this.state.subjects.map((subject, index) => {
-                                    const {id, name, examinationTeacher} = subject;
-                                    const cred = examinationTeacher.surname + " " + examinationTeacher.name + " "
-                                        + examinationTeacher.patronymic;
+                                    const {id, name, examTeacher} = subject;
                                     return (
                                         <tr key={id}>
                                             <td>{index + 1}</td>
                                             <td>{name}</td>
-                                            <td>{cred}</td>
+                                            <td>{examTeacher}</td>
                                             <td>
                                                 <select
                                                     name="NSTId"
@@ -627,17 +622,13 @@ class AdminSubjectsPage extends React.Component {
                                     </tr>
                                 )}
                                 {!this.state.isChangeSubjectInfo && this.state.subjectInfos.map((subjectInfo, index) => {
-                                    const {id, subject, subjectTeacher, subjectType} = subjectInfo;
-                                    const {name} = subject;
-                                    const cred = subjectTeacher.surname + " " + subjectTeacher.name + " "
-                                        + subjectTeacher.patronymic;
-                                    const subjectTypeName = subjectType.name;
+                                    const {id, subjectTeacher, subjectForm, subjectName} = subjectInfo;
                                     return (
                                         <tr key={id}>
                                             <td>{index + 1}</td>
-                                            <td>{name}</td>
-                                            <td>{subjectTypeName}</td>
-                                            <td>{cred}</td>
+                                            <td>{subjectName}</td>
+                                            <td>{subjectForm}</td>
+                                            <td>{subjectTeacher}</td>
                                             <td>
                                                 <button
                                                     className="btn_view"
@@ -651,17 +642,13 @@ class AdminSubjectsPage extends React.Component {
                                     )
                                 })}
                                 {this.state.isChangeSubjectInfo && this.state.subjectInfos.map((subjectInfo, index) => {
-                                    const {id, subject, subjectTeacher, subjectType} = subjectInfo;
-                                    const {name} = subject;
-                                    const cred = subjectTeacher.surname + " " + subjectTeacher.name + " "
-                                        + subjectTeacher.patronymic;
-                                    const subjectTypeName = subjectType.name;
+                                    const {id, subjectTeacher, subjectForm, subjectName} = subjectInfo;
                                     return (
                                         <tr key={id}>
                                             <td>{index + 1}</td>
-                                            <td>{name}</td>
-                                            <td>{subjectTypeName}</td>
-                                            <td>{cred}</td>
+                                            <td>{subjectName}</td>
+                                            <td>{subjectForm}</td>
+                                            <td>{subjectTeacher}</td>
                                             <td>
                                                 <select
                                                     name="NSITId"

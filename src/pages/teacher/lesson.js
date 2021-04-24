@@ -198,18 +198,14 @@ class TeacherLessonPage extends React.Component {
                                         <th/>
                                     </tr>
                                     {this.state.subjectInfos.map((subjectInfo, index) => {
-                                        const {id, subject, subjectType} = subjectInfo;
-                                        const SName = subject.name;
-                                        const TName = subjectType.name;
-                                        const termNumber = subject.term.number;
-                                        const specialityName = subject.term.speciality.name;
+                                        const {id, subjectName, subjectForm, termNumber, speciality} = subjectInfo;
                                         return (
                                             <tr>
                                                 <td>{index + 1}</td>
-                                                <td>{SName}</td>
-                                                <td>{TName}</td>
+                                                <td>{subjectName}</td>
+                                                <td>{subjectForm}</td>
                                                 <td>{termNumber}</td>
-                                                <td>{specialityName}</td>
+                                                <td>{speciality}</td>
                                                 <td>
                                                     <button
                                                         className="btn_view"
@@ -248,8 +244,8 @@ class TeacherLessonPage extends React.Component {
                                     </tr>
                                     {this.state.groupInfos.map(groupInfo => {
                                         const {group, pastLessonsCount} = groupInfo;
-                                        const id = group.id;
-                                        const planLessonsCount = this.state.subjectInfos.find(s => s.id == this.state.SIId).count;
+                                        const id = group;
+                                        const planLessonsCount = this.state.subjectInfos.find(s => s.id == this.state.SIId).lessonsCount;
                                         return (
                                             <tr>
                                                 <td>{id}</td>
@@ -276,7 +272,7 @@ class TeacherLessonPage extends React.Component {
                 {this.state.part === 2 && (
                     <div className="table_panel">
                         <h1 id='title'>Занятие
-                            - {this.state.groupInfos.find(g => g.group.id == this.state.GId).group.id}</h1>
+                            - {this.state.groupInfos.find(g => g.group == this.state.GId).group}</h1>
                         <table id='data'>
                             <tbody>
                             <tr>

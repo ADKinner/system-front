@@ -128,8 +128,8 @@ class AdminTeachersPage extends React.Component {
             patronymic: this.state.values.TPatronymic,
             password: this.state.values.TPassword,
             email: this.state.values.TEmail,
-            postId: this.state.values.TPId,
-            cathedraId: this.state.values.CId
+            position: this.state.values.TPId,
+            cathedra: this.state.values.CId
         }, {
             headers: {
                 Authorization: localStorage.getItem("token")
@@ -293,9 +293,9 @@ class AdminTeachersPage extends React.Component {
                                 onChange={event => this.change(event)}
                             >
                                 {this.state.cathedras.map(cathedra => {
-                                    const {id, name} = cathedra;
+                                    const {id, title} = cathedra;
                                     return (
-                                        <option value={id}>{name}</option>
+                                        <option value={id}>{title}</option>
                                     )
                                 })}
                             </select>
@@ -385,26 +385,27 @@ class AdminTeachersPage extends React.Component {
                                         <tbody>
                                         <tr>
                                             <th>Предмет</th>
-                                            <th>Тип</th>
-                                            <th>Кол-во занятий</th>
+                                            <th>Тип защиты</th>
                                             <th>Семестр</th>
                                             <th>Форма обучения</th>
                                             <th>Специальность</th>
                                         </tr>
                                         {this.state.subjects.map(subject => {
-                                            const {id, name, count} = subject;
-                                            const typeName = subject["subjectType"]["name"];
-                                            const termNumber = subject["term"]["number"];
-                                            const edFormName = subject["term"]["educationForm"]["name"];
-                                            const specialityName = subject["term"]["speciality"]["name"];
+                                            const {
+                                                id,
+                                                name,
+                                                termNumber,
+                                                educationForm,
+                                                offsetForm,
+                                                speciality
+                                            } = subject;
                                             return (
                                                 <tr key={id}>
                                                     <td>{name}</td>
-                                                    <td>{typeName}</td>
-                                                    <td>{count}</td>
+                                                    <td>{offsetForm}</td>
                                                     <td>{termNumber}</td>
-                                                    <td>{edFormName}</td>
-                                                    <td>{specialityName}</td>
+                                                    <td>{educationForm}</td>
+                                                    <td>{speciality}</td>
                                                 </tr>
                                             )
                                         })}

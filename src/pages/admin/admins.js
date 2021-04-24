@@ -87,7 +87,7 @@ class AdminsPage extends React.Component {
             patronymic: this.state.values.APatronymic,
             password: this.state.values.APassword,
             email: this.state.values.AEmail,
-            postId: this.state.values.PId
+            position: this.state.values.PId
         }, {
             headers: {
                 Authorization: localStorage.getItem("token")
@@ -240,7 +240,7 @@ class AdminsPage extends React.Component {
                                         <th/>
                                     </tr>
                                     {this.state.admins.map(admin => {
-                                        const {id, surname, name, patronymic, email} = admin
+                                        const {id, surname, name, patronymic, email, position} = admin
                                         const adminId = localStorage.getItem("id");
                                         return (
                                             <tr key={id}>
@@ -249,7 +249,7 @@ class AdminsPage extends React.Component {
                                                 <td>{name}</td>
                                                 <td>{patronymic}</td>
                                                 <td>{email}</td>
-                                                <td>{admin.post.name}</td>
+                                                <td>{position}</td>
                                                 {id != adminId && (
                                                     <td>
                                                         <button
