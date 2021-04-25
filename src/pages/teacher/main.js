@@ -11,12 +11,13 @@ import {
     GROUP_INFOS_URL,
     GROUPS_URL,
     Q_PARAM,
+    S_PARAM,
     SKIPS_URL,
     STUDENT_ID_PARAM,
     STUDENTS_URL,
-    SUBJECT_ID_PARAM,
     SUB_SUBJECT_ID_PARAM,
-    SUB_SUBJECT_URL,
+    SUB_SUBJECTS_URL,
+    SUBJECT_ID_PARAM,
     SUBJECTS_URL,
     TEACHER_ID_PARAM,
     TERM_ID_PARAM
@@ -31,12 +32,12 @@ class MainTeacherPage extends React.Component {
         this.state = {
             part: 0,
             subjects: [],
-            subjectInfos: [],
+            subSubjects: [],
             groups: [],
             grades: [],
             skips: [],
             students: [],
-            subjectInfo: {},
+            subSubject: {},
             skip: {},
             examGrade: {}
         }
@@ -47,14 +48,30 @@ class MainTeacherPage extends React.Component {
     }
 
     getSubjects() {
-        axios.get(DEFAULT_URL + SUBJECTS_URL + Q_PARAM + TEACHER_ID_PARAM + localStorage.getItem("id"), {
+        const teacherId = localStorage.getItem("id");
+        axios.get(DEFAULT_URL + SUBJECTS_URL + Q_PARAM + TEACHER_ID_PARAM + teacherId, {
+            headers: {
+                Authorization: localStorage.getItem("token")
+            }
+        }).then(response => {
+            this.setState({
+                subjects: response.data
+            });
+        }).catch(error => {
+            handleDefaultError(this.props, error.response.status);
+        });
+    }
+
+    getSubSubjects() {
+        const teacherId = localStorage.getItem("id");
+        axios.get(DEFAULT_URL + SUB_SUBJECTS_URL + Q_PARAM + TEACHER_ID_PARAM + teacherId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
         }).then(response => {
             if (response.data.length !== 0) {
                 this.setState({
-                    subjects: response.data
+                    subSubjects: response.data
                 });
             }
         }).catch(error => {
@@ -62,24 +79,8 @@ class MainTeacherPage extends React.Component {
         });
     }
 
-    getSubjectInfos() {
-        axios.get(DEFAULT_URL + SUB_SUBJECT_URL + TEACHER_ID_PARAM + localStorage.getItem("id"), {
-            headers: {
-                Authorization: localStorage.getItem("token")
-            }
-        }).then(response => {
-            if (response.data.length !== 0) {
-                this.setState({
-                    subjectInfos: response.data
-                });
-            }
-        }).catch(error => {
-            handleDefaultError(this.props, error.response.status);
-        });
-    }
-
-    getGroups(id) {
-        axios.get(DEFAULT_URL + GROUPS_URL + TERM_ID_PARAM + id, {
+    getGroups(termId) {
+        axios.get(DEFAULT_URL + GROUPS_URL + Q_PARAM + TERM_ID_PARAM + termId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -94,8 +95,8 @@ class MainTeacherPage extends React.Component {
         });
     }
 
-    getStudents(id) {
-        axios.get(DEFAULT_URL + STUDENTS_URL + GROUP_ID_PARAM + id + AND_PARAM + SUBJECT_ID_PARAM, {
+    getStudents(groupId) {
+        axios.get(DEFAULT_URL + STUDENTS_URL + Q_PARAM + GROUP_ID_PARAM + groupId + AND_PARAM + SUBJECT_ID_PARAM, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -110,8 +111,8 @@ class MainTeacherPage extends React.Component {
         });
     }
 
-    getGroupInfos(id) {
-        axios.get(DEFAULT_URL + GROUP_INFOS_URL + SUB_SUBJECT_ID_PARAM + id, {
+    getGroupInfos(subSubjectId) {
+        axios.get(DEFAULT_URL + GROUP_INFOS_URL + Q_PARAM + SUB_SUBJECT_ID_PARAM + subSubjectId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -127,15 +128,15 @@ class MainTeacherPage extends React.Component {
         });
     }
 
-    getSubjectInfo(id) {
-        axios.get(DEFAULT_URL + SUB_SUBJECT_URL + id, {
+    getSubSubject(subSubjectId) {
+        axios.get(DEFAULT_URL + SUB_SUBJECTS_URL + S_PARAM + subSubjectId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
         }).then(response => {
             if (response.data.length !== 0) {
                 this.setState({
-                    subjectInfo: response.data
+                    subSubject: response.data
                 });
             }
         }).catch(error => {
@@ -143,18 +144,16 @@ class MainTeacherPage extends React.Component {
         });
     }
 
-    getAllGrades(id) {
-        axios.get(DEFAULT_URL + GRADES_URL + Q_PARAM + SUB_SUBJECT_ID_PARAM + id, {
+    getAllGrades(subSubjectId) {
+        axios.get(DEFAULT_URL + GRADES_URL + Q_PARAM + SUB_SUBJECT_ID_PARAM + subSubjectId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
         }).then(response => {
-            if (response.data.length !== 0) {
-                this.setState({
-                    grades: response.data,
-                    avGrade: this.averageGrades(response.data)
-                });
-            }
+            this.setState({
+                grades: response.data,
+                avGrade: this.averageGrades(response.data)
+            });
         }).catch(error => {
             handleDefaultError(this.props, error.response.status);
         });
@@ -166,19 +165,17 @@ class MainTeacherPage extends React.Component {
                 Authorization: localStorage.getItem("token")
             }
         }).then(response => {
-            if (response.data.length !== 0) {
-                this.setState({
-                    skips: response.data,
-                    avSkips: this.averageSkips(response.data)
-                });
-            }
+            this.setState({
+                skips: response.data,
+                avSkips: this.averageSkips(response.data)
+            });
         }).catch(error => {
             handleDefaultError(this.props, error.response.status);
         });
     }
 
-    getGroupInfo(id) {
-        axios.get(DEFAULT_URL + GROUP_INFOS_URL + Q_PARAM + GROUP_ID_PARAM + id + AND_PARAM
+    getGroupInfo(groupId) {
+        axios.get(DEFAULT_URL + GROUP_INFOS_URL + Q_PARAM + GROUP_ID_PARAM + groupId + AND_PARAM
             + SUB_SUBJECT_ID_PARAM + this.state.SIId, {
             headers: {
                 Authorization: localStorage.getItem("token")
@@ -194,96 +191,88 @@ class MainTeacherPage extends React.Component {
         });
     }
 
-    getGroupGrades(id) {
+    getGroupGrades(groupId) {
         axios.get(DEFAULT_URL + GRADES_URL + Q_PARAM + SUB_SUBJECT_ID_PARAM + this.state.SIId + AND_PARAM
-            + GROUP_ID_PARAM + id, {
+            + GROUP_ID_PARAM + groupId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
         }).then(response => {
-            if (response.data.length !== 0) {
-                this.setState({
-                    grades: response.data,
-                    avGrade: this.averageGrades(response.data)
-                });
-            }
+            this.setState({
+                grades: response.data,
+                avGrade: this.averageGrades(response.data)
+            });
         }).catch(error => {
             handleDefaultError(this.props, error.response.status);
         });
     }
 
-    getGroupSkips(id) {
+    getGroupSkips(groupId) {
         axios.get(DEFAULT_URL + SKIPS_URL + Q_PARAM + SUB_SUBJECT_ID_PARAM + this.state.SIId + AND_PARAM
-            + GROUP_ID_PARAM + id, {
+            + GROUP_ID_PARAM + groupId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
         }).then(response => {
-            if (response.data.length !== 0) {
-                this.setState({
-                    skips: response.data,
-                    avSkips: this.averageSkips(response.data)
-                });
-            }
+            this.setState({
+                skips: response.data,
+                avSkips: this.averageSkips(response.data)
+            });
         }).catch(error => {
             handleDefaultError(this.props, error.response.status);
         });
     }
 
-    getStudentGrades(id) {
+    getStudentGrades(studentId) {
         axios.get(DEFAULT_URL + GRADES_URL + Q_PARAM + SUB_SUBJECT_ID_PARAM + this.state.SIId + AND_PARAM
-            + STUDENT_ID_PARAM + id, {
+            + STUDENT_ID_PARAM + studentId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
         }).then(response => {
-            if (response.data.length !== 0) {
-                this.setState({
-                    grades: response.data,
-                    avGrade: this.averageGrades(response.data)
-                });
-            }
+            this.setState({
+                grades: response.data,
+                avGrade: this.averageGrades(response.data)
+            });
         }).catch(error => {
             handleDefaultError(this.props, error.response.status);
         });
     }
 
-    getStudentExamGrade(id) {
-        axios.get(DEFAULT_URL + GRADES_URL + EXAM_GRADE_URL + Q_PARAM + SUBJECT_ID_PARAM + this.state.SId + AND_PARAM
-            + STUDENT_ID_PARAM + id, {
+    getStudentExamGrade(studentId) {
+        axios.get(DEFAULT_URL + EXAM_GRADE_URL + Q_PARAM + SUBJECT_ID_PARAM + this.state.SId + AND_PARAM
+            + STUDENT_ID_PARAM + studentId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
         }).then(response => {
-            if (response.data.length !== 0) {
-                this.setState({
-                    examGrade: response.data
-                });
-            }
+            console.log(response.data)
+            this.setState({
+                examGrade: response.data
+            });
         }).catch(error => {
             handleDefaultError(this.props, error.response.status);
         });
     }
 
-    getStudentSkip(id) {
+    getStudentSkip(studentId) {
         axios.get(DEFAULT_URL + SKIPS_URL + Q_PARAM + SUB_SUBJECT_ID_PARAM + this.state.SIId + AND_PARAM
-            + STUDENT_ID_PARAM + id, {
+            + STUDENT_ID_PARAM + studentId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
         }).then(response => {
-            if (response.data.length !== 0) {
-                this.setState({
-                    skip: response.data[0]
-                });
-            }
+            console.log(response.data)
+            this.setState({
+                skip: response.data
+            });
         }).catch(error => {
             handleDefaultError(this.props, error.response.status);
         });
     }
 
     async subjects() {
-        this.getSubjectInfos();
+        this.getSubSubjects();
         await this.timeout(300);
         this.setState({
             part: 2
@@ -300,7 +289,7 @@ class MainTeacherPage extends React.Component {
 
     async allData(id) {
         this.getGroupInfos(id);
-        this.getSubjectInfo(id);
+        this.getSubSubject(id);
         this.getAllGrades(id);
         this.getAllSkips(id);
         await this.timeout(300);
@@ -311,7 +300,7 @@ class MainTeacherPage extends React.Component {
 
     async groupData(id) {
         this.getGroupInfo(id);
-        this.getSubjectInfo(this.state.SIId);
+        this.getSubSubject(this.state.SIId);
         this.getGroupGrades(id);
         this.getGroupSkips(id);
         await this.timeout(300);
@@ -322,7 +311,7 @@ class MainTeacherPage extends React.Component {
 
     async studentData(id) {
         this.getGroupInfo(this.state.GId);
-        this.getSubjectInfo(this.state.SIId);
+        this.getSubSubject(this.state.SIId);
         this.getStudentGrades(id);
         this.getStudentExamGrade(id);
         this.getStudentSkip(id);
@@ -446,14 +435,13 @@ class MainTeacherPage extends React.Component {
                                         <th>Тип сдачи</th>
                                     </tr>
                                     {this.state.subjects.map((subject, index) => {
-                                        const {name, termId, offsetForm, speciality} = subject;
                                         return (
                                             <tr>
                                                 <td>{index + 1}</td>
-                                                <td>{name}</td>
-                                                <td>{termId}</td>
-                                                <td>{speciality}</td>
-                                                <td>{offsetForm}</td>
+                                                <td>{subject.name}</td>
+                                                <td>{subject.termId}</td>
+                                                <td>{subject.speciality}</td>
+                                                <td>{subject.offsetForm}</td>
                                             </tr>
                                         )
                                     })}
@@ -465,12 +453,12 @@ class MainTeacherPage extends React.Component {
                 )}
                 {this.state.part === 2 && (
                     <div className="table_panel">
-                        {this.state.subjectInfos.length === 0 && (
+                        {this.state.subSubjects.length === 0 && (
                             <div>
                                 <h2 className="h2_margin">Предметов нет</h2>
                             </div>
                         )}
-                        {this.state.subjectInfos.length !== 0 && (
+                        {this.state.subSubjects.length !== 0 && (
                             <div>
                                 <h1 id='title'>Предметы</h1>
                                 <table id='data'>
@@ -483,19 +471,18 @@ class MainTeacherPage extends React.Component {
                                         <th/>
                                         <th/>
                                     </tr>
-                                    {this.state.subjectInfos.map((subjectInfo, index) => {
-                                        const {id, count, subjectName, subjectForm, termId, subjectId} = subjectInfo;
-                                        const data = [id, termId, subjectId];
+                                    {this.state.subSubjects.map((subSubject, index) => {
+                                        const data = [subSubject.id, subSubject.termId, subSubject.subjectId];
                                         return (
                                             <tr>
                                                 <td>{index + 1}</td>
-                                                <td>{subjectName}</td>
-                                                <td>{subjectForm}</td>
-                                                <td>{count}</td>
+                                                <td>{subSubject.subjectName}</td>
+                                                <td>{subSubject.subjectForm}</td>
+                                                <td>{subSubject.lessonsCount}</td>
                                                 <td>
                                                     <button
                                                         className="btn_view"
-                                                        value={id}
+                                                        value={subSubject.id}
                                                         onClick={event => this.allData(event.target.value)}
                                                     >
                                                         Данные
@@ -617,8 +604,8 @@ class MainTeacherPage extends React.Component {
                 )}
                 {this.state.part === 5 && (
                     <div className="data_panel_student subject_data">
-                        <h1>Предмет: {this.state.subjectInfo.subjectName}</h1>
-                        <h1>Тип занятия: {this.state.subjectInfo.subjectForm}</h1>
+                        <h1>Предмет: {this.state.subSubject.subjectName}</h1>
+                        <h1>Тип занятия: {this.state.subSubject.subjectForm}</h1>
                         <div className="subject_detail">
                             <div className="subject_detail_name">Средний балл:</div>
                             <div className="subject_detail_value">
@@ -640,15 +627,15 @@ class MainTeacherPage extends React.Component {
                         <div className="subject_detail">
                             <div className="subject_detail_name">Всего занятий:</div>
                             <div className="subject_detail_value">
-                                {this.state.subjectInfo.count}
+                                {this.state.subSubject.lessonsCount}
                             </div>
                         </div>
                     </div>
                 )}
                 {this.state.part === 6 && (
                     <div className="data_panel_student subject_data">
-                        <h1>Предмет: {this.state.subjectInfo.subjectName}</h1>
-                        <h1>Тип занятия: {this.state.subjectInfo.subjectForm}</h1>
+                        <h1>Предмет: {this.state.subSubject.subjectName}</h1>
+                        <h1>Тип занятия: {this.state.subSubject.subjectForm}</h1>
                         <div className="subject_detail">
                             <div className="subject_detail_name">Средний балл:</div>
                             <div className="subject_detail_value">
@@ -670,30 +657,22 @@ class MainTeacherPage extends React.Component {
                         <div className="subject_detail">
                             <div className="subject_detail_name">Всего занятий:</div>
                             <div className="subject_detail_value">
-                                {this.state.subjectInfo.lessonsCount}
+                                {this.state.subSubject.lessonsCount}
                             </div>
                         </div>
                         <div className="subject_detail">
                             <div className="subject_detail_name">Экзамен/зачёт:</div>
                             <div className="subject_detail_value">
-                                {this.state.groupInfo.offsetStatus && (
-                                    <div>
-                                        Проведён
-                                    </div>
-                                )}
-                                {!this.state.groupInfo.offsetStatus && (
-                                    <div>
-                                        Не проведён
-                                    </div>
-                                )}
+                                {this.state.groupInfo.offsetStatus && "Проведён"}
+                                {!this.state.groupInfo.offsetStatus && "Не проведён"}
                             </div>
                         </div>
                     </div>
                 )}
                 {this.state.part === 7 && (
                     <div className="data_panel_student subject_data">
-                        <h1>Предмет: {this.state.subjectInfo.subjectName}</h1>
-                        <h1>Тип занятия: {this.state.subjectInfo.subjectForm}</h1>
+                        <h1>Предмет: {this.state.subSubject.subjectName}</h1>
+                        <h1>Тип занятия: {this.state.subSubject.subjectForm}</h1>
                         <div className="subject_detail">
                             <div className="subject_detail_name">Студент:</div>
                             <div className="subject_detail_value">
@@ -706,6 +685,7 @@ class MainTeacherPage extends React.Component {
                                 {this.state.grades.map(grade => {
                                     return grade.mark + " ";
                                 })}
+                                {this.state.grades.length === 0 && "Оценок нет"}
                             </div>
                         </div>
                         <div className="subject_detail">
@@ -729,22 +709,14 @@ class MainTeacherPage extends React.Component {
                         <div className="subject_detail">
                             <div className="subject_detail_name">Всего занятий:</div>
                             <div className="subject_detail_value">
-                                {this.state.subjectInfo.count}
+                                {this.state.subSubject.lessonsCount}
                             </div>
                         </div>
                         <div className="subject_detail">
                             <div className="subject_detail_name">Оценка за экзамен/зачёт:</div>
                             <div className="subject_detail_value">
-                                {Object.keys(this.state.examGrade).length === 0 && (
-                                    <div>
-                                        Нет оценки
-                                    </div>
-                                )}
-                                {Object.keys(this.state.examGrade).length === 0 && (
-                                    <div>
-                                        {this.state.examGrade.mark}
-                                    </div>
-                                )}
+                                {this.state.examGrade.mark === null && "Нет оценки"}
+                                {this.state.examGrade.mark !== null && this.state.examGrade.mark}
                             </div>
                         </div>
                     </div>

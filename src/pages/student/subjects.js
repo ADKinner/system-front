@@ -11,7 +11,7 @@ import {
     Q_PARAM,
     SKIPS_URL,
     STUDENT_ID_PARAM, SUB_SUBJECT_ID_PARAM,
-    SUB_SUBJECT_URL,
+    SUB_SUBJECTS_URL,
     SUBJECT_FORMS_URL,
     SUBJECT_ID_PARAM,
     SUBJECT_TYPE_ID_PARAM,
@@ -70,7 +70,7 @@ class StudentSubjectsPage extends React.Component {
     }
 
     getSubjectInfo(subjectId, typeId) {
-        axios.get(DEFAULT_URL + SUB_SUBJECT_URL + Q_PARAM + SUBJECT_ID_PARAM + subjectId + AND_PARAM
+        axios.get(DEFAULT_URL + SUB_SUBJECTS_URL + Q_PARAM + SUBJECT_ID_PARAM + subjectId + AND_PARAM
             + SUBJECT_TYPE_ID_PARAM + typeId, {
             headers: {
                 Authorization: localStorage.getItem("token")
@@ -236,7 +236,7 @@ class StudentSubjectsPage extends React.Component {
                                     {this.state.grades.length !== 0 && this.state.grades.map(grade => {
                                         return grade.mark + " ";
                                     })}
-                                    {this.state.grades.length === 0 && "Оценок пока нет"}
+                                    {this.state.grades.length === 0 && "Оценок нет"}
                                 </div>
                             </div>
                             <div className="subject_detail">

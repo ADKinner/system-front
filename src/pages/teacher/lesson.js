@@ -3,6 +3,7 @@ import '../../styles/teacher.css';
 import {goLoginPage, goTeacherExamPage, goTeacherMainPage, goTeacherProfilePage} from "../../redirect";
 import axios from "axios";
 import {
+    AND_PARAM,
     DEFAULT_URL,
     GROUP_ID_PARAM,
     GROUP_INFOS_URL,
@@ -10,10 +11,13 @@ import {
     Q_PARAM,
     STUDENTS_URL,
     SUB_SUBJECT_ID_PARAM,
+    SUB_SUBJECTS_URL,
+    SUBJECT_ID_PARAM,
     TEACHER_ID_PARAM
 } from "../../constants";
 import handleDefaultError from "../../handle/handleDefaultReuqestError";
 import handleTeacherMount from "../../handle/handleTeacherMount";
+import timeout from "../../handle/timeout";
 
 class TeacherLessonPage extends React.Component {
 
@@ -21,7 +25,7 @@ class TeacherLessonPage extends React.Component {
         super(props);
         this.state = {
             part: 0,
-            subjectInfos: [],
+            subSubjects: [],
             groupInfos: [],
             students: [],
             SIId: '',
@@ -31,52 +35,47 @@ class TeacherLessonPage extends React.Component {
 
     componentDidMount() {
         handleTeacherMount(localStorage);
-        this.getSubjectInfos();
+        this.getSubSubjects();
     }
 
-    getSubjectInfos() {
-        axios.get(DEFAULT_URL + GROUP_INFOS_URL + Q_PARAM + TEACHER_ID_PARAM + localStorage.getItem("id"), {
+    getSubSubjects() {
+        const teacherId = localStorage.getItem("id");
+        axios.get(DEFAULT_URL + SUB_SUBJECTS_URL + Q_PARAM + TEACHER_ID_PARAM + teacherId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
         }).then(response => {
-            if (response.data.length !== 0) {
-                this.setState({
-                    subjectInfos: response.data
-                });
-            }
+            this.setState({
+                subSubjects: response.data
+            });
         }).catch(error => {
             handleDefaultError(this.props, error.response.status);
         });
     }
 
-    getGroupInfos(id) {
-        axios.get(DEFAULT_URL + GROUP_INFOS_URL + Q_PARAM + SUB_SUBJECT_ID_PARAM + id, {
+    getGroupInfos(subSubjectId) {
+        axios.get(DEFAULT_URL + GROUP_INFOS_URL + Q_PARAM + SUB_SUBJECT_ID_PARAM + subSubjectId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
         }).then(response => {
-            if (response.data.length !== 0) {
-                this.setState({
-                    groupInfos: response.data
-                });
-            }
+            this.setState({
+                groupInfos: response.data
+            });
         }).catch(error => {
             handleDefaultError(this.props, error.response.status);
         });
     }
 
-    getStudents(id) {
-        axios.get(DEFAULT_URL + STUDENTS_URL + Q_PARAM + GROUP_ID_PARAM + id, {
+    getStudents(groupId) {
+        axios.get(DEFAULT_URL + STUDENTS_URL + Q_PARAM + GROUP_ID_PARAM + groupId + AND_PARAM + SUBJECT_ID_PARAM, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
         }).then(response => {
-            if (response.data.length !== 0) {
-                this.setState({
-                    students: response.data
-                });
-            }
+            this.setState({
+                students: response.data
+            });
         }).catch(error => {
             handleDefaultError(this.props, error.response.status);
         });
@@ -86,9 +85,9 @@ class TeacherLessonPage extends React.Component {
         const data = [];
         this.state.students.forEach((st) => {
             const info = {
-                id: st["id"],
-                mark: st["mark"],
-                isSkip: st["isSkip"]
+                studentId: st["id"],
+                mark: st["mark"] === null || st["mark"] === undefined ? 0 : st["mark"],
+                isSkip: st["isSkip"] === null || st["isSkip"] === undefined ? false : st["isSkip"]
             };
             data.push(info);
         });
@@ -108,7 +107,7 @@ class TeacherLessonPage extends React.Component {
 
     async groupInfos(id) {
         this.getGroupInfos(id);
-        await this.timeout(300);
+        await timeout(300);
         this.setState({
             part: 1,
             SIId: id
@@ -120,7 +119,7 @@ class TeacherLessonPage extends React.Component {
         this.setState({
             GId: id
         });
-        await this.timeout(300);
+        await timeout(300);
         this.setState({
             part: 2
         });
@@ -128,7 +127,7 @@ class TeacherLessonPage extends React.Component {
 
     async save() {
         this.saveLessonInfo();
-        await this.timeout(300);
+        await timeout(300);
         this.setState({
             part: 1
         });
@@ -140,10 +139,6 @@ class TeacherLessonPage extends React.Component {
                 part: this.state.part - 1
             });
         }
-    }
-
-    timeout(delay) {
-        return new Promise(res => setTimeout(res, delay));
     }
 
     changeSkip(event) {
@@ -179,12 +174,12 @@ class TeacherLessonPage extends React.Component {
                 </div>
                 {this.state.part === 0 && (
                     <div className="table_panel">
-                        {this.state.subjectInfos.length === 0 && (
+                        {this.state.subSubjects.length === 0 && (
                             <div>
                                 <h2 className="h2_margin">Предметов нет</h2>
                             </div>
                         )}
-                        {this.state.subjectInfos.length !== 0 && (
+                        {this.state.subSubjects.length !== 0 && (
                             <div>
                                 <h1 id='title'>Предметы</h1>
                                 <table id='data'>
@@ -197,19 +192,18 @@ class TeacherLessonPage extends React.Component {
                                         <th>Специальность</th>
                                         <th/>
                                     </tr>
-                                    {this.state.subjectInfos.map((subjectInfo, index) => {
-                                        const {id, subjectName, subjectForm, termNumber, speciality} = subjectInfo;
+                                    {this.state.subSubjects.map((subSubject, index) => {
                                         return (
                                             <tr>
                                                 <td>{index + 1}</td>
-                                                <td>{subjectName}</td>
-                                                <td>{subjectForm}</td>
-                                                <td>{termNumber}</td>
-                                                <td>{speciality}</td>
+                                                <td>{subSubject.subjectName}</td>
+                                                <td>{subSubject.subjectForm}</td>
+                                                <td>{subSubject.termNumber}</td>
+                                                <td>{subSubject.speciality}</td>
                                                 <td>
                                                     <button
                                                         className="btn_view"
-                                                        value={id}
+                                                        value={subSubject.id}
                                                         onClick={event => this.groupInfos(event.target.value)}
                                                     >
                                                         Группы
@@ -243,18 +237,16 @@ class TeacherLessonPage extends React.Component {
                                         <th/>
                                     </tr>
                                     {this.state.groupInfos.map(groupInfo => {
-                                        const {group, pastLessonsCount} = groupInfo;
-                                        const id = group;
-                                        const planLessonsCount = this.state.subjectInfos.find(s => s.id == this.state.SIId).lessonsCount;
+                                        const planLessonsCount = this.state.subSubjects.find(s => s.id == this.state.SIId).lessonsCount;
                                         return (
                                             <tr>
-                                                <td>{id}</td>
-                                                <td>{pastLessonsCount}</td>
+                                                <td>{groupInfo.group}</td>
+                                                <td>{groupInfo.pastLessonsCount}</td>
                                                 <td>{planLessonsCount}</td>
                                                 <td>
                                                     <button
                                                         className="btn_view"
-                                                        value={id}
+                                                        value={groupInfo.group}
                                                         onClick={(event => this.students(event.target.value))}
                                                     >
                                                         Провести занятие
@@ -284,13 +276,12 @@ class TeacherLessonPage extends React.Component {
                                 <th>Оценка</th>
                             </tr>
                             {this.state.students.map((student, index) => {
-                                const {id, surname, name, patronymic} = student;
                                 return (
-                                    <tr key={id}>
+                                    <tr>
                                         <td>{index + 1}</td>
-                                        <td>{surname}</td>
-                                        <td>{name}</td>
-                                        <td>{patronymic}</td>
+                                        <td>{student.surname}</td>
+                                        <td>{student.name}</td>
+                                        <td>{student.patronymic}</td>
                                         <td>
                                             <select
                                                 id={index}

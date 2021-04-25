@@ -20,7 +20,7 @@ import {
     SPECIALITIES_URL,
     SPECIALITY_PARAM,
     SUBJECT_ID_PARAM,
-    SUB_SUBJECT_URL,
+    SUB_SUBJECTS_URL,
     SUBJECTS_URL,
     TEACHERS_URL,
     TERM_ID_PARAM,
@@ -163,7 +163,7 @@ class AdminSubjectsPage extends React.Component {
     }
 
     getSubjectsInfos(id) {
-        axios.get(DEFAULT_URL + SUB_SUBJECT_URL + Q_PARAM + SUBJECT_ID_PARAM + id, {
+        axios.get(DEFAULT_URL + SUB_SUBJECTS_URL + Q_PARAM + SUBJECT_ID_PARAM + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -196,7 +196,7 @@ class AdminSubjectsPage extends React.Component {
     }
 
     updateSubjectInfo(id) {
-        axios.put(DEFAULT_URL + SUB_SUBJECT_URL, {
+        axios.put(DEFAULT_URL + SUB_SUBJECTS_URL, {
             subjectInfoId: id,
             teacherId: this.state.values.NSITId
         }, {
