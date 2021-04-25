@@ -15,7 +15,7 @@ export const POSTS_URL = "/university/positions";
 export const GROUPS_URL = "/groups";
 export const SUBJECTS_URL = "/subjects";
 export const SUB_SUBJECT_URL = "/subjects/sub";
-export const SUBJECT_FORMS_URL = "/subject/forms";
+export const SUBJECT_FORMS_URL = "/subjects/forms";
 export const PASSWORD_CHANGE_URL = "/password-change";
 export const EMAIL_URL_PARAM = "?email=";
 export const FACULTIES_URL = "/university/faculties";

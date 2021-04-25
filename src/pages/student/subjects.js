@@ -19,6 +19,7 @@ import {
 } from "../../constants";
 import handleDefaultError from "../../handle/handleDefaultReuqestError";
 import handleStudentMount from "../../handle/handleStudentMount";
+import timeout from "../../handle/timeout";
 
 class StudentSubjectsPage extends React.Component {
 
@@ -28,7 +29,7 @@ class StudentSubjectsPage extends React.Component {
             part: 0,
             subjects: [],
             grades: [],
-            subjectTypes: [],
+            subjectForms: [],
             subjectInfo: {},
             groupInfo: {},
             skip: {}
@@ -54,14 +55,14 @@ class StudentSubjectsPage extends React.Component {
         });
     }
 
-    getSubjectTypes(id) {
-        axios.get(DEFAULT_URL + SUBJECT_FORMS_URL + Q_PARAM + SUBJECT_ID_PARAM + id, {
+    getSubjectForms(subjectId) {
+        axios.get(DEFAULT_URL + SUBJECT_FORMS_URL + Q_PARAM + SUBJECT_ID_PARAM + subjectId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
         }).then(response => {
             this.setState({
-                subjectTypes: response.data
+                subjectForms: response.data
             });
         }).catch((error) => {
             handleDefaultError(this.props, error.response.status);
@@ -137,30 +138,25 @@ class StudentSubjectsPage extends React.Component {
         }
     }
 
-    timeout(delay) {
-        return new Promise(res => setTimeout(res, delay));
-    }
-
     async view(subjectId) {
         this.setState({
             part: 1,
             SId: subjectId
         });
-        this.getSubjectTypes(subjectId);
-        await this.timeout(150);
+        this.getSubjectForms(subjectId);
+        await timeout(150);
     }
 
     async get(typeId) {
         const studentId = localStorage.getItem("id");
         const groupId = localStorage.getItem("groupId");
         this.getSubjectInfo(this.state.SId, typeId);
-        await this.timeout(150);
-        console.log(this.state.subjectInfo)
+        await timeout(150);
         const subSubjectId = this.state.subjectInfo["id"];
         this.getGrades(subSubjectId, studentId);
         this.getSkip(subSubjectId, studentId);
         this.getGroupInfo(subSubjectId, groupId);
-        await this.timeout(150);
+        await timeout(150);
         this.setState({
             part: 2,
             STId: typeId
@@ -193,15 +189,14 @@ class StudentSubjectsPage extends React.Component {
                         <div className="data_panel">
                             {
                                 this.state.subjects.map(subject => {
-                                    const {id, name} = subject
                                     return (
                                         <div>
                                             <button
                                                 className="btn_data"
-                                                value={id}
+                                                value={subject.id}
                                                 onClick={event => this.view(event.target.value)}
                                             >
-                                                {name}
+                                                {subject.name}
                                             </button>
                                         </div>
                                     )
@@ -210,16 +205,15 @@ class StudentSubjectsPage extends React.Component {
                     )}
                     {this.state.part === 1 && (
                         <div className="data_panel small">
-                            {this.state.subjectTypes.map(subject => {
-                                const {id, title} = subject
+                            {this.state.subjectForms.map(subjectForm => {
                                 return (
                                     <div>
                                         <button
                                             className="btn_data"
-                                            value={id}
+                                            value={subjectForm.id}
                                             onClick={event => this.get(event.target.value)}
                                         >
-                                            {title}
+                                            {subjectForm.title}
                                         </button>
                                     </div>
                                 )
@@ -229,7 +223,7 @@ class StudentSubjectsPage extends React.Component {
                     {this.state.part === 2 && (
                         <div className="data_panel_student">
                             <h1>Предмет: {this.state.subjectInfo.subjectName}</h1>
-                            <h1>Тип занятия: {this.state.subjectInfo.subjectForm}</h1>
+                            <h1>Тип занятий: {this.state.subjectInfo.subjectForm}</h1>
                             <div className="subject_detail">
                                 <div className="subject_detail_name">Преподаватель:</div>
                                 <div className="subject_detail_value">
@@ -239,9 +233,10 @@ class StudentSubjectsPage extends React.Component {
                             <div className="subject_detail">
                                 <div className="subject_detail_name">Оценки:</div>
                                 <div className="subject_detail_value">
-                                    {this.state.grades.map(grade => {
+                                    {this.state.grades.length !== 0 && this.state.grades.map(grade => {
                                         return grade.mark + " ";
                                     })}
+                                    {this.state.grades.length === 0 && "Оценок пока нет"}
                                 </div>
                             </div>
                             <div className="subject_detail">

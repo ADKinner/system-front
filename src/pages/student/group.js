@@ -66,14 +66,13 @@ class StudentGroupPage extends React.Component {
                                 <th>Email</th>
                             </tr>
                             {this.state.students.map((student, index) => {
-                                const {id, surname, name, patronymic, email} = student
                                 return (
-                                    <tr key={id}>
+                                    <tr>
                                         <td>{index + 1}</td>
-                                        <td>{surname}</td>
-                                        <td>{name}</td>
-                                        <td>{patronymic}</td>
-                                        <td>{email}</td>
+                                        <td>{student.surname}</td>
+                                        <td>{student.name}</td>
+                                        <td>{student.patronymic}</td>
+                                        <td>{student.email}</td>
                                     </tr>
                                 )
                             })}
