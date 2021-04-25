@@ -14,6 +14,7 @@ import {DEFAULT_URL, EXISTS_URL, GROUPS_URL, S_PARAM, STUDENTS_URL} from "../../
 import validateCreateRegStudentInput from "../../validate/validateCreateRegStudentInput";
 import handleDefaultError from "../../handle/handleDefaultReuqestError";
 import handleAdminMount from "../../handle/handleAdminMount";
+import timeout from "../../handle/timeout";
 
 class AdminRegisterStudentsPage extends React.Component {
 
@@ -113,10 +114,6 @@ class AdminRegisterStudentsPage extends React.Component {
         }
     }
 
-    timeout(delay) {
-        return new Promise(res => setTimeout(res, delay));
-    }
-
     change(event) {
         this.setState({
             values: {
@@ -135,7 +132,7 @@ class AdminRegisterStudentsPage extends React.Component {
     async search() {
         if (this.state.findId !== '') {
             this.studentExists(this.state.findId);
-            await this.timeout(300);
+            await timeout(300);
             if (this.state.isExists) {
                 this.setState({
                     answer: 'ID занят'
@@ -151,7 +148,7 @@ class AdminRegisterStudentsPage extends React.Component {
     async add() {
         this.getGroups();
         this.defaultDetail();
-        await this.timeout(500);
+        await timeout(500);
         this.setState({
             part: 1
         });
@@ -170,9 +167,9 @@ class AdminRegisterStudentsPage extends React.Component {
                 errors: {}
             });
             this.createStudent();
-            await this.timeout(500);
+            await timeout(500);
             this.studentExists();
-            await this.timeout(500);
+            await timeout(500);
             if (Object.keys(this.state.errors).length === 0) {
                 this.setState({
                     part: 0
@@ -339,9 +336,8 @@ class AdminRegisterStudentsPage extends React.Component {
                                 onChange={event => this.change(event)}
                             >
                                 {this.state.groups.map(group => {
-                                    const {id} = group;
                                     return (
-                                        <option value={id}>{id}</option>
+                                        <option value={group.id}>{group.id}</option>
                                     )
                                 })}
                             </select>

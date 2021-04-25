@@ -25,6 +25,7 @@ import {
 } from "../../constants";
 import handleDefaultError from "../../handle/handleDefaultReuqestError";
 import handleAdminMount from "../../handle/handleAdminMount";
+import timeout from "../../handle/timeout";
 
 class AdminStudentsPage extends React.Component {
 
@@ -96,7 +97,7 @@ class AdminStudentsPage extends React.Component {
             if (response.data.length !== 0) {
                 this.setState({
                     student: response.data,
-                    GId: response.data.group.id
+                    GId: response.data.group
                 });
             }
         }).catch(error => {
@@ -116,8 +117,8 @@ class AdminStudentsPage extends React.Component {
 
     updateStudent() {
         axios.put(constants.DEFAULT_URL + STUDENTS_URL + GROUP_URL, {
-            studentId: this.state.SId,
-            groupId: this.state.GId
+            userId: this.state.SId,
+            userGroup: this.state.GId
         }, {
             headers: {
                 Authorization: localStorage.getItem("token")
@@ -125,7 +126,7 @@ class AdminStudentsPage extends React.Component {
         }).then(response => {
             this.setState({
                 student: response.data,
-                GId: response.data.group.id
+                GId: response.data.group
             });
         }).catch(error => {
             handleDefaultError(this.props, error.response.status);
@@ -160,12 +161,13 @@ class AdminStudentsPage extends React.Component {
 
     async modalDelete() {
         this.deleteStudent();
-        await this.timeout(500);
+        await timeout(500);
         if (this.state.isFindById) {
             this.getStudentsById();
         } else {
             this.getStudentsByNSP();
         }
+        await timeout(500);
         this.setState({
             part: 1
         });
@@ -189,7 +191,7 @@ class AdminStudentsPage extends React.Component {
 
     async openGroupChange() {
         this.getGroups();
-        await this.timeout(300);
+        await timeout(300);
         this.setState({
             isChangeGroup: true
         });
@@ -212,7 +214,7 @@ class AdminStudentsPage extends React.Component {
 
     async view(event) {
         this.getStudent(event.target.value);
-        await this.timeout(500);
+        await timeout(500);
         this.setState({
             SId: event.target.value,
             part: 2
@@ -220,11 +222,11 @@ class AdminStudentsPage extends React.Component {
     }
 
     async update() {
-        await this.timeout(150);
+        await timeout(150);
         this.updateStudent();
-        await this.timeout(150);
+        await timeout(150);
         this.getStudent(this.state.SId);
-        await this.timeout(150);
+        await timeout(150);
         this.setState({
             isChangeGroup: false
         });
@@ -232,7 +234,7 @@ class AdminStudentsPage extends React.Component {
 
     async findById() {
         this.getStudentsById();
-        await this.timeout(300);
+        await timeout(300);
         this.setState({
             isFindById: true,
             part: 1
@@ -241,7 +243,7 @@ class AdminStudentsPage extends React.Component {
 
     async findByNSP() {
         this.getStudentsByNSP();
-        await this.timeout(300);
+        await timeout(300);
         this.setState({
             isFindById: false,
             part: 1
@@ -365,19 +367,18 @@ class AdminStudentsPage extends React.Component {
                                     <th/>
                                 </tr>
                                 {this.state.students.map(student => {
-                                    const {id, surname, name, patronymic, email, group} = student;
                                     return (
-                                        <tr key={id}>
-                                            <td>{id}</td>
-                                            <td>{surname}</td>
-                                            <td>{name}</td>
-                                            <td>{patronymic}</td>
-                                            <td>{email}</td>
-                                            <td>{group}</td>
+                                        <tr>
+                                            <td>{student.id}</td>
+                                            <td>{student.surname}</td>
+                                            <td>{student.name}</td>
+                                            <td>{student.patronymic}</td>
+                                            <td>{student.email}</td>
+                                            <td>{student.group}</td>
                                             <td>
                                                 <button
                                                     className="btn_view"
-                                                    value={id}
+                                                    value={student.id}
                                                     onClick={event => this.view(event)}
                                                 >
                                                     Посмотреть
@@ -386,7 +387,7 @@ class AdminStudentsPage extends React.Component {
                                             <td>
                                                 <button
                                                     className="btn_delete"
-                                                    value={id}
+                                                    value={student.id}
                                                     onClick={event => this.delete(event)}
                                                 >
                                                     Удалить
@@ -401,7 +402,7 @@ class AdminStudentsPage extends React.Component {
                     </div>
                 )}
                 {this.state.part === 2 && (
-                    <div className="data_panel_student data_admin">
+                    <div className="data_panel_student">
                         <h1>Студент</h1>
                         <h1>{this.state.student.surname} {this.state.student.name} {this.state.student.patronymic}</h1>
                         <div className="subject_detail">
@@ -460,9 +461,8 @@ class AdminStudentsPage extends React.Component {
                                     onChange={event => this.change(event)}
                                 >
                                     {this.state.groups.map(group => {
-                                        const {id} = group;
                                         return (
-                                            <option value={id}>{id}</option>
+                                            <option value={group.id}>{group.id}</option>
                                         )
                                     })}
                                 </select>

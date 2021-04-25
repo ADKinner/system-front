@@ -24,6 +24,7 @@ import {
 import validateCreateTeacherInput from "../../validate/validateCreateTeacherInput";
 import handleDefaultError from "../../handle/handleDefaultReuqestError";
 import handleAdminMount from "../../handle/handleAdminMount";
+import timeout from "../../handle/timeout";
 
 class AdminTeachersPage extends React.Component {
 
@@ -146,10 +147,6 @@ class AdminTeachersPage extends React.Component {
         });
     }
 
-    timeout(delay) {
-        return new Promise(res => setTimeout(res, delay));
-    }
-
     defaultCreateValues() {
         this.setState({
             values: {
@@ -215,9 +212,9 @@ class AdminTeachersPage extends React.Component {
 
     async modalDelete() {
         this.deleteTeacher();
-        await this.timeout(500);
+        await timeout(500);
         this.getTeachers();
-        await this.timeout(500);
+        await timeout(500);
         this.setState({
             part: 1
         });
@@ -251,9 +248,9 @@ class AdminTeachersPage extends React.Component {
                 errors: {}
             });
             this.createTeacher();
-            await this.timeout(500);
+            await timeout(500);
             this.getTeachers();
-            await this.timeout(500);
+            await timeout(500);
             if (Object.keys(this.state.errors).length === 0) {
                 this.setState({
                     part: 1
@@ -293,9 +290,8 @@ class AdminTeachersPage extends React.Component {
                                 onChange={event => this.change(event)}
                             >
                                 {this.state.cathedras.map(cathedra => {
-                                    const {id, title} = cathedra;
                                     return (
-                                        <option value={id}>{title}</option>
+                                        <option value={cathedra.id}>{cathedra.title}</option>
                                     )
                                 })}
                             </select>
@@ -330,18 +326,17 @@ class AdminTeachersPage extends React.Component {
                                         <th/>
                                     </tr>
                                     {this.state.teachers.map(teacher => {
-                                        const {id, surname, name, patronymic, email} = teacher
                                         return (
-                                            <tr key={id}>
-                                                <td>{id}</td>
-                                                <td>{surname}</td>
-                                                <td>{name}</td>
-                                                <td>{patronymic}</td>
-                                                <td>{email}</td>
+                                            <tr>
+                                                <td>{teacher.id}</td>
+                                                <td>{teacher.surname}</td>
+                                                <td>{teacher.name}</td>
+                                                <td>{teacher.patronymic}</td>
+                                                <td>{teacher.email}</td>
                                                 <td>
                                                     <button
                                                         className="btn_view"
-                                                        value={id}
+                                                        value={teacher.id}
                                                         onClick={event => this.view(event)}
                                                     >
                                                         Посмотреть
@@ -350,7 +345,7 @@ class AdminTeachersPage extends React.Component {
                                                 <td>
                                                     <button
                                                         className="btn_delete"
-                                                        value={id}
+                                                        value={teacher.id}
                                                         onClick={event => this.delete(event)}
                                                     >
                                                         Удалить
@@ -391,21 +386,13 @@ class AdminTeachersPage extends React.Component {
                                             <th>Специальность</th>
                                         </tr>
                                         {this.state.subjects.map(subject => {
-                                            const {
-                                                id,
-                                                name,
-                                                termNumber,
-                                                educationForm,
-                                                offsetForm,
-                                                speciality
-                                            } = subject;
                                             return (
-                                                <tr key={id}>
-                                                    <td>{name}</td>
-                                                    <td>{offsetForm}</td>
-                                                    <td>{termNumber}</td>
-                                                    <td>{educationForm}</td>
-                                                    <td>{speciality}</td>
+                                                <tr>
+                                                    <td>{subject.name}</td>
+                                                    <td>{subject.offsetForm}</td>
+                                                    <td>{subject.termNumber}</td>
+                                                    <td>{subject.educationForm}</td>
+                                                    <td>{subject.speciality}</td>
                                                 </tr>
                                             )
                                         })}
@@ -522,9 +509,8 @@ class AdminTeachersPage extends React.Component {
                                 onChange={event => this.change(event)}
                             >
                                 {this.state.posts.map(post => {
-                                    const {id, name} = post;
                                     return (
-                                        <option value={id}>{name}</option>
+                                        <option value={post.id}>{post.title}</option>
                                     )
                                 })}
                             </select>

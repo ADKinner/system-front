@@ -9,6 +9,7 @@ export const SKIPS_URL = "/performance/skips";
 export const AUTHENTICATION_URL = "/auth"
 export const STUDENTS_URL = "/students";
 export const TEACHERS_URL = "/teachers";
+export const TEACHER_URL = "/teacher";
 export const LESSON_ULR = "/performance/lesson";
 export const ADMINS_URL = "/admins";
 export const POSTS_URL = "/university/positions";
@@ -39,7 +40,7 @@ export const CATHEDRA_PARAM = "cathedraId=";
 export const NAME_PARAM = "name=";
 export const SURNAME_PARAM = "surname=";
 export const PATRONYMIC_PARAM = "patronymic=";
-export const ID_PARAM = "id=";
+export const ID_PARAM = "studentId=";
 
 export const STUDENT_ROLE = "ROLE_STUDENT";
 export const TEACHER_ROLE = "ROLE_TEACHER";
