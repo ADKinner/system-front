@@ -268,7 +268,7 @@ class AdminTeachersPage extends React.Component {
                     <a className="logout" onClick={() => goLoginPage(this.props)}>Выйти</a>
                     <a onClick={() => goAdminProfilePage(this.props)}>Профиль</a>
                     <a onClick={() => goAdminsPage(this.props)}>Администраторы</a>
-                    <a className="active" onClick={() => this.teachersBar()}>Учителя</a>
+                    <a className="active" onClick={() => this.teachersBar()}>Преподаватели</a>
                     <a onClick={() => goAdminGroupsPage(this.props)}>Группы</a>
                     <a onClick={() => goAdminRegisterStudentsPage(this.props)}>Регистрация студентов</a>
                     <a onClick={() => goAdminStudentsPage(this.props)}>Студенты</a>
@@ -313,7 +313,7 @@ class AdminTeachersPage extends React.Component {
                         )}
                         {this.state.teachers.length !== 0 && (
                             <div>
-                                <h1 id='title'>Учителя</h1>
+                                <h1 id='title'>Преподаватели</h1>
                                 <table id='data'>
                                     <tbody>
                                     <tr>
@@ -359,7 +359,7 @@ class AdminTeachersPage extends React.Component {
                                 <button
                                     className="btn_add_medium"
                                     onClick={() => this.add()}>
-                                    Добавить
+                                    Регистрация
                                 </button>
                             </div>
                         )}

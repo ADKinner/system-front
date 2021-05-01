@@ -193,7 +193,7 @@ class AdminRegisterStudentsPage extends React.Component {
                     <a className="logout" onClick={() => goLoginPage(this.props)}>Выйти</a>
                     <a onClick={() => goAdminProfilePage(this.props)}>Профиль</a>
                     <a onClick={() => goAdminsPage(this.props)}>Администраторы</a>
-                    <a onClick={() => goAdminTeachersPage(this.props)}>Учителя</a>
+                    <a onClick={() => goAdminTeachersPage(this.props)}>Преподаватели</a>
                     <a onClick={() => goAdminGroupsPage(this.props)}>Группы</a>
                     <a className="active" onClick={() => this.regStudentsBar()}>Регистрация студентов</a>
                     <a onClick={() => goAdminStudentsPage(this.props)}>Студенты</a>
@@ -226,7 +226,7 @@ class AdminRegisterStudentsPage extends React.Component {
                             Проверить ID
                         </button>
                         <button className="btn_add" onClick={() => this.add()}>
-                            Добавить студента
+                            Регистрация
                         </button>
                     </div>
                 )}
