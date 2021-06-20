@@ -14,6 +14,7 @@ import {ADMINS_URL, DEFAULT_URL, POSTS_URL, S_PARAM} from "../../constants";
 import validateCreateAdminInput from "../../validate/validateCreateAdminInput";
 import handleDefaultError from "../../handle/handleDefaultReuqestError";
 import handleAdminMount from "../../handle/handleAdminMount";
+import timeout from "../../handle/timeout";
 
 class AdminsPage extends React.Component {
 
@@ -87,7 +88,7 @@ class AdminsPage extends React.Component {
             patronymic: this.state.values.APatronymic,
             password: this.state.values.APassword,
             email: this.state.values.AEmail,
-            postId: this.state.values.PId
+            position: this.state.values.PId
         }, {
             headers: {
                 Authorization: localStorage.getItem("token")
@@ -102,10 +103,6 @@ class AdminsPage extends React.Component {
                 });
             }
         });
-    }
-
-    timeout(delay) {
-        return new Promise(res => setTimeout(res, delay));
     }
 
     adminsBar() {
@@ -134,7 +131,7 @@ class AdminsPage extends React.Component {
 
     async modalDelete() {
         this.deleteAdmin();
-        await this.timeout(1000);
+        await timeout(600);
         this.getAdmins();
         this.setState({
             part: 0
@@ -192,9 +189,9 @@ class AdminsPage extends React.Component {
                 errors: {}
             });
             this.createAdmin();
-            await this.timeout(500);
+            await timeout(300);
             this.getAdmins();
-            await this.timeout(500);
+            await timeout(300);
             if (Object.keys(this.state.errors).length === 0) {
                 this.setState({
                     part: 0
@@ -212,7 +209,7 @@ class AdminsPage extends React.Component {
                     <a className="logout" onClick={() => goLoginPage(this.props)}>Выйти</a>
                     <a onClick={() => goAdminProfilePage(this.props)}>Профиль</a>
                     <a className="active" onClick={() => this.adminsBar()}>Администраторы</a>
-                    <a onClick={() => goAdminTeachersPage(this.props)}>Учителя</a>
+                    <a onClick={() => goAdminTeachersPage(this.props)}>Преподаватели</a>
                     <a onClick={() => goAdminGroupsPage(this.props)}>Группы</a>
                     <a onClick={() => goAdminRegisterStudentsPage(this.props)}>Регистрация студентов</a>
                     <a onClick={() => goAdminStudentsPage(this.props)}>Студенты</a>
@@ -240,28 +237,27 @@ class AdminsPage extends React.Component {
                                         <th/>
                                     </tr>
                                     {this.state.admins.map(admin => {
-                                        const {id, surname, name, patronymic, email} = admin
                                         const adminId = localStorage.getItem("id");
                                         return (
-                                            <tr key={id}>
-                                                <td>{id}</td>
-                                                <td>{surname}</td>
-                                                <td>{name}</td>
-                                                <td>{patronymic}</td>
-                                                <td>{email}</td>
-                                                <td>{admin.post.name}</td>
-                                                {id != adminId && (
+                                            <tr>
+                                                <td>{admin.id}</td>
+                                                <td>{admin.surname}</td>
+                                                <td>{admin.name}</td>
+                                                <td>{admin.patronymic}</td>
+                                                <td>{admin.email}</td>
+                                                <td>{admin.position}</td>
+                                                {admin.id != adminId && (
                                                     <td>
                                                         <button
                                                             className="btn_delete"
-                                                            value={id}
+                                                            value={admin.id}
                                                             onClick={event => this.delete(event)}
                                                         >
                                                             Удалить
                                                         </button>
                                                     </td>
                                                 )}
-                                                {id == adminId && (
+                                                {admin.id == adminId && (
                                                     <td/>
                                                 )}
                                             </tr>
@@ -271,7 +267,7 @@ class AdminsPage extends React.Component {
                                     </tbody>
                                 </table>
                                 <button className="btn_add_medium" onClick={() => this.add()}>
-                                    Добавить администратора
+                                    Регистрация
                                 </button>
                             </div>
                         )}
@@ -383,9 +379,8 @@ class AdminsPage extends React.Component {
                                 onChange={event => this.change(event)}
                             >
                                 {this.state.posts.map(post => {
-                                    const {id, name} = post;
                                     return (
-                                        <option value={id}>{name}</option>
+                                        <option value={post.id}>{post.title}</option>
                                     )
                                 })}
                             </select>

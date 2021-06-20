@@ -14,6 +14,7 @@ import {DEFAULT_URL, EXISTS_URL, GROUPS_URL, S_PARAM, STUDENTS_URL} from "../../
 import validateCreateRegStudentInput from "../../validate/validateCreateRegStudentInput";
 import handleDefaultError from "../../handle/handleDefaultReuqestError";
 import handleAdminMount from "../../handle/handleAdminMount";
+import timeout from "../../handle/timeout";
 
 class AdminRegisterStudentsPage extends React.Component {
 
@@ -69,7 +70,7 @@ class AdminRegisterStudentsPage extends React.Component {
             patronymic: this.state.values.patronymic,
             email: this.state.values.email,
             password: this.state.values.password,
-            groupId: this.state.values.GId,
+            group: this.state.values.GId,
         }, {
             headers: {
                 Authorization: localStorage.getItem("token")
@@ -113,10 +114,6 @@ class AdminRegisterStudentsPage extends React.Component {
         }
     }
 
-    timeout(delay) {
-        return new Promise(res => setTimeout(res, delay));
-    }
-
     change(event) {
         this.setState({
             values: {
@@ -135,7 +132,7 @@ class AdminRegisterStudentsPage extends React.Component {
     async search() {
         if (this.state.findId !== '') {
             this.studentExists(this.state.findId);
-            await this.timeout(300);
+            await timeout(300);
             if (this.state.isExists) {
                 this.setState({
                     answer: 'ID занят'
@@ -151,7 +148,7 @@ class AdminRegisterStudentsPage extends React.Component {
     async add() {
         this.getGroups();
         this.defaultDetail();
-        await this.timeout(500);
+        await timeout(500);
         this.setState({
             part: 1
         });
@@ -170,9 +167,9 @@ class AdminRegisterStudentsPage extends React.Component {
                 errors: {}
             });
             this.createStudent();
-            await this.timeout(500);
+            await timeout(500);
             this.studentExists();
-            await this.timeout(500);
+            await timeout(500);
             if (Object.keys(this.state.errors).length === 0) {
                 this.setState({
                     part: 0
@@ -196,7 +193,7 @@ class AdminRegisterStudentsPage extends React.Component {
                     <a className="logout" onClick={() => goLoginPage(this.props)}>Выйти</a>
                     <a onClick={() => goAdminProfilePage(this.props)}>Профиль</a>
                     <a onClick={() => goAdminsPage(this.props)}>Администраторы</a>
-                    <a onClick={() => goAdminTeachersPage(this.props)}>Учителя</a>
+                    <a onClick={() => goAdminTeachersPage(this.props)}>Преподаватели</a>
                     <a onClick={() => goAdminGroupsPage(this.props)}>Группы</a>
                     <a className="active" onClick={() => this.regStudentsBar()}>Регистрация студентов</a>
                     <a onClick={() => goAdminStudentsPage(this.props)}>Студенты</a>
@@ -229,7 +226,7 @@ class AdminRegisterStudentsPage extends React.Component {
                             Проверить ID
                         </button>
                         <button className="btn_add" onClick={() => this.add()}>
-                            Добавить студента
+                            Регистрация
                         </button>
                     </div>
                 )}
@@ -339,9 +336,8 @@ class AdminRegisterStudentsPage extends React.Component {
                                 onChange={event => this.change(event)}
                             >
                                 {this.state.groups.map(group => {
-                                    const {id} = group;
                                     return (
-                                        <option value={id}>{id}</option>
+                                        <option value={group.id}>{group.id}</option>
                                     )
                                 })}
                             </select>

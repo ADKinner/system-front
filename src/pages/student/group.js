@@ -7,7 +7,7 @@ import {
     goStudentRecordBookPage,
     goStudentSubjectsPage
 } from "../../redirect";
-import {DEFAULT_URL, GROUP_ID_PARAM, Q_PARAM, STUDENTS_URL} from "../../constants";
+import {AND_PARAM, DEFAULT_URL, GROUP_ID_PARAM, Q_PARAM, STUDENTS_URL, SUBJECT_ID_PARAM} from "../../constants";
 import '../../styles/main.css';
 import handleDefaultError from "../../handle/handleDefaultReuqestError";
 import handleStudentMount from "../../handle/handleStudentMount";
@@ -28,7 +28,7 @@ class StudentGroupPage extends React.Component {
 
     getStudents() {
         const groupId = localStorage.getItem("groupId");
-        axios.get(DEFAULT_URL + STUDENTS_URL + Q_PARAM + GROUP_ID_PARAM + groupId, {
+        axios.get(DEFAULT_URL + STUDENTS_URL + Q_PARAM + GROUP_ID_PARAM + groupId + AND_PARAM + SUBJECT_ID_PARAM, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -66,14 +66,13 @@ class StudentGroupPage extends React.Component {
                                 <th>Email</th>
                             </tr>
                             {this.state.students.map((student, index) => {
-                                const {id, surname, name, patronymic, email} = student
                                 return (
-                                    <tr key={id}>
+                                    <tr>
                                         <td>{index + 1}</td>
-                                        <td>{surname}</td>
-                                        <td>{name}</td>
-                                        <td>{patronymic}</td>
-                                        <td>{email}</td>
+                                        <td>{student.surname}</td>
+                                        <td>{student.name}</td>
+                                        <td>{student.patronymic}</td>
+                                        <td>{student.email}</td>
                                     </tr>
                                 )
                             })}

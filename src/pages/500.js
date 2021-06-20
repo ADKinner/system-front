@@ -1,5 +1,5 @@
 import React from "react";
-import '../styles/500.css'
+import '../styles/error.css'
 
 class ServerErrorPage extends React.Component {
 

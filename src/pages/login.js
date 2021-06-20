@@ -49,8 +49,8 @@ class LoginPage extends React.Component {
         localStorage.setItem("id", id);
         if (role === STUDENT_ROLE) {
             this.getGroup(id, token);
-            await timeout(250);
         }
+        await timeout(150);
     }
 
     changeVisibility() {
@@ -87,7 +87,6 @@ class LoginPage extends React.Component {
             }
         }).then(response => {
             localStorage.setItem("groupId", response.data["id"]);
-            console.log(response.data["id"]);
         }).catch((error) => {
             if (error.response.status === 500) {
                 goServerErrorPage(this.props);
@@ -97,8 +96,8 @@ class LoginPage extends React.Component {
         });
     }
 
-
     async redirect(role) {
+        await timeout(150);
         switch (role) {
             case STUDENT_ROLE:
                 goStudentSubjectsPage(this.props);

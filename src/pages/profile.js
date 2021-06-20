@@ -83,10 +83,10 @@ class ProfilePage extends React.Component {
                     email: response.data["email"],
                 },
                 student: {
-                    group: response.data["group"]["id"],
-                    term: response.data["group"]["term"]["number"],
-                    speciality: response.data["group"]["term"]["speciality"]["name"],
-                    faculty: response.data["group"]["term"]["speciality"]["cathedra"]["faculty"]["name"]
+                    group: response.data["group"],
+                    term: response.data["term"],
+                    speciality: response.data["speciality"],
+                    faculty: response.data["faculty"]
                 }
             })
         }).catch((error) => {
@@ -111,8 +111,8 @@ class ProfilePage extends React.Component {
                         email: response.data["email"],
                     },
                     teacher: {
-                        cathedra: response.data["cathedra"]["name"],
-                        post: response.data["post"]["name"]
+                        cathedra: response.data["cathedra"],
+                        post: response.data["position"]
                     }
                 })
             }).catch((error) => {
@@ -136,7 +136,7 @@ class ProfilePage extends React.Component {
                     email: response.data["email"],
                 },
                 admin: {
-                    post: response.data["post"]["name"]
+                    post: response.data["position"]
                 }
             })
         }).catch((error) => {

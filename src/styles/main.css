@@ -590,6 +590,7 @@ h2 {
 .data_panel_student {
     margin-top: 15px;
     margin-left: 600px;
+    padding-top: 10px;
     padding-bottom: 20px;
     width: 800px;
     height: auto;

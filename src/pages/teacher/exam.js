@@ -17,6 +17,7 @@ import {
 } from "../../constants";
 import handleDefaultError from "../../handle/handleDefaultReuqestError";
 import handleTeacherMount from "../../handle/handleTeacherMount";
+import timeout from "../../handle/timeout";
 
 class TeacherExamPage extends React.Component {
 
@@ -38,16 +39,15 @@ class TeacherExamPage extends React.Component {
     }
 
     getSubjects() {
-        axios.get(DEFAULT_URL + SUBJECTS_URL + Q_PARAM + TEACHER_ID_PARAM + localStorage.getItem("id"), {
+        const teacherId = localStorage.getItem("id");
+        axios.get(DEFAULT_URL + SUBJECTS_URL + Q_PARAM + TEACHER_ID_PARAM + teacherId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
         }).then(response => {
-            if (response.data.length !== 0) {
-                this.setState({
-                    subjects: response.data
-                });
-            }
+            this.setState({
+                subjects: response.data
+            });
         }).catch(error => {
             handleDefaultError(this.props, error.response.status);
         });
@@ -59,11 +59,9 @@ class TeacherExamPage extends React.Component {
                 Authorization: localStorage.getItem("token")
             }
         }).then(response => {
-            if (response.data.length !== 0) {
-                this.setState({
-                    groups: response.data
-                });
-            }
+            this.setState({
+                groups: response.data
+            });
         }).catch(error => {
             handleDefaultError(this.props, error.response.status);
         });
@@ -76,11 +74,9 @@ class TeacherExamPage extends React.Component {
                 Authorization: localStorage.getItem("token")
             }
         }).then(response => {
-            if (response.data.length !== 0) {
-                this.setState({
-                    students: response.data
-                });
-            }
+            this.setState({
+                students: response.data
+            });
         }).catch(error => {
             handleDefaultError(this.props, error.response.status);
         });
@@ -90,9 +86,9 @@ class TeacherExamPage extends React.Component {
         const data = [];
         this.state.students.forEach((st) => {
             const info = {
-                id: st["id"],
-                mark: st["mark"],
-                isSkip: st["isSkip"]
+                studentId: st["id"],
+                mark: st["mark"] === null || st["mark"] === undefined ? 0 : st["mark"],
+                isSkip: st["isSkip"] === null || st["isSkip"] === undefined ? false : st["isSkip"]
             };
             data.push(info);
         });
@@ -115,7 +111,7 @@ class TeacherExamPage extends React.Component {
         this.setState({
             SId: data[0]
         });
-        await this.timeout(300);
+        await timeout(300);
         this.setState({
             part: 1
         });
@@ -126,7 +122,7 @@ class TeacherExamPage extends React.Component {
         this.setState({
             GId: id
         });
-        await this.timeout(300);
+        await timeout(300);
         this.setState({
             part: 2
         });
@@ -134,7 +130,7 @@ class TeacherExamPage extends React.Component {
 
     async save() {
         this.saveExamInfo();
-        await this.timeout(300);
+        await timeout(300);
         this.setState({
             part: 1
         });
@@ -146,10 +142,6 @@ class TeacherExamPage extends React.Component {
                 part: this.state.part - 1
             });
         }
-    }
-
-    timeout(delay) {
-        return new Promise(res => setTimeout(res, delay));
     }
 
     changeSkip(event) {
@@ -204,19 +196,14 @@ class TeacherExamPage extends React.Component {
                                         <th/>
                                     </tr>
                                     {this.state.subjects.map((subject, index) => {
-                                        const {id, name, term, examinationType} = subject;
-                                        const TNumber = term.number;
-                                        const TId = term.id;
-                                        const SName = term.speciality.name;
-                                        const EName = examinationType.name;
-                                        const data = [id, TId]
+                                        const data = [subject.id, subject.termId]
                                         return (
                                             <tr>
                                                 <td>{index + 1}</td>
-                                                <td>{name}</td>
-                                                <td>{TNumber}</td>
-                                                <td>{SName}</td>
-                                                <td>{EName}</td>
+                                                <td>{subject.name}</td>
+                                                <td>{subject.termNumber}</td>
+                                                <td>{subject.speciality}</td>
+                                                <td>{subject.offsetForm}</td>
                                                 <td>
                                                     <button
                                                         className="btn_view"
@@ -252,17 +239,16 @@ class TeacherExamPage extends React.Component {
                                         <th/>
                                     </tr>
                                     {this.state.groups.map(group => {
-                                        const {id} = group;
                                         return (
                                             <tr>
-                                                <td>{id}</td>
+                                                <td>{group.id}</td>
                                                 <td>
                                                     <button
                                                         className="btn_view"
-                                                        value={id}
+                                                        value={group.id}
                                                         onClick={(event => this.students(event.target.value))}
                                                     >
-                                                        {this.state.subjects.find(s => s.id == this.state.SId).examinationType.name}
+                                                        {this.state.subjects.find(s => s.id == this.state.SId).offsetForm}
                                                     </button>
                                                 </td>
                                             </tr>
@@ -290,13 +276,12 @@ class TeacherExamPage extends React.Component {
                                 <th>Оценка</th>
                             </tr>
                             {this.state.students.map((student, index) => {
-                                const {id, surname, name, patronymic} = student;
                                 return (
-                                    <tr key={id}>
+                                    <tr>
                                         <td>{index + 1}</td>
-                                        <td>{surname}</td>
-                                        <td>{name}</td>
-                                        <td>{patronymic}</td>
+                                        <td>{student.surname}</td>
+                                        <td>{student.name}</td>
+                                        <td>{student.patronymic}</td>
                                         <td>
                                             <select
                                                 id={index}

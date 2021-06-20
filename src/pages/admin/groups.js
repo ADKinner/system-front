@@ -11,6 +11,7 @@ import {
 } from "../../redirect";
 import axios from "axios";
 import {
+    AND_PARAM,
     CATHEDRA_PARAM,
     CATHEDRAS_URL,
     DEFAULT_URL,
@@ -22,13 +23,14 @@ import {
     S_PARAM,
     SPECIALITIES_URL,
     SPECIALITY_PARAM,
-    STUDENTS_URL,
+    STUDENTS_URL, SUBJECT_ID_PARAM,
     TERM_ID_PARAM,
     TERMS_URL
 } from "../../constants";
 import validateCreateGroupInput from "../../validate/validateCreateGroupInput";
 import handleDefaultError from "../../handle/handleDefaultReuqestError";
 import handleAdminMount from "../../handle/handleAdminMount";
+import timeout from "../../handle/timeout";
 
 class AdminGroupsPage extends React.Component {
 
@@ -179,7 +181,7 @@ class AdminGroupsPage extends React.Component {
     }
 
     getStudents(groupId) {
-        axios.get(DEFAULT_URL + STUDENTS_URL + Q_PARAM + GROUP_ID_PARAM + groupId, {
+        axios.get(DEFAULT_URL + STUDENTS_URL + Q_PARAM + GROUP_ID_PARAM + groupId + AND_PARAM + SUBJECT_ID_PARAM, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
@@ -264,10 +266,6 @@ class AdminGroupsPage extends React.Component {
         }
     }
 
-    timeout(delay) {
-        return new Promise(res => setTimeout(res, delay));
-    }
-
     find() {
         if (this.state.smallPart < 3) {
             this.getData(this.state.smallPart);
@@ -328,9 +326,9 @@ class AdminGroupsPage extends React.Component {
                 errors: {}
             });
             this.createGroup();
-            await this.timeout(500);
+            await timeout(500);
             this.getGroups();
-            await this.timeout(500);
+            await timeout(500);
             if (Object.keys(this.state.errors).length === 0) {
                 this.setState({
                     part: 1
@@ -362,7 +360,7 @@ class AdminGroupsPage extends React.Component {
 
     async modalDelete() {
         this.deleteGroup();
-        await this.timeout(1000);
+        await timeout(500);
         this.getGroups();
         this.setState({
             part: 1
@@ -384,7 +382,7 @@ class AdminGroupsPage extends React.Component {
                     <a className="logout" onClick={() => goLoginPage(this.props)}>Выйти</a>
                     <a onClick={() => goAdminProfilePage(this.props)}>Профиль</a>
                     <a onClick={() => goAdminsPage(this.props)}>Администраторы</a>
-                    <a onClick={() => goAdminTeachersPage(this.props)}>Учителя</a>
+                    <a onClick={() => goAdminTeachersPage(this.props)}>Преподаватели</a>
                     <a className="active" onClick={() => this.groupsBar()}>Группы</a>
                     <a onClick={() => goAdminRegisterStudentsPage(this.props)}>Регистрация студентов</a>
                     <a onClick={() => goAdminStudentsPage(this.props)}>Студенты</a>
@@ -406,9 +404,8 @@ class AdminGroupsPage extends React.Component {
                                 onChange={event => this.change(event)}
                             >
                                 {this.state.faculties.map(faculty => {
-                                    const {id, name} = faculty;
                                     return (
-                                        <option value={id}>{name}</option>
+                                        <option value={faculty.id}>{faculty.title}</option>
                                     )
                                 })}
                             </select>
@@ -425,9 +422,8 @@ class AdminGroupsPage extends React.Component {
                                     onChange={event => this.change(event)}
                                 >
                                     {this.state.cathedras.map(cathedra => {
-                                        const {id, name} = cathedra;
                                         return (
-                                            <option value={id}>{name}</option>
+                                            <option value={cathedra.id}>{cathedra.title}</option>
                                         )
                                     })}
                                 </select>
@@ -445,9 +441,8 @@ class AdminGroupsPage extends React.Component {
                                     onChange={event => this.change(event)}
                                 >
                                     {this.state.specialities.map(speciality => {
-                                        const {id, name} = speciality;
                                         return (
-                                            <option value={id}>{name}</option>
+                                            <option value={speciality.id}>{speciality.title}</option>
                                         )
                                     })}
                                 </select>
@@ -465,10 +460,10 @@ class AdminGroupsPage extends React.Component {
                                     onChange={event => this.change(event)}
                                 >
                                     {this.state.terms.map(term => {
-                                        const {id, number} = term;
-                                        const formName = term["educationForm"]["name"];
                                         return (
-                                            <option value={id}>{number} сем., форма обучения: {formName}</option>
+                                            <option value={term.id}>
+                                                {term.number} сем., форма обучения: {term.educationFormTitle}
+                                            </option>
                                         )
                                     })}
                                 </select>
@@ -501,15 +496,14 @@ class AdminGroupsPage extends React.Component {
                                         <th/>
                                     </tr>
                                     {this.state.groups.map((group, index) => {
-                                        const {id} = group
                                         return (
-                                            <tr key={id}>
+                                            <tr>
                                                 <td>{index + 1}</td>
-                                                <td>{id}</td>
+                                                <td>{group.id}</td>
                                                 <td>
                                                     <button
                                                         className="btn_view"
-                                                        value={id}
+                                                        value={group.id}
                                                         onClick={event => this.view(event)}
                                                     >
                                                         Посмотреть
@@ -518,7 +512,7 @@ class AdminGroupsPage extends React.Component {
                                                 <td>
                                                     <button
                                                         className="btn_delete"
-                                                        value={id}
+                                                        value={group.id}
                                                         onClick={event => this.delete(event)}
                                                     >
                                                         Удалить
@@ -556,14 +550,13 @@ class AdminGroupsPage extends React.Component {
                                         <th>Email</th>
                                     </tr>
                                     {this.state.students.map(student => {
-                                        const {id, surname, name, patronymic, email} = student
                                         return (
-                                            <tr key={id}>
-                                                <td>{id}</td>
-                                                <td>{surname}</td>
-                                                <td>{name}</td>
-                                                <td>{patronymic}</td>
-                                                <td>{email}</td>
+                                            <tr>
+                                                <td>{student.id}</td>
+                                                <td>{student.surname}</td>
+                                                <td>{student.name}</td>
+                                                <td>{student.patronymic}</td>
+                                                <td>{student.email}</td>
                                             </tr>
                                         )
                                     })}

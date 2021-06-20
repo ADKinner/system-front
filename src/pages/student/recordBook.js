@@ -8,7 +8,9 @@ import {
     EXAM_GRADE_URL,
     GROUP_ID_PARAM,
     Q_PARAM,
-    STUDENT_ID_PARAM, SUBJECT_ID_PARAM, SUBJECTS_URL,
+    STUDENT_ID_PARAM,
+    SUBJECT_ID_PARAM,
+    SUBJECTS_URL,
     TERM_ID_PARAM,
     TERMS_URL
 } from "../../constants";
@@ -108,10 +110,9 @@ class StudentRecordBookPage extends React.Component {
         if (this.state.examGrades.length === 0) {
             return 0;
         }
-        console.log(this.state.examGrades);
-        const grade = this.state.examGrades.find(g => g.subject.id === subjectId);
-        if (grade === undefined) {
-            return 0;
+        const grade = this.state.examGrades.find(g => g.subjectId === subjectId);
+        if (grade === undefined || grade.mark == null) {
+            return "---";
         } else {
             return grade.mark;
         }
@@ -133,15 +134,14 @@ class StudentRecordBookPage extends React.Component {
                     <div className="main_data">
                         <div className="data_panel">
                             {this.state.terms.map(term => {
-                                const {id, number} = term
                                 return (
                                     <div>
                                         <button
                                             className="btn_data"
-                                            value={id}
+                                            value={term.id}
                                             onClick={event => this.view(event.target.value)}
                                         >
-                                            {number}
+                                            {term.number}
                                         </button>
                                     </div>
                                 )
@@ -159,23 +159,17 @@ class StudentRecordBookPage extends React.Component {
                                     <th>№</th>
                                     <th>Предмет</th>
                                     <th>Тип сдачи</th>
-                                    <th>Фамилия преподавателя</th>
-                                    <th>Имя преподавателя</th>
-                                    <th>Отчество преподавателя</th>
+                                    <th>Преподаватель</th>
                                     <th>Оценка</th>
                                 </tr>
                                 {this.state.subjects.map((subject, index) => {
-                                    const {id, name, examinationTeacher, examinationType} = subject;
-                                    const mark = this.getMark(id);
                                     return (
                                         <tr>
                                             <td>{index + 1}</td>
-                                            <td>{name}</td>
-                                            <td>{examinationType.name}</td>
-                                            <td>{examinationTeacher.surname}</td>
-                                            <td>{examinationTeacher.name}</td>
-                                            <td>{examinationTeacher.patronymic}</td>
-                                            <td>{mark}</td>
+                                            <td>{subject.name}</td>
+                                            <td>{subject.offsetForm}</td>
+                                            <td>{subject.examTeacher}</td>
+                                            <td>{this.getMark(subject.id)}</td>
                                         </tr>
                                     )
                                 })}

@@ -20,14 +20,15 @@ import {
     SPECIALITIES_URL,
     SPECIALITY_PARAM,
     SUBJECT_ID_PARAM,
-    SUB_SUBJECT_URL,
+    SUB_SUBJECTS_URL,
     SUBJECTS_URL,
     TEACHERS_URL,
     TERM_ID_PARAM,
-    TERMS_URL
+    TERMS_URL, TEACHER_URL
 } from "../../constants";
 import handleDefaultError from "../../handle/handleDefaultReuqestError";
 import handleAdminMount from "../../handle/handleAdminMount";
+import timeout from "../../handle/timeout";
 
 class AdminSubjectsPage extends React.Component {
 
@@ -41,11 +42,11 @@ class AdminSubjectsPage extends React.Component {
             specialities: [],
             terms: [],
             subjects: [],
-            subjectInfos: [],
+            subSubjects: [],
             teachers: {},
             values: {},
             isChangeSubject: false,
-            isChangeSubjectInfo: false
+            isChangeSubSubject: false
         }
     }
 
@@ -163,14 +164,14 @@ class AdminSubjectsPage extends React.Component {
     }
 
     getSubjectsInfos(id) {
-        axios.get(DEFAULT_URL + SUB_SUBJECT_URL + Q_PARAM + SUBJECT_ID_PARAM + id, {
+        axios.get(DEFAULT_URL + SUB_SUBJECTS_URL + Q_PARAM + SUBJECT_ID_PARAM + id, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
         }).then(response => {
             if (response.data.length !== 0) {
                 this.setState({
-                    subjectInfos: response.data,
+                    subSubjects: response.data,
                     values: {
                         ...this.state.values,
                         SbId: id
@@ -183,7 +184,7 @@ class AdminSubjectsPage extends React.Component {
     }
 
     updateSubject(id) {
-        axios.put(DEFAULT_URL + SUBJECTS_URL, {
+        axios.put(DEFAULT_URL + SUBJECTS_URL + TEACHER_URL, {
             subjectId: id,
             teacherId: this.state.values.NSTId
         }, {
@@ -195,9 +196,9 @@ class AdminSubjectsPage extends React.Component {
         });
     }
 
-    updateSubjectInfo(id) {
-        axios.put(DEFAULT_URL + SUB_SUBJECT_URL, {
-            subjectInfoId: id,
+    updateSubSubject(id) {
+        axios.put(DEFAULT_URL + SUB_SUBJECTS_URL + TEACHER_URL, {
+            subjectId: id,
             teacherId: this.state.values.NSITId
         }, {
             headers: {
@@ -290,13 +291,9 @@ class AdminSubjectsPage extends React.Component {
         }
     }
 
-    timeout(delay) {
-        return new Promise(res => setTimeout(res, delay));
-    }
-
-    async openChangeSubject(event) {
+    async openChangeSubject() {
         this.getTeachers();
-        await this.timeout(300);
+        await timeout(300);
         this.setState({
             isChangeSubject: true
         });
@@ -310,35 +307,35 @@ class AdminSubjectsPage extends React.Component {
 
     async changeSubject(event) {
         this.updateSubject(event.target.value);
-        await this.timeout(150);
+        await timeout(150);
         this.getSubjects();
-        await this.timeout(150);
+        await timeout(150);
         this.setState({
             isChangeSubject: false
         });
     }
 
-    async openChangeSubjectInfo() {
+    async openChangeSubSubject() {
         this.getTeachers();
-        await this.timeout(300);
+        await timeout(300);
         this.setState({
-            isChangeSubjectInfo: true,
+            isChangeSubSubject: true,
         });
     }
 
-    closeChangeSubjectInfo() {
+    closeChangeSubSubject() {
         this.setState({
-            isChangeSubjectInfo: false
+            isChangeSubSubject: false
         });
     }
 
-    async changeSubjectInfo(event) {
-        this.updateSubjectInfo(event.target.value);
-        await this.timeout(150);
+    async changeSubSubject(event) {
+        this.updateSubSubject(event.target.value);
+        await timeout(150);
         this.getSubjectsInfos(this.state.values.SbId);
-        await this.timeout(150);
+        await timeout(150);
         this.setState({
-            isChangeSubjectInfo: false
+            isChangeSubSubject: false
         });
     }
 
@@ -381,7 +378,7 @@ class AdminSubjectsPage extends React.Component {
 
     async view(event) {
         this.getSubjectsInfos(event.target.value);
-        await this.timeout(500);
+        await timeout(500);
         this.setState({
             part: 2
         });
@@ -396,7 +393,7 @@ class AdminSubjectsPage extends React.Component {
                     <a className="logout" onClick={() => goLoginPage(this.props)}>Выйти</a>
                     <a onClick={() => goAdminProfilePage(this.props)}>Профиль</a>
                     <a onClick={() => goAdminsPage(this.props)}>Администраторы</a>
-                    <a onClick={() => goAdminTeachersPage(this.props)}>Учителя</a>
+                    <a onClick={() => goAdminTeachersPage(this.props)}>Преподаватели</a>
                     <a onClick={() => goAdminGroupsPage(this.props)}>Группы</a>
                     <a onClick={() => goAdminRegisterStudentsPage(this.props)}>Регистрация студентов</a>
                     <a onClick={() => goAdminStudentsPage(this.props)}>Студенты</a>
@@ -418,9 +415,8 @@ class AdminSubjectsPage extends React.Component {
                                 onChange={event => this.change(event)}
                             >
                                 {this.state.faculties.map(faculty => {
-                                    const {id, name} = faculty;
                                     return (
-                                        <option value={id}>{name}</option>
+                                        <option value={faculty.id}>{faculty.title}</option>
                                     )
                                 })}
                             </select>
@@ -437,9 +433,8 @@ class AdminSubjectsPage extends React.Component {
                                     onChange={event => this.change(event)}
                                 >
                                     {this.state.cathedras.map(cathedra => {
-                                        const {id, name} = cathedra;
                                         return (
-                                            <option value={id}>{name}</option>
+                                            <option value={cathedra.id}>{cathedra.title}</option>
                                         )
                                     })}
                                 </select>
@@ -457,9 +452,8 @@ class AdminSubjectsPage extends React.Component {
                                     onChange={event => this.change(event)}
                                 >
                                     {this.state.specialities.map(speciality => {
-                                        const {id, name} = speciality;
                                         return (
-                                            <option value={id}>{name}</option>
+                                            <option value={speciality.id}>{speciality.title}</option>
                                         )
                                     })}
                                 </select>
@@ -477,10 +471,10 @@ class AdminSubjectsPage extends React.Component {
                                     onChange={event => this.change(event)}
                                 >
                                     {this.state.terms.map(term => {
-                                        const {id, number} = term;
-                                        const formName = term["educationForm"]["name"];
                                         return (
-                                            <option value={id}>{number} сем., форма обучения: {formName}</option>
+                                            <option value={term.id}>
+                                                {term.number} сем., форма обучения: {term.educationFormTitle}
+                                            </option>
                                         )
                                     })}
                                 </select>
@@ -520,18 +514,15 @@ class AdminSubjectsPage extends React.Component {
                                     </tr>
                                 )}
                                 {!this.state.isChangeSubject && this.state.subjects.map((subject, index) => {
-                                    const {id, name, examinationTeacher} = subject;
-                                    const cred = examinationTeacher.surname + " " + examinationTeacher.name + " "
-                                        + examinationTeacher.patronymic;
                                     return (
-                                        <tr key={id}>
+                                        <tr>
                                             <td>{index + 1}</td>
-                                            <td>{name}</td>
-                                            <td>{cred}</td>
+                                            <td>{subject.name}</td>
+                                            <td>{subject.examTeacher}</td>
                                             <td>
                                                 <button
                                                     className="btn_view"
-                                                    value={id}
+                                                    value={subject.id}
                                                     onClick={event => this.openChangeSubject(event)}
                                                 >
                                                     Изменить
@@ -540,7 +531,7 @@ class AdminSubjectsPage extends React.Component {
                                             <td>
                                                 <button
                                                     className="btn_view"
-                                                    value={id}
+                                                    value={subject.id}
                                                     onClick={event => this.view(event)}
                                                 >
                                                     Посмотреть
@@ -550,14 +541,11 @@ class AdminSubjectsPage extends React.Component {
                                     )
                                 })}
                                 {this.state.isChangeSubject && this.state.subjects.map((subject, index) => {
-                                    const {id, name, examinationTeacher} = subject;
-                                    const cred = examinationTeacher.surname + " " + examinationTeacher.name + " "
-                                        + examinationTeacher.patronymic;
                                     return (
-                                        <tr key={id}>
+                                        <tr>
                                             <td>{index + 1}</td>
-                                            <td>{name}</td>
-                                            <td>{cred}</td>
+                                            <td>{subject.name}</td>
+                                            <td>{subject.examTeacher}</td>
                                             <td>
                                                 <select
                                                     name="NSTId"
@@ -566,10 +554,9 @@ class AdminSubjectsPage extends React.Component {
                                                     onChange={event => this.change(event)}
                                                 >
                                                     {this.state.teachers.map(teacher => {
-                                                        const {id, name, surname, patronymic} = teacher;
-                                                        const cred = surname + " " + name + " " + patronymic;
+                                                        const cred = teacher.surname + " " + teacher.name + " " + teacher.patronymic;
                                                         return (
-                                                            <option value={id}>{cred}</option>
+                                                            <option value={teacher.id}>{cred}</option>
                                                         )
                                                     })}
                                                 </select>
@@ -577,7 +564,7 @@ class AdminSubjectsPage extends React.Component {
                                             <td>
                                                 <button
                                                     className="btn_view"
-                                                    value={id}
+                                                    value={subject.id}
                                                     onClick={event => this.changeSubject(event)}
                                                 >
                                                     Сохранить
@@ -586,7 +573,7 @@ class AdminSubjectsPage extends React.Component {
                                             <td>
                                                 <button
                                                     className="btn_view"
-                                                    value={id}
+                                                    value={subject.id}
                                                     onClick={event => this.closeChangeSubject(event)}
                                                 >
                                                     Закрыть
@@ -606,7 +593,7 @@ class AdminSubjectsPage extends React.Component {
                             <h1 id='title'>Предметы</h1>
                             <table id='data'>
                                 <tbody>
-                                {!this.state.isChangeSubjectInfo && (
+                                {!this.state.isChangeSubSubject && (
                                     <tr>
                                         <th>№</th>
                                         <th>Предмет</th>
@@ -615,7 +602,7 @@ class AdminSubjectsPage extends React.Component {
                                         <th/>
                                     </tr>
                                 )}
-                                {this.state.isChangeSubjectInfo && (
+                                {this.state.isChangeSubSubject && (
                                     <tr>
                                         <th>№</th>
                                         <th>Предмет</th>
@@ -626,23 +613,18 @@ class AdminSubjectsPage extends React.Component {
                                         <th/>
                                     </tr>
                                 )}
-                                {!this.state.isChangeSubjectInfo && this.state.subjectInfos.map((subjectInfo, index) => {
-                                    const {id, subject, subjectTeacher, subjectType} = subjectInfo;
-                                    const {name} = subject;
-                                    const cred = subjectTeacher.surname + " " + subjectTeacher.name + " "
-                                        + subjectTeacher.patronymic;
-                                    const subjectTypeName = subjectType.name;
+                                {!this.state.isChangeSubSubject && this.state.subSubjects.map((subSubject, index) => {
                                     return (
-                                        <tr key={id}>
+                                        <tr>
                                             <td>{index + 1}</td>
-                                            <td>{name}</td>
-                                            <td>{subjectTypeName}</td>
-                                            <td>{cred}</td>
+                                            <td>{subSubject.subjectName}</td>
+                                            <td>{subSubject.subjectForm}</td>
+                                            <td>{subSubject.subjectTeacher}</td>
                                             <td>
                                                 <button
                                                     className="btn_view"
-                                                    value={id}
-                                                    onClick={event => this.openChangeSubjectInfo(event)}
+                                                    value={subSubject.id}
+                                                    onClick={event => this.openChangeSubSubject(event)}
                                                 >
                                                     Изменить
                                                 </button>
@@ -650,18 +632,13 @@ class AdminSubjectsPage extends React.Component {
                                         </tr>
                                     )
                                 })}
-                                {this.state.isChangeSubjectInfo && this.state.subjectInfos.map((subjectInfo, index) => {
-                                    const {id, subject, subjectTeacher, subjectType} = subjectInfo;
-                                    const {name} = subject;
-                                    const cred = subjectTeacher.surname + " " + subjectTeacher.name + " "
-                                        + subjectTeacher.patronymic;
-                                    const subjectTypeName = subjectType.name;
+                                {this.state.isChangeSubSubject && this.state.subSubjects.map((subSubject, index) => {
                                     return (
-                                        <tr key={id}>
+                                        <tr>
                                             <td>{index + 1}</td>
-                                            <td>{name}</td>
-                                            <td>{subjectTypeName}</td>
-                                            <td>{cred}</td>
+                                            <td>{subSubject.subjectName}</td>
+                                            <td>{subSubject.subjectForm}</td>
+                                            <td>{subSubject.subjectTeacher}</td>
                                             <td>
                                                 <select
                                                     name="NSITId"
@@ -670,10 +647,9 @@ class AdminSubjectsPage extends React.Component {
                                                     onChange={event => this.change(event)}
                                                 >
                                                     {this.state.teachers.map(teacher => {
-                                                        const {id, name, surname, patronymic} = teacher;
-                                                        const cred = surname + " " + name + " " + patronymic;
+                                                        const cred = teacher.surname + " " + teacher.name + " " + teacher.patronymic;
                                                         return (
-                                                            <option value={id}>{cred}</option>
+                                                            <option value={teacher.id}>{cred}</option>
                                                         )
                                                     })}
                                                 </select>
@@ -681,8 +657,8 @@ class AdminSubjectsPage extends React.Component {
                                             <td>
                                                 <button
                                                     className="btn_view"
-                                                    value={id}
-                                                    onClick={event => this.changeSubjectInfo(event)}
+                                                    value={subSubject.id}
+                                                    onClick={event => this.changeSubSubject(event)}
                                                 >
                                                     Сохранить
                                                 </button>
@@ -690,8 +666,8 @@ class AdminSubjectsPage extends React.Component {
                                             <td>
                                                 <button
                                                     className="btn_view"
-                                                    value={id}
-                                                    onClick={event => this.closeChangeSubjectInfo(event)}
+                                                    value={subSubject.id}
+                                                    onClick={event => this.closeChangeSubSubject(event)}
                                                 >
                                                     Закрыть
                                                 </button>

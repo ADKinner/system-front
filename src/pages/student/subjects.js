@@ -11,7 +11,7 @@ import {
     Q_PARAM,
     SKIPS_URL,
     STUDENT_ID_PARAM, SUB_SUBJECT_ID_PARAM,
-    SUB_SUBJECT_URL,
+    SUB_SUBJECTS_URL,
     SUBJECT_FORMS_URL,
     SUBJECT_ID_PARAM,
     SUBJECT_TYPE_ID_PARAM,
@@ -19,6 +19,7 @@ import {
 } from "../../constants";
 import handleDefaultError from "../../handle/handleDefaultReuqestError";
 import handleStudentMount from "../../handle/handleStudentMount";
+import timeout from "../../handle/timeout";
 
 class StudentSubjectsPage extends React.Component {
 
@@ -28,7 +29,7 @@ class StudentSubjectsPage extends React.Component {
             part: 0,
             subjects: [],
             grades: [],
-            subjectTypes: [],
+            subjectForms: [],
             subjectInfo: {},
             groupInfo: {},
             skip: {}
@@ -54,14 +55,14 @@ class StudentSubjectsPage extends React.Component {
         });
     }
 
-    getSubjectTypes(id) {
-        axios.get(DEFAULT_URL + SUBJECT_FORMS_URL + Q_PARAM + SUBJECT_ID_PARAM + id, {
+    getSubjectForms(subjectId) {
+        axios.get(DEFAULT_URL + SUBJECT_FORMS_URL + Q_PARAM + SUBJECT_ID_PARAM + subjectId, {
             headers: {
                 Authorization: localStorage.getItem("token")
             }
         }).then(response => {
             this.setState({
-                subjectTypes: response.data
+                subjectForms: response.data
             });
         }).catch((error) => {
             handleDefaultError(this.props, error.response.status);
@@ -69,7 +70,7 @@ class StudentSubjectsPage extends React.Component {
     }
 
     getSubjectInfo(subjectId, typeId) {
-        axios.get(DEFAULT_URL + SUB_SUBJECT_URL + Q_PARAM + SUBJECT_ID_PARAM + subjectId + AND_PARAM
+        axios.get(DEFAULT_URL + SUB_SUBJECTS_URL + Q_PARAM + SUBJECT_ID_PARAM + subjectId + AND_PARAM
             + SUBJECT_TYPE_ID_PARAM + typeId, {
             headers: {
                 Authorization: localStorage.getItem("token")
@@ -133,12 +134,8 @@ class StudentSubjectsPage extends React.Component {
         if (grades.length === 0) {
             return 0;
         } else {
-            return (grades.reduce((total, next) => total + next.value, 0) / grades.length).toFixed(1);
+            return (grades.reduce((total, next) => total + next.mark, 0) / grades.length).toFixed(1);
         }
-    }
-
-    timeout(delay) {
-        return new Promise(res => setTimeout(res, delay));
     }
 
     async view(subjectId) {
@@ -146,21 +143,20 @@ class StudentSubjectsPage extends React.Component {
             part: 1,
             SId: subjectId
         });
-        this.getSubjectTypes(subjectId);
-        await this.timeout(150);
+        this.getSubjectForms(subjectId);
+        await timeout(150);
     }
 
     async get(typeId) {
         const studentId = localStorage.getItem("id");
         const groupId = localStorage.getItem("groupId");
         this.getSubjectInfo(this.state.SId, typeId);
-        await this.timeout(150);
-        console.log(this.state.subjectInfo)
+        await timeout(150);
         const subSubjectId = this.state.subjectInfo["id"];
         this.getGrades(subSubjectId, studentId);
         this.getSkip(subSubjectId, studentId);
         this.getGroupInfo(subSubjectId, groupId);
-        await this.timeout(150);
+        await timeout(150);
         this.setState({
             part: 2,
             STId: typeId
@@ -193,15 +189,14 @@ class StudentSubjectsPage extends React.Component {
                         <div className="data_panel">
                             {
                                 this.state.subjects.map(subject => {
-                                    const {id, name} = subject
                                     return (
                                         <div>
                                             <button
                                                 className="btn_data"
-                                                value={id}
+                                                value={subject.id}
                                                 onClick={event => this.view(event.target.value)}
                                             >
-                                                {name}
+                                                {subject.name}
                                             </button>
                                         </div>
                                     )
@@ -210,16 +205,15 @@ class StudentSubjectsPage extends React.Component {
                     )}
                     {this.state.part === 1 && (
                         <div className="data_panel small">
-                            {this.state.subjectTypes.map(subject => {
-                                const {id, name} = subject
+                            {this.state.subjectForms.map(subjectForm => {
                                 return (
                                     <div>
                                         <button
                                             className="btn_data"
-                                            value={id}
+                                            value={subjectForm.id}
                                             onClick={event => this.get(event.target.value)}
                                         >
-                                            {name}
+                                            {subjectForm.title}
                                         </button>
                                     </div>
                                 )
@@ -228,22 +222,21 @@ class StudentSubjectsPage extends React.Component {
                     )}
                     {this.state.part === 2 && (
                         <div className="data_panel_student">
-                            <h1>Предмет: {this.state.subjectInfo.subject.name}</h1>
-                            <h1>Тип занятия: {this.state.subjectInfo.subjectForm.name}</h1>
+                            <h1>Предмет: {this.state.subjectInfo.subjectName}</h1>
+                            <h1>Тип занятий: {this.state.subjectInfo.subjectForm}</h1>
                             <div className="subject_detail">
                                 <div className="subject_detail_name">Преподаватель:</div>
                                 <div className="subject_detail_value">
-                                    {this.state.subjectInfo.subjectTeacher.surname + " "}
-                                    {this.state.subjectInfo.subjectTeacher.name + " "}
-                                    {this.state.subjectInfo.subjectTeacher.patronymic}
+                                    {this.state.subjectInfo.subjectTeacher}
                                 </div>
                             </div>
                             <div className="subject_detail">
                                 <div className="subject_detail_name">Оценки:</div>
                                 <div className="subject_detail_value">
-                                    {this.state.grades.map(grade => {
-                                        return grade.value + " ";
+                                    {this.state.grades.length !== 0 && this.state.grades.map(grade => {
+                                        return grade.mark + " ";
                                     })}
+                                    {this.state.grades.length === 0 && "Оценок нет"}
                                 </div>
                             </div>
                             <div className="subject_detail">
@@ -256,7 +249,7 @@ class StudentSubjectsPage extends React.Component {
                                 <div className="subject_detail_name">Тип сдачи:</div>
                                 <div
                                     className="subject_detail_value">
-                                    {this.state.subjectInfo.subject.examinationType.name}
+                                    {this.state.subjectInfo.offsetForm}
                                 </div>
                             </div>
                             <div className="subject_detail">
@@ -274,7 +267,7 @@ class StudentSubjectsPage extends React.Component {
                             <div className="subject_detail">
                                 <div className="subject_detail_name">Всего занятий:</div>
                                 <div className="subject_detail_value">
-                                    {this.state.subjectInfo.count}
+                                    {this.state.subjectInfo.lessonsCount}
                                 </div>
                             </div>
                         </div>
